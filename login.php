@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
 
     // Prepared statement for security
-    $stmt = $conn->prepare("SELECT id, password, role, verified FROM users WHERE email = ?");
+    $stmt = $conn->prepare("SELECT id, name, password, role, verified, points FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -25,11 +25,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Verify password
         if (password_verify($password, $row['password'])) {
             // Save session
-            $_SESSION['user_id'] = $row['id'];
-            $_SESSION['role'] = $row['role'];
+            $_SESSION['user_id']   = $row['id'];
+            $_SESSION['role']      = $row['role'];
+            $_SESSION['user_name'] = $row['name'];
+            $_SESSION['points']    = $row['points']; // now it's correct
 
             // Redirect to dashboard
-            header("Location: dashboard.php");
+            header("Location: home.php");
             exit();
         } else {
             $_SESSION['error'] = "Invalid email or password.";

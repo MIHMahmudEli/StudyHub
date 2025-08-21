@@ -1,0 +1,107 @@
+/* Leaderboard Page Styles */
+body {
+    background: #f0f4f8;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.leaderboard {
+    max-width: 900px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.leaderboard h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    text-shadow: 1px 1px 2px #aaa;
+}
+
+/* Player card layout */
+.player-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-radius: 12px;
+    background: #f9f9f9;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.player-card:hover {
+    background: #f0f8ff;
+}
+
+/* Rank badge */
+.rank-badge {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-right: 14px;
+    width: 40px;
+    text-align: center;
+}
+
+/* Highlight ranks */
+.rank-1 { background: #ffeaa7; }
+.rank-2 { background: #dfe6e9; }
+.rank-3 { background: #fab1a0; }
+
+/* Player info section */
+.player-info {
+    flex-grow: 1;
+}
+
+.player-top {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.level-badge {
+    display: inline-block;
+    background: #8e44ad;
+    color: #fff;
+    font-weight: bold;
+    padding: 6px 10px;
+    border-radius: 50%;
+    font-size: 0.9rem;
+    margin-right: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.player-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.clan-name {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+.player-stats {
+    font-size: 0.8rem;
+    color: #444;
+    margin-top: 2px;
+}
+
+/* Trophy section */
+.trophy-count {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #d4a017;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.trophy-count .trophy-icon {
+    font-size: 1.5rem;
+}

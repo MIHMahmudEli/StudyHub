@@ -44,6 +44,7 @@ if(isset($_POST['verify'])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verify Email | StudyHub</title>
     <link rel="stylesheet" href="assets/css/otp-style.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
     <div class="container">
