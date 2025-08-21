@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['otp'] = rand(100000, 999999);
 
     include('mailer.php');
-    if(sendOTP($email, $name, $_SESSION['otp'])) {
+    if(sendOTP($email, $name, $_SESSION['otp'],'register')) {
         header("Location: otp.php");
         exit();
     } else {

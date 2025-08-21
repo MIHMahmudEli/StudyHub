@@ -6,36 +6,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const registerPassword = document.getElementById('registerPassword');
     const confirmPassword = document.getElementById('confirmPassword');
-    
-    // Correctly select the error message element
     const errorMessage = document.querySelector('#registerForm .error-message');
 
-    // Check URL hash and show appropriate form
+    // ---------- Show form based on URL hash ----------
     if (window.location.hash === '#register') {
         loginForm.classList.remove('active');
         registerForm.classList.add('active');
+    } else {
+        loginForm.classList.add('active');
+        registerForm.classList.remove('active');
     }
 
-    // Toggle forms
+    // ---------- Toggle between login and register ----------
     toggleButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             loginForm.classList.toggle('active');
             registerForm.classList.toggle('active');
-            
-            // Clear error message when switching forms
             errorMessage.textContent = "";
             errorMessage.style.display = "none";
-            
-            // Update URL hash
-            if (registerForm.classList.contains('active')) {
-                window.location.hash = 'register';
-            } else {
-                window.location.hash = '';
-            }
+
+            window.location.hash = registerForm.classList.contains('active') ? 'register' : '';
         });
     });
 
-    // Toggle password visibility
+    // ---------- Toggle password visibility ----------
     togglePasswordIcons.forEach(icon => {
         icon.addEventListener('click', () => {
             const input = icon.previousElementSibling;
@@ -49,40 +43,58 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Check if confirm password matches dynamically
+    // ---------- Password validation ----------
+    function validatePassword(password) {
+        if (!/.{8,}/.test(password)) return "Password must be at least 8 characters long.";
+        if (!/[A-Z]/.test(password)) return "Password must contain at least 1 uppercase letter.";
+        if (!/[a-z]/.test(password)) return "Password must contain at least 1 lowercase letter.";
+        if (!/[0-9]/.test(password)) return "Password must contain at least 1 number.";
+        if (!/[@$!%*?&#]/.test(password)) return "Password must contain at least 1 special character (@$!%*?&#).";
+        return "";
+    }
+
+    // ---------- Live confirm password check ----------
     confirmPassword.addEventListener('input', () => {
         if (confirmPassword.value !== registerPassword.value) {
-            errorMessage.textContent = "Passwords do not match!";
-            errorMessage.style.display = "block";
+            showError("Passwords do not match!");
         } else {
-            errorMessage.textContent = "";
-            errorMessage.style.display = "none";
+            hideError();
         }
     });
 
-    // Also check when the password field changes
+    // ---------- Live password validation ----------
     registerPassword.addEventListener('input', () => {
-        if (confirmPassword.value && confirmPassword.value !== registerPassword.value) {
-            errorMessage.textContent = "Passwords do not match!";
-            errorMessage.style.display = "block";
+        const message = validatePassword(registerPassword.value);
+
+        if (message) {
+            showError(message);
+        } else if (confirmPassword.value && confirmPassword.value !== registerPassword.value) {
+            showError("Passwords do not match!");
         } else {
-            errorMessage.textContent = "";
-            errorMessage.style.display = "none";
+            hideError();
         }
     });
 
-    // Optional: prevent form submit if mismatch
+    // ---------- Form submit check ----------
     registerForm.addEventListener('submit', (e) => {
-        if (confirmPassword.value !== registerPassword.value) {
+        const message = validatePassword(registerPassword.value);
+
+        if (message || confirmPassword.value !== registerPassword.value) {
             e.preventDefault();
-            errorMessage.textContent = "Passwords do not match!";
-            errorMessage.style.display = "block";
-            
-            // Add a little animation to draw attention to the error
-            errorMessage.style.animation = "shake 0.5s";
-            setTimeout(() => {
-                errorMessage.style.animation = "";
-            }, 500);
+            showError(message || "Passwords do not match!");
         }
     });
+
+    // ---------- Helper functions ----------
+    function showError(msg) {
+        errorMessage.textContent = msg;
+        errorMessage.style.display = "block";
+        errorMessage.style.animation = "shake 0.5s";
+        setTimeout(() => { errorMessage.style.animation = ""; }, 500);
+    }
+
+    function hideError() {
+        errorMessage.textContent = "";
+        errorMessage.style.display = "none";
+    }
 });

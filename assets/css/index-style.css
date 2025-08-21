@@ -142,9 +142,27 @@ button:hover {
     cursor: pointer;
 }
 
+/* Error messages style */
 .error-messages {
     color: red;
     margin-bottom: 10px;
     font-size: 14px;
     text-align: center;
+}
+
+/* Forgot Password link style */
+.forgot-password {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.forgot-password a {
+    color: #007BFF; /* Blue color for the link */
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
 }

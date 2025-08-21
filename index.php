@@ -19,10 +19,11 @@ session_start();
     <form id="loginForm" class="active" method="POST" action="login.php">
         <h2>Login</h2>
 
-        <!-- Error message placeholder -->
+        <!-- Error message -->
         <?php if(isset($_SESSION['error'])): ?>
             <div class="error-messages">
-                <?php echo htmlspecialchars($_SESSION['error']); 
+                <?php 
+                echo htmlspecialchars($_SESSION['error']); 
                 unset($_SESSION['error']);
                 ?>
             </div>
@@ -39,6 +40,11 @@ session_start();
             <i class="fa fa-eye toggle-password"></i>
         </div>
 
+        <div class="forgot-password">
+            <!-- Redirect to forgot-password.php -->
+            <a href="forgot-password.php">Forgot Password?</a>
+        </div>
+
         <button type="submit">Login</button>
         <button type="button" class="toggle-btn">Don't have an account? Register</button>
     </form>
@@ -47,18 +53,21 @@ session_start();
     <form id="registerForm" method="POST" action="register.php">
         <h2>Register</h2>
 
-        <!-- Error message placeholder -->
+        <!-- Error message -->
         <?php if(isset($_SESSION['reg_error'])): ?>
             <div style="color: red; text-align:center; margin-bottom:10px;">
-                <?php echo htmlspecialchars($_SESSION['reg_error']); 
+                <?php 
+                echo htmlspecialchars($_SESSION['reg_error']); 
                 unset($_SESSION['reg_error']);
                 ?>
             </div>
         <?php endif; ?>
 
+        <!-- Success message -->
         <?php if(isset($_SESSION['reg_success'])): ?>
             <div style="color: green; text-align:center; margin-bottom:10px;">
-                <?php echo htmlspecialchars($_SESSION['reg_success']); 
+                <?php 
+                echo htmlspecialchars($_SESSION['reg_success']); 
                 unset($_SESSION['reg_success']);
                 ?>
             </div>
@@ -96,8 +105,9 @@ session_start();
 <script src="assets/js/index-script.js"></script>
 </body>
 </html>
+
 <?php
-// Clear form data after displaying
+// Clear registration form data after displaying
 if (isset($_SESSION['reg_form_data'])) {
     unset($_SESSION['reg_form_data']);
 }
