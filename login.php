@@ -28,16 +28,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_id']   = $row['id'];
             $_SESSION['role']      = $row['role'];
             $_SESSION['user_name'] = $row['name'];
-            $_SESSION['points']    = $row['points']; // now it's correct
+            $_SESSION['points']    = $row['points'];
 
-            // Redirect to dashboard
-            header("Location: home.php");
+            // Redirect based on role
+            if ($row['role'] === 'admin') {
+                header("Location: admin_dashboard.php");
+            } elseif ($row['role'] === 'moderator') {
+                header("Location: moderator_dashboard.php");
+            } else {
+                header("Location: home.php"); // normal student/user dashboard
+            }
             exit();
         } else {
-            $_SESSION['error'] = "Invalid email or password.";
-            header("Location: index.php#login");
-            exit();
-        }
+                    $_SESSION['error'] = "Invalid email or password.";
+                    header("Location: index.php#login");
+                    exit();
+                }
     } else {
         $_SESSION['error'] = "Invalid email or password.";
         header("Location: index.php#login");

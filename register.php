@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("includes/db.php"); // Make sure this connects properly
+include("includes/db.php"); 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = trim($_POST['name']);

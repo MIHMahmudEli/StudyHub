@@ -45,6 +45,7 @@ if (isset($_GET['bookmarks'])) {
     // Show all notes
     $query = "SELECT id, title, subject, avg_rating, file_type 
               FROM notes 
+              WHERE status = 'approved'
               ORDER BY created_at DESC";
 }
 
@@ -66,7 +67,7 @@ $result = mysqli_query($conn, $query);
     <section class="nav-center">
         <a href="home.php">🏠 Home</a>
         <a href="home.php?bookmarks=1" class="<?php echo isset($_GET['bookmarks']) ? 'active-link' : ''; ?>">🔖 Bookmark</a>
-        <a href="#">📅 Event</a>
+        <a href="dashboard.php">📅 Event</a>
         <a href="leaderboard.php">🏆 Leaderboard</a>
         <a href="upload.php">📘 Upload Notes</a>
     </section>

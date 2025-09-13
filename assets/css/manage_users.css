@@ -1,0 +1,120 @@
+/* Global */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #eef2f7;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 600;
+    color: #222;
+}
+
+/* Table Container */
+.table-wrapper {
+    width: 95%;
+    margin: auto;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: linear-gradient(90deg, #6a11cb, #2575fc);
+    color: #fff;
+}
+
+thead th {
+    padding: 14px;
+    font-weight: 600;
+    text-align: left;
+    letter-spacing: 0.5px;
+    font-size: 15px;
+}
+
+tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.25s ease, transform 0.15s ease;
+    cursor: pointer;
+}
+
+tbody tr:hover {
+    background: #f9fbff;
+    transform: scale(1.01);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+td {
+    padding: 12px 16px;
+    font-size: 14px;
+}
+
+/* Action Row (hidden by default) */
+.action-row {
+    display: none;
+    background: #fafafa;
+    text-align: center;
+    padding: 12px 0;
+    border-top: 1px solid #ddd;
+    animation: fadeIn 0.3s ease;
+}
+
+.action-row a {
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    margin: 0 6px;
+}
+
+.action-row a:hover {
+    opacity: 0.85;
+    transform: translateY(-2px);
+}
+
+/* Buttons */
+.action-row .promote {
+    background: #27ae60;
+    color: #fff;
+}
+
+.action-row .delete {
+    background: #e74c3c;
+    color: #fff;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    td {
+        font-size: 13px;
+        padding: 10px;
+    }
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+.fa-bars{
+    color: black;
+}

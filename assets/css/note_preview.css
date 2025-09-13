@@ -1,0 +1,120 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+/* Body and background */
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Container: sidebar + preview */
+.container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    height: 90vh;
+    gap: 20px;
+}
+
+/* Sidebar */
+.sidebar {
+    flex: 0 0 300px; /* fixed width */
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Title in sidebar */
+.note-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+}
+
+/* Meta info */
+.note-meta p {
+    color: #f0f0f0;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+/* Back button */
+.btn-back {
+    display: inline-block;
+    margin-top: auto; /* push to bottom */
+    padding: 10px 20px;
+    background: linear-gradient(90deg, #ff512f, #dd2476);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 50px;
+    text-decoration: none;
+    text-align: center;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-back:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* Note preview area */
+.note-preview {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Preview content */
+.note-preview embed,
+.note-preview iframe,
+.note-preview img {
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    object-fit: contain;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    transition: transform 0.3s ease;
+}
+
+.note-preview embed:hover,
+.note-preview iframe:hover,
+.note-preview img:hover {
+    transform: scale(1.02);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+    }
+    .sidebar {
+        flex: none;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .note-preview {
+        height: 70vh;
+    }
+}
