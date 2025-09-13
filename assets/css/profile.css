@@ -1,0 +1,103 @@
+/* ---------------- Profile Page Content ---------------- */
+.profile-container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    flex-wrap: wrap; /* Responsive wrapping */
+    margin-top: 20px;
+}
+
+/* Each section (Profile Info & Password) */
+.settings-section {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    flex: 1 1 400px; /* Grow, shrink, minimum width */
+}
+
+/* Section headings */
+.settings-section h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Success & Error Messages */
+.success {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    border-left: 4px solid #10b981;
+}
+.error {
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    border-left: 4px solid #ef4444;
+}
+
+/* Forms */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+form label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #374151;
+}
+form input {
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.2s;
+}
+form input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+}
+
+/* Disabled inputs styling */
+form input[disabled] {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+}
+
+/* Buttons */
+form button {
+    width: max-content;
+    background-color: #3b82f6;
+    color: #fff;
+    font-weight: 500;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+form button:hover {
+    background-color: #2563eb;
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    .profile-container {
+        flex-direction: column;
+    }
+}

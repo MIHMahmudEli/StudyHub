@@ -9,16 +9,13 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+$isModerator = isset($_SESSION['role']) && $_SESSION['role'] === 'moderator';
 $userId = intval($_SESSION['user_id']);
 
-// Handle search or bookmark filter
 // Handle search or bookmark filter
 $searchTerm = '';
 $query = "";
 
-$userId = intval($_SESSION['user_id']);
-
-// Check if search term exists in GET
 if (isset($_GET['bookmarks'])) {
     // Show only bookmarked notes
     $query = "SELECT n.id, n.title, n.subject, n.avg_rating, n.file_type
@@ -42,13 +39,12 @@ if (isset($_GET['bookmarks'])) {
               ORDER BY created_at DESC";
 
 } else {
-    // Show all notes
+    // Show all approved notes
     $query = "SELECT id, title, subject, avg_rating, file_type 
               FROM notes 
               WHERE status = 'approved'
               ORDER BY created_at DESC";
 }
-
 
 $result = mysqli_query($conn, $query);
 ?>
@@ -67,7 +63,6 @@ $result = mysqli_query($conn, $query);
     <section class="nav-center">
         <a href="home.php">🏠 Home</a>
         <a href="home.php?bookmarks=1" class="<?php echo isset($_GET['bookmarks']) ? 'active-link' : ''; ?>">🔖 Bookmark</a>
-        <a href="dashboard.php">📅 Event</a>
         <a href="leaderboard.php">🏆 Leaderboard</a>
         <a href="upload.php">📘 Upload Notes</a>
     </section>
@@ -79,7 +74,7 @@ $result = mysqli_query($conn, $query);
                 <input type="hidden" name="bookmarks" value="1">
             <?php endif; ?>
         </form>
-        <a href="profile.php">
+        <a href="user_dashboard.php">
             👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
         </a>
         <p>⭐ <?php echo isset($_SESSION['points']) ? intval($_SESSION['points']) : 0; ?> pts</p>
@@ -91,23 +86,28 @@ $result = mysqli_query($conn, $query);
         <?php if ($result && mysqli_num_rows($result) > 0): ?>
             <?php while ($row = mysqli_fetch_assoc($result)): ?>
                 <div class="note-card">
-                    <div class="note-file">
-                        <?php 
-                        $type = strtolower($row['file_type']);
-                        if ($type === 'pdf') echo "📘";
-                        elseif (in_array($type, ['jpg','jpeg','png'])) echo "🖼️";
-                        else echo "📘";
-                        ?>
-                    </div>
-                    <h3 class="note-title"><?php echo htmlspecialchars($row['title']); ?></h3>
-                    <p class="note-subject"><?php echo htmlspecialchars($row['subject']); ?></p>
-                    <div class="note-rating">
-                        <?php
-                        $rating = round($row['avg_rating']);
-                        for ($i=1; $i<=5; $i++) echo $i <= $rating ? "★" : "☆";
-                        ?>
-                    </div>
-                    <?php if (!$isAdmin): ?>
+                    <!-- Clickable content area -->
+                    <a href="preview_note.php?id=<?php echo $row['id']; ?>" class="note-content">
+                        <div class="note-file">
+                            <?php 
+                            $type = strtolower($row['file_type']);
+                            if ($type === 'pdf') echo "📘";
+                            elseif (in_array($type, ['jpg','jpeg','png'])) echo "🖼️";
+                            else echo "📘";
+                            ?>
+                        </div>
+                        <h3 class="note-title"><?php echo htmlspecialchars($row['title']); ?></h3>
+                        <p class="note-subject"><?php echo htmlspecialchars($row['subject']); ?></p>
+                        <div class="note-rating">
+                            <?php
+                            $rating = round($row['avg_rating']);
+                            for ($i=1; $i<=5; $i++) echo $i <= $rating ? "★" : "☆";
+                            ?>
+                        </div>
+                    </a>
+
+                    <!-- Actions only for students -->
+                    <?php if (!$isAdmin && !$isModerator): ?>
                         <div class="note-actions">
                             <button class="bookmark-btn" data-id="<?php echo $row['id']; ?>">🔖 Bookmark</button>
                             <a href="download.php?id=<?php echo $row['id']; ?>" class="download-btn">⬇️ Download</a>

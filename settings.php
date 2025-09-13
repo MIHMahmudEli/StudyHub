@@ -23,12 +23,12 @@ if (isset($_POST['update_name'])) {
         $stmt->bind_param("si", $new_name, $_SESSION['user_id']);
         if ($stmt->execute()) {
             $_SESSION['user_name'] = $new_name;
-            $nameMessage = "✅ Name updated successfully!";
+            $nameMessage = "Name updated successfully!";
         } else {
-            $nameError = "❌ Failed to update name.";
+            $nameError = "Failed to update name.";
         }
     } else {
-        $nameError = "❌ Name cannot be empty.";
+        $nameError = "Name cannot be empty.";
     }
 }
 
@@ -39,7 +39,7 @@ if (isset($_POST['update_password'])) {
     $confirm_pass = trim($_POST['confirm_password']);
 
     if ($new_pass !== $confirm_pass) {
-        $passError = "❌ New password and confirm password do not match.";
+        $passError = "New password and confirm password do not match.";
     } else {
         // Get current hashed password
         $stmt = $conn->prepare("SELECT password FROM users WHERE id=?");
@@ -54,12 +54,12 @@ if (isset($_POST['update_password'])) {
             $stmt = $conn->prepare("UPDATE users SET password=? WHERE id=?");
             $stmt->bind_param("si", $hashed, $_SESSION['user_id']);
             if ($stmt->execute()) {
-                $passMessage = "✅ Password updated successfully!";
+                $passMessage = "Password updated successfully!";
             } else {
-                $passError = "❌ Failed to update password.";
+                $passError = "Failed to update password.";
             }
         } else {
-            $passError = "❌ Current password is incorrect.";
+            $passError = "Current password is incorrect.";
         }
     }
 }
@@ -70,9 +70,9 @@ if (isset($_POST['demote_user'])) {
     $stmt = $conn->prepare("UPDATE users SET role='student' WHERE id=? AND role='moderator'");
     $stmt->bind_param("i", $mod_id);
     if ($stmt->execute()) {
-        $modMessage = "🟢 Moderator demoted to student successfully!";
+        $modMessage = "Moderator demoted to student successfully!";
     } else {
-        $modMessage = "❌ Failed to demote moderator. Try again.";
+        $modMessage = "Failed to demote moderator. Try again.";
     }
 }
 

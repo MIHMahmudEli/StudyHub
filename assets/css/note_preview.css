@@ -118,3 +118,55 @@ body {
         height: 70vh;
     }
 }
+
+/* No preview message */
+.no-preview {
+    background: #fef2f2;
+    color: #991b1b;
+    padding: 12px 15px;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-top: 15px;
+    font-weight: 500;
+}
+
+/* No preview container */
+.no-preview {
+    background: #f9fafb; /* light gray background */
+    border: 1px solid #e5e7eb; /* subtle border */
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Message text */
+.no-preview p {
+    font-size: 16px;
+    font-weight: 500;
+    color: #374151; /* neutral dark gray */
+    margin-bottom: 12px;
+}
+
+/* Download button */
+.no-preview .download-link {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.2s;
+}
+
+/* Hover effect */
+.no-preview .download-link:hover {
+    background: linear-gradient(90deg, #2563eb, #1d4ed8);
+    transform: translateY(-2px);
+}
+
+

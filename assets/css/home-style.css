@@ -1,10 +1,12 @@
 /* Global Styles */
-body, h3, p {
+body,
+h3,
+p {
     margin: 0;
     padding: 0;
     font-family: "Segoe UI", Arial, sans-serif;
     color: #333;
-    
+
 }
 
 /* Header */
@@ -15,7 +17,7 @@ header {
     background: #34495e;
     padding: 12px 25px;
     color: #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -94,14 +96,15 @@ header .nav-right p {
     padding: 15px 12px;
     text-align: center;
     transition: all 0.25s ease;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     overflow: hidden;
-    min-height: 150px; /* smaller card height */
+    min-height: 150px;
+    /* smaller card height */
 }
 
 .note-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.12);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 /* Note Content */
@@ -141,7 +144,8 @@ header .nav-right p {
     gap: 8px;
     padding: 10px 0;
     background: rgba(255, 255, 255, 0.85);
-    opacity: 1; /* default opacity */
+    opacity: 1;
+    /* default opacity */
     transform: translateY(100%);
     transition: transform 0.3s ease, opacity 0.3s ease;
 }
@@ -250,7 +254,8 @@ header .nav-right p {
     padding: 6px 12px;
     border-radius: 5px;
     border: none;
-    background-color: #ffc107; /* Amber color */
+    background-color: #ffc107;
+    /* Amber color */
     color: #333;
     font-weight: 500;
     cursor: pointer;
@@ -258,20 +263,37 @@ header .nav-right p {
 }
 
 .search-form button:hover {
-    background-color: #e0a800; /* Darker on hover */
-    transform: scale(1.05);    /* Slight zoom effect */
+    background-color: #e0a800;
+    /* Darker on hover */
+    transform: scale(1.05);
+    /* Slight zoom effect */
 }
 
 .search-form button:active {
-    transform: scale(0.98);    /* Press effect */
+    transform: scale(0.98);
+    /* Press effect */
 }
 
 /* Highlight active link / disable link style */
 .active-link {
-    pointer-events: none;      
-    opacity: 0.6;               
-    font-weight: bold;          
+    pointer-events: none;
+    opacity: 0.6;
+    font-weight: bold;
 }
 
+/* Ensure clickable area works without breaking buttons */
+.note-content {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
 
+.note-card {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
 
+.note-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}

@@ -2,12 +2,18 @@
 session_start();
 include("includes/db.php");
 
-// Allow only admin or moderator
-if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'moderator'])) {
+if (!isset($_SESSION['user_id'])) {
     header("Location: index.php#login");
     exit();
 }
 
+if (isset($_SESSION['role'])) {
+    $role = $_SESSION['role'];
+} else {
+    $role = 'student';
+}
+
+// If no ID provided
 if (!isset($_GET['id'])) {
     echo "Invalid request.";
     exit();
@@ -24,6 +30,14 @@ if (!$note) {
     echo "Note not found.";
     exit();
 }
+
+// Decide back link
+if ($role === 'admin' || $role === 'moderator') {
+    $backLink = "pending_notes.php";
+} else {
+    $backLink = "home.php";
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,7 +58,7 @@ if (!$note) {
                 <p><strong>Uploaded:</strong> <?php echo $note['created_at']; ?></p>
                 <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($note['description'])); ?></p>
             </div>
-            <a href="pending_notes.php" class="btn-back">← Back to Pending Notes</a>
+            <a href="<?php echo $backLink; ?>" class="btn-back">← Back</a>
         </div>
 
         <!-- Main Content -->
@@ -53,14 +67,17 @@ if (!$note) {
             $filePath = htmlspecialchars($note['file_path']);
             $fileType = strtolower($note['file_type']);
 
-            if (in_array($fileType, ['pdf'])) {
+            if ($fileType === 'pdf') {
                 echo "<embed src='$filePath' type='application/pdf'>";
             } elseif (in_array($fileType, ['jpg','jpeg','png','gif'])) {
                 echo "<img src='$filePath' alt='Note Preview'>";
             } elseif (in_array($fileType, ['doc','docx'])) {
                 echo "<iframe src='https://view.officeapps.live.com/op/embed.aspx?src=" . urlencode($filePath) . "'></iframe>";
             } else {
-                echo "<p>Preview not available. <a href='$filePath' target='_blank'>Download</a></p>";
+                echo "<p class='no-preview'>Preview not available.
+                <a href='$filePath' target='_blank' class='download-link'>Download</a>
+                </p>";
+
             }
             ?>
         </div>

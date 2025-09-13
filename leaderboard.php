@@ -60,7 +60,6 @@ function getTitleIcon($rank, $points) {
         <a href="home.php">🏠 Home</a>
         <a href="home.php?bookmarks=1">🔖 Bookmark</a>
         <a href="leaderboard.php" class="active-link">🏆 Leaderboard</a>
-        <a href="#">📅 Event</a>
         <a href="upload.php">📘 Upload Notes</a>
     </section>
 

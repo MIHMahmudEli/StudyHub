@@ -1,0 +1,113 @@
+* {
+    box-sizing: border-box;
+}
+
+.notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.note-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.note-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.note-card label {
+    font-weight: 600;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.note-card input[type="text"],
+.note-card textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.note-card textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.note-card input:focus,
+.note-card textarea:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+.note-card .actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.note-card .save-btn {
+    background: #3b82f6;
+    color: #fff;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.note-card .save-btn:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+}
+
+.note-card .delete-btn {
+    background: #ef4444;
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.note-card .delete-btn:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+}
+
+.success {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.error {
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.no-notes {
+    font-size: 16px;
+    color: #555;
+    text-align: center;
+    padding: 30px 0;
+}
