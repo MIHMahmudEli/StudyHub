@@ -41,6 +41,8 @@ $users = $conn->query("
             <li><a href="manage_users.php"><i class="fa fa-users"></i> <span>Users</span></a></li>
             <li class="active"><i class="fa fa-chart-bar"></i> <span>Analytics</span></a></li>
             <li><a href="#"><i class="fa fa-file-alt"></i> <span>Reports</span></a></li>
+            <li><a href="home.php"><i class="fa fa-book"></i> <span>Browse Notes</span></a></li>
+            <li><a href="show_uploaded.php"><i class="fa fa-upload"></i> <span>Uploaded Notes</span></a></li>
             <li><a href="settings.php"><i class="fa fa-cog"></i> <span>Settings</span></a></li>
         </ul>
         <div class="logout">

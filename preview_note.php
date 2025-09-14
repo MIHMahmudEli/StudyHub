@@ -20,6 +20,8 @@ if (!isset($_GET['id'])) {
 }
 
 $noteId = intval($_GET['id']);
+$homeLink = $_GET['track'] ?? false;
+
 $stmt = $conn->prepare("SELECT title, description, subject, course_code, file_path, file_type, created_at 
                         FROM notes WHERE id=?");
 $stmt->bind_param("i", $noteId);
@@ -32,7 +34,7 @@ if (!$note) {
 }
 
 // Decide back link
-if ($role === 'admin' || $role === 'moderator') {
+if (($role === 'admin' || $role === 'moderator') && !$homeLink) {
     $backLink = "pending_notes.php";
 } else {
     $backLink = "home.php";

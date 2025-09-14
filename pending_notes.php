@@ -2,11 +2,12 @@
 session_start();
 include("includes/db.php");
 
-// Only admin can access
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+// Security: only admin or moderator allowed
+if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'moderator'])) {
     header("Location: index.php#login");
     exit();
 }
+$role = $_SESSION['role'];
 
 // Fetch pending notes
 $pendingNotes = $conn->query("SELECT n.id, n.title, n.created_at, u.name AS uploader 
@@ -35,13 +36,22 @@ $pendingNotes = $conn->query("SELECT n.id, n.title, n.created_at, u.name AS uplo
         <ul class="nav">
             <li><a href="admin_dashboard.php"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
             <li class="active"><a href="pending_notes.php"><i class="fa fa-file"></i> <span>Notes</span></a></li>
-            <li><a href="manage_users.php"><i class="fa fa-users"></i> <span>Users</span></a></li>
+
+            <?php if ($role === 'admin') { ?>
+                <li><a href="manage_users.php"><i class="fa fa-users"></i> <span>Users</span></a></li>
+            <?php } ?>
+
             <li><a href="trending_subjects.php"><i class="fa fa-chart-bar"></i> <span>Analytics</span></a></li>
-            <li><a href="#"><i class="fa fa-file-alt"></i> <span>Reports</span></a></li>
+
+            <?php if ($role === 'admin') { ?>
+                <li><a href="#"><i class="fa fa-file-alt"></i> <span>Reports</span></a></li>
+            <?php } ?>
+            <li><a href="home.php"><i class="fa fa-book"></i> <span>Browse Notes</span></a></li>
+            <li><a href="show_uploaded.php"><i class="fa fa-upload"></i> <span>Uploaded Notes</span></a></li>
             <li><a href="settings.php"><i class="fa fa-cog"></i> <span>Settings</span></a></li>
         </ul>
         <div class="logout">
-            <a href="logout.php"><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a>
+            <a href="logout.php" ><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a>
         </div>
     </aside>
 
@@ -56,7 +66,7 @@ $pendingNotes = $conn->query("SELECT n.id, n.title, n.created_at, u.name AS uplo
                 <h2>Pending Notes</h2>
             </div>
             <div class="topbar-right">
-                <span class="role">Admin</span>
+                <span class="role"><?php echo $role ?></span>
                 <a href="admin_dashboard.php" class="btn btn-primary">
                     <i class="fa fa-arrow-left"></i> Back
                 </a>

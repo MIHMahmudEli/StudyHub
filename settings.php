@@ -2,11 +2,13 @@
 session_start();
 include("includes/db.php");
 
-// Security: only admin allowed
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+// Security: only admin or moderator allowed
+if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'moderator'])) {
     header("Location: index.php#login");
     exit();
 }
+
+$role = $_SESSION['role'];
 
 // Messages for sections
 $nameMessage = "";
@@ -100,13 +102,22 @@ $moderators = $conn->query("SELECT id, name, email FROM users WHERE role='modera
         <ul class="nav">
             <li><a href="admin_dashboard.php"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
             <li><a href="pending_notes.php"><i class="fa fa-file"></i> <span>Notes</span></a></li>
-            <li><a href="manage_users.php"><i class="fa fa-users"></i> <span>Users</span></a></li>
+
+            <?php if ($role === 'admin') { ?>
+                <li><a href="manage_users.php"><i class="fa fa-users"></i> <span>Users</span></a></li>
+            <?php } ?>
+
             <li><a href="trending_subjects.php"><i class="fa fa-chart-bar"></i> <span>Analytics</span></a></li>
-            <li><a href="#"><i class="fa fa-file-alt"></i> <span>Reports</span></a></li>
+
+            <?php if ($role === 'admin') { ?>
+                <li><a href="#"><i class="fa fa-file-alt"></i> <span>Reports</span></a></li>
+            <?php } ?>
+            <li><a href="home.php"><i class="fa fa-book"></i> <span>Browse Notes</span></a></li>
+            <li><a href="show_uploaded.php"><i class="fa fa-upload"></i> <span>Uploaded Notes</span></a></li>
             <li class="active"><a href="settings.php"><i class="fa fa-cog"></i> <span>Settings</span></a></li>
         </ul>
         <div class="logout">
-            <a href="logout.php"><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a>
+            <a href="logout.php" ><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a>
         </div>
     </aside>
 
@@ -120,7 +131,7 @@ $moderators = $conn->query("SELECT id, name, email FROM users WHERE role='modera
                 <h2>Settings</h2>
             </div>
             <div class="topbar-right">
-                <span class="role">Admin</span>
+                <span class="role"><?php echo $role ?></span>
                 <a href="logout.php" class="btn btn-danger">Logout</a>
             </div>
         </header>
@@ -154,6 +165,7 @@ $moderators = $conn->query("SELECT id, name, email FROM users WHERE role='modera
         </section>
 
         <!-- Demote Moderators Section -->
+    <?php if ($role === 'admin') { ?>
         <section class="settings-section">
             <h3>🧑‍⚖️ Demote Moderator</h3>
             <?php if (!empty($modMessage)) echo "<div class='success'>$modMessage</div>"; ?>
@@ -181,6 +193,7 @@ $moderators = $conn->query("SELECT id, name, email FROM users WHERE role='modera
                 </table>
             <?php } ?>
         </section>
+    <?php } ?>
     </main>
 </body>
 </html>

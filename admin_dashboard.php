@@ -2,13 +2,15 @@
 session_start();
 include("includes/db.php");
 
-// Security: only admin allowed
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+// Security: only admin or moderator allowed
+if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'moderator'])) {
     header("Location: index.php#login");
     exit();
 }
 
-// Example queries
+$role = $_SESSION['role'];
+
+// queries
 $pendingCount = $conn->query("SELECT COUNT(*) as c FROM notes WHERE status='pending'")
                      ->fetch_assoc()['c'];
 
@@ -34,7 +36,7 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard - StudyHub</title>
+    <title><?php echo ucfirst($role); ?> Dashboard - StudyHub</title>
     <link rel="stylesheet" href="assets/css/admin_dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -49,9 +51,19 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
         <ul class="nav">
             <li class="active"><a href="admin_dashboard.php"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
             <li><a href="pending_notes.php"><i class="fa fa-file"></i> <span>Notes</span></a></li>
-            <li><a href="manage_users.php"><i class="fa fa-users"></i> <span>Users</span></a></li>
+
+            <?php if ($role === 'admin') { ?>
+                <li><a href="manage_users.php"><i class="fa fa-users"></i> <span>Users</span></a></li>
+            <?php } ?>
+
             <li><a href="trending_subjects.php"><i class="fa fa-chart-bar"></i> <span>Analytics</span></a></li>
-            <li><a href="#"><i class="fa fa-file-alt"></i> <span>Reports</span></a></li>
+
+            <?php if ($role === 'admin') { ?>
+                <li><a href="#"><i class="fa fa-file-alt"></i> <span>Reports</span></a></li>
+            <?php } ?>
+
+            <li><a href="home.php"><i class="fa fa-book"></i> <span>Browse Notes</span></a></li>
+            <li><a href="show_uploaded.php"><i class="fa fa-upload"></i> <span>Uploaded Notes</span></a></li>
             <li><a href="settings.php"><i class="fa fa-cog"></i> <span>Settings</span></a></li>
         </ul>
         <div class="logout">
@@ -70,7 +82,7 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
                 <h2>Welcome back, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h2>
             </div>
             <div class="topbar-right">
-                <span class="role">Admin</span>
+                <span class="role"><?php echo ucfirst($role); ?></span>
                 <a href="logout.php" class="btn btn-danger">Logout</a>
             </div>
         </header>
@@ -82,26 +94,33 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
                 <p class="metric"><?php echo $pendingCount; ?></p>
                 <a href="pending_notes.php">View Details</a>
             </div>
-            <div class="card">
-                <h3>👥 Total Users</h3>
-                <p class="metric"><?php echo $userCount; ?></p>
-                <a href="manage_users.php">View Details</a>
-            </div>
+
+            <?php if ($role === 'admin') { ?>
+                <div class="card">
+                    <h3>👥 Total Users</h3>
+                    <p class="metric"><?php echo $userCount; ?></p>
+                    <a href="manage_users.php">View Details</a>
+                </div>
+            <?php } ?>
+
             <div class="card">
                 <h3>📚 Trending Courses</h3>
                 <p class="metric"><?php echo count($trendingSubjects); ?> Courses</p>
                 <a href="trending_subjects.php">View Details</a> 
             </div>
-            <div class="card">
-                <h3>🔥 Active Users</h3>
-                <p class="metric"><?php echo count($activeUsers); ?> Users</p>
-                <a href="active_users.php">View Details</a>
-            </div>
-            <div class="card">
-                <h3>📑 Reports</h3>
-                <p class="metric">Generate</p>
-                <a href="#">View Details</a>
-            </div>
+
+            <?php if ($role === 'admin') { ?>
+                <div class="card">
+                    <h3>🔥 Active Users</h3>
+                    <p class="metric"><?php echo count($activeUsers); ?> Users</p>
+                    <a href="active_users.php">View Details</a>
+                </div>
+                <div class="card">
+                    <h3>📑 Reports</h3>
+                    <p class="metric">Generate</p>
+                    <a href="#">View Details</a>
+                </div>
+            <?php } ?>
         </section>
     </main>
 

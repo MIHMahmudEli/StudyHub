@@ -31,10 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['points']    = $row['points'];
 
             // Redirect based on role
-            if ($row['role'] === 'admin') {
+            if ($row['role'] === 'admin' || $row['role'] === 'moderator') {
                 header("Location: admin_dashboard.php");
-            } elseif ($row['role'] === 'moderator') {
-                header("Location: moderator_dashboard.php");
             } else {
                 header("Location: home.php"); // normal student/user dashboard
             }

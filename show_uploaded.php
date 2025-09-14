@@ -7,6 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: index.php#login");
     exit();
 }
+$role = $_SESSION['role'];
 
 $userId = intval($_SESSION['user_id']);
 $message = "";
@@ -64,6 +65,34 @@ $notes = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 <body>
     <!-- Sidebar -->
     <aside class="sidebar">
+        <!-- Admin/Moderator Sidebar -->
+        <?php if (in_array($_SESSION['role'], ['admin', 'moderator'])) { ?>
+        <div class="logo">
+            <i class="fa fa-graduation-cap"></i> <span>StudyHub</span>
+        </div>
+        <ul class="nav">
+            <li><a href="admin_dashboard.php"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
+            <li><a href="pending_notes.php"><i class="fa fa-file"></i> <span>Notes</span></a></li>
+
+            <?php if ($role === 'admin') { ?>
+                <li><a href="manage_users.php"><i class="fa fa-users"></i> <span>Users</span></a></li>
+            <?php } ?>
+
+            <li><a href="trending_subjects.php"><i class="fa fa-chart-bar"></i> <span>Analytics</span></a></li>
+
+            <?php if ($role === 'admin') { ?>
+                <li><a href="#"><i class="fa fa-file-alt"></i> <span>Reports</span></a></li>
+            <?php } ?>
+
+            <li><a href="home.php"><i class="fa fa-book"></i> <span>Browse Notes</span></a></li>
+            <li class="active"><a href="show_uploaded.php"><i class="fa fa-upload"></i> <span>Uploaded Notes</span></a></li>
+            <li><a href="settings.php"><i class="fa fa-cog"></i> <span>Settings</span></a></li>
+        </ul>
+        <div class="logout">
+            <a href="logout.php" ><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a>
+        </div>
+        <?php } else { ?>
+        <!-- Student Sidebar -->
         <div class="logo">
             <i class="fa fa-graduation-cap"></i> <span>StudyHub</span>
         </div>
@@ -78,6 +107,7 @@ $notes = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         <div class="logout">
             <a href="logout.php"><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a>
         </div>
+        <?php } ?>
     </aside>
 
     <!-- Main Content -->

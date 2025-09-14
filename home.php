@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 $isModerator = isset($_SESSION['role']) && $_SESSION['role'] === 'moderator';
 $userId = intval($_SESSION['user_id']);
+$role = $_SESSION['role'];
 
 // Handle search or bookmark filter
 $searchTerm = '';
@@ -74,9 +75,17 @@ $result = mysqli_query($conn, $query);
                 <input type="hidden" name="bookmarks" value="1">
             <?php endif; ?>
         </form>
-        <a href="user_dashboard.php">
-            👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
-        </a>
+        
+        <?php if ($role === 'student') { ?>
+            <a href="user_dashboard.php">
+                👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
+            </a>
+        <?php } elseif ($role === 'admin' || $role === 'moderator') { ?>
+            <a href="admin_dashboard.php">
+                👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
+            </a>
+        <?php } ?>
+
         <p>⭐ <?php echo isset($_SESSION['points']) ? intval($_SESSION['points']) : 0; ?> pts</p>
     </section>
 </header>
@@ -87,7 +96,7 @@ $result = mysqli_query($conn, $query);
             <?php while ($row = mysqli_fetch_assoc($result)): ?>
                 <div class="note-card">
                     <!-- Clickable content area -->
-                    <a href="preview_note.php?id=<?php echo $row['id']; ?>" class="note-content">
+                    <a href="preview_note.php?id=<?php echo $row['id']; ?>&track=true" class="note-content">
                         <div class="note-file">
                             <?php 
                             $type = strtolower($row['file_type']);
