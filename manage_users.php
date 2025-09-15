@@ -71,7 +71,9 @@ $users = $conn->query("SELECT id, name, email, role, points, created_at FROM use
             </div>
             <div class="topbar-right">
                 <span class="role">Admin</span>
-                <a href="logout.php" class="btn btn-danger">Logout</a>
+                <a href="admin_dashboard.php" class="btn btn-primary">
+                    <i class="fa fa-arrow-left"></i> Back
+                </a>
             </div>
         </header>
 
