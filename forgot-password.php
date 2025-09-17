@@ -18,10 +18,12 @@ session_start();
 
     <!-- Show success/error messages -->
     <?php if(isset($_SESSION['fp_error'])): ?>
-        <div class="form-message error-msg"><?= $_SESSION['fp_error']; unset($_SESSION['fp_error']); ?></div>
+        <div class="form-message error-msg"><?= $_SESSION['fp_error']; 
+        unset($_SESSION['fp_error']); ?></div>
     <?php endif; ?>
     <?php if(isset($_SESSION['fp_success'])): ?>
-        <div class="form-message success-msg"><?= $_SESSION['fp_success']; unset($_SESSION['fp_success']); ?></div>
+        <div class="form-message success-msg"><?= $_SESSION['fp_success']; 
+        unset($_SESSION['fp_success']); ?></div>
     <?php endif; ?>
 
     <!-- Step 1: Confirm Email -->

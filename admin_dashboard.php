@@ -82,7 +82,7 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
                 <h2>Welcome back, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h2>
             </div>
             <div class="topbar-right">
-                <span class="role"><?php echo ucfirst($role); ?></span>
+                <span class="role"><?php echo $role; ?></span>
                 <a href="logout.php" class="btn btn-danger">Logout</a>
             </div>
         </header>

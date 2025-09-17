@@ -25,7 +25,7 @@ $users = $conn->query("
     <title>Active Users - Admin</title>
     <link rel="stylesheet" href="assets/css/admin_dashboard.css"> <!-- sidebar/topbar -->
     <link rel="stylesheet" href="assets/css/manage_users.css"> <!-- buttons + table style -->
-    <link rel="stylesheet" href="assets/css/trending_subjects.css"> <!-- nice table styling -->
+    <link rel="stylesheet" href="assets/css/trending_subjects.css"> <!-- new table styling -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>

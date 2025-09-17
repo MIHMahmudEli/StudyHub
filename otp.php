@@ -26,7 +26,7 @@ if(isset($_POST['verify'])){
         if($stmt->execute()){
             unset($_SESSION['reg_form_data']);
             unset($_SESSION['otp']);
-            $message = "Email verified and registration successful! You can now <a href='index.php'>Login</a>.";
+            header("Location: index.php#login");
         } else {
             $message = "Database error. Please try again.";
         }

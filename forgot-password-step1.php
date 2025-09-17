@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             exit();
         }
     } else {
-        $_SESSION['fp_error'] = "Email not found!";
+        $_SESSION['fp_error'] = "No account found! Please check your email or sign up.";
         header("Location: forgot-password.php");
         exit();
     }
