@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const confirmPassword = confirmPasswordInput.value.trim();
 
         if(!validatePassword(password)){
-            formMessage.textContent = "Password must be at least 6 characters, include uppercase, lowercase, number, and special character.";
+            formMessage.textContent = "Password must be at least 8 characters, include uppercase, lowercase, number, and special character.";
             formMessage.className = "form-message error-msg"; 
             formMessage.style.display = "block";
             return;

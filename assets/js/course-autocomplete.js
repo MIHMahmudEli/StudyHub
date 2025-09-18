@@ -3,6 +3,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const courseCodeInput = document.getElementById("course-code");
     const suggestionsBox = document.getElementById("suggestions");
 
+    let courses = [];
+
+    // Load courses.json using  AJAX
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "assets/data/courses.json", true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            try {
+                courses = JSON.parse(xhr.responseText);
+            } catch (e) {
+                console.error("Error parsing courses.json:", e);
+            }
+        }
+    };
+    xhr.send();
+
     subjectInput.addEventListener("input", function () {
         const query = this.value.toLowerCase();
         suggestionsBox.innerHTML = "";

@@ -1,9 +1,12 @@
 // Toggle action buttons for user management
 function toggleActions(row) {
-    let next = row.nextElementSibling;
-    if (next && next.classList.contains("action-row")) {
+    var next = row.nextElementSibling;
+    if (next && next.className.indexOf("action-row") !== -1) {
         // Toggle
-        next.style.display = (next.style.display === "table-row") ? "none" : "table-row";
+        if (next.style.display === "table-row") {
+            next.style.display = "none";
+        } else {
+            next.style.display = "table-row";
+        }
     }
 }
-

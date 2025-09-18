@@ -14,8 +14,8 @@ if (!isset($_GET['id'])) {
 $noteId = intval($_GET['id']);
 $userId = $_SESSION['user_id'];
 
-// Get file info
-$query = "SELECT id, file_path, title FROM notes WHERE id = ? AND status = 'approved'";
+// Get file info + uploader
+$query = "SELECT id, file_path, title, uploader_id FROM notes WHERE id = ? AND status = 'approved'";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $noteId);
 $stmt->execute();
@@ -27,6 +27,7 @@ if ($result->num_rows === 0) {
 
 $note = $result->fetch_assoc();
 $file = $note['file_path'];
+$uploaderId = $note['uploader_id'];
 
 // 1. Update downloads count
 $update = $conn->prepare("UPDATE notes SET downloads = downloads + 1 WHERE id = ?");
@@ -38,12 +39,21 @@ $event = $conn->prepare("INSERT INTO events (user_id, note_id, type) VALUES (?, 
 $event->bind_param("ii", $userId, $noteId);
 $event->execute();
 
-// 3. Award points (+5 per download)
+// 3. Award points to downloader (+5 per download)
 $points = $conn->prepare("UPDATE users SET points = points + 5 WHERE id = ?");
 $points->bind_param("i", $userId);
 $points->execute();
 
-// 4. Download file
+// 4. Award points to uploader (+5 when their note is downloaded)
+if ($uploaderId && $uploaderId != $userId) { 
+    // prevent giving points twice if uploader downloads their own file
+    $ownerPoints = $conn->prepare("UPDATE users SET points = points + 5 WHERE id = ?");
+    $ownerPoints->bind_param("i", $uploaderId);
+    $ownerPoints->execute();
+    $ownerPoints->close();
+}
+
+// 5. Download file
 if (file_exists($file)) {
     header('Content-Description: File Transfer');
     header('Content-Type: application/octet-stream');
