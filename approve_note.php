@@ -24,7 +24,7 @@ if (isset($_GET['id'])) {
         $q->close();
 
         if ($uploaderId) {
-            //  Award +5 points to uploader
+            //  Award +10 points to uploader
             $p = $conn->prepare("UPDATE users SET points = points + 10 WHERE id=?");
             $p->bind_param("i", $uploaderId);
             $p->execute();
