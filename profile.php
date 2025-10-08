@@ -4,7 +4,7 @@ include("includes/db.php");
 
 // Security: must be logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php#login");
+    header("Location: main_index.php#login");
     exit();
 }
 

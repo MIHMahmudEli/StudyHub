@@ -4,7 +4,7 @@ include("includes/db.php");
 
 // Security: only logged-in students allowed
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
-    header("Location: index.php#login");
+    header("Location: main_index.php#login");
     exit();
 }
 

@@ -99,7 +99,7 @@ session_start();
 
         <div class="input-group">
             <i class="fa fa-lock icon-left"></i>
-            <input type="password" name="confirmPassword" placeholder="Confirm Password" id="confirmPassword" required>
+            <input type="password" name="confirm_password" placeholder="Confirm Password" id="confirmPassword" required>
             <i class="fa fa-eye toggle-password"></i>
         </div>
 

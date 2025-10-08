@@ -4,7 +4,7 @@ include("includes/db.php");
 
 // Security: only admin or moderator allowed
 if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'moderator'])) {
-    header("Location: index.php#login");
+    header("Location: main_index.php#login");
     exit();
 }
 

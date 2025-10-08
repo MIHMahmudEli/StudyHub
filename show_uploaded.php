@@ -4,7 +4,7 @@ include("includes/db.php");
 
 // Ensure user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php#login");
+    header("Location: main_index.php#login");
     exit();
 }
 $role = $_SESSION['role'];

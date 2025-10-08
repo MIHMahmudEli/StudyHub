@@ -3,7 +3,7 @@ session_start();
 include("includes/db.php");
 
 if(!isset($_SESSION['reg_form_data']) || !isset($_SESSION['otp'])){
-    header("Location: index.php");
+    header("Location: main_index.php");
     exit();
 }
 
@@ -26,7 +26,7 @@ if(isset($_POST['verify'])){
         if($stmt->execute()){
             unset($_SESSION['reg_form_data']);
             unset($_SESSION['otp']);
-            header("Location: index.php#login");
+            header("Location: main_index.php#login");
         } else {
             $message = "Database error. Please try again.";
         }
@@ -60,7 +60,7 @@ if(isset($_POST['verify'])){
                 <input type="text" name="otp" placeholder="Enter OTP" required maxlength="6">
                 <button type="submit" name="verify">Verify OTP</button>
             </form>
-            <p class="note">Didn't receive the code? Check your spam or <a href="index.php#register">register again</a>.</p>
+            <p class="note">Didn't receive the code? Check your spam or <a href="main_index.php#register">register again</a>.</p>
         </div>
     </div>
 </body>

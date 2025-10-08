@@ -4,7 +4,7 @@ include("includes/db.php"); // DB connection
 
 // Make sure the user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php");
+    header("Location: main_index.php#login");
     exit;
 }
 

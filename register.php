@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check passwords
     if ($password !== $confirmPassword) {
         $_SESSION['reg_error'] = "Passwords do not match.";
-        header("Location: index.php#register");
+        header("Location: main_index.php#register");
         exit();
     }
 
@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Email exists
         $_SESSION['reg_error'] = "This email is already registered. Please use another email.";
         $stmt->close();
-        header("Location: index.php#register");
+        header("Location: main_index.php#register");
         exit();
     }
     $stmt->close();
@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     } else {
         $_SESSION['reg_error'] = "Failed to send OTP email. Please try again.";
-        header("Location: index.php#register");
+        header("Location: main_index.php#register");
         exit();
     }
 

@@ -4,7 +4,7 @@ include("includes/db.php");
 
 // Security: only admin
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: index.php#login");
+    header("Location: main_index.php#login");
     exit();
 }
 

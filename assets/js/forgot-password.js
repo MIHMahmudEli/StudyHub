@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Cancel buttons → back to login
-    backToLogin.addEventListener("click", () => window.location.href = "index.php");
-    cancelReset.addEventListener("click", () => window.location.href = "index.php");
+    backToLogin.addEventListener("click", () => window.location.href = "main_index.php");
+    cancelReset.addEventListener("click", () => window.location.href = "main_index.php");
 
     // Resend OTP
     resendCode.addEventListener("click", () => {

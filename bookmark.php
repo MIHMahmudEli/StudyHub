@@ -4,7 +4,7 @@ include("includes/db.php");
 
 if (!isset($_SESSION['user_id'])) {
     http_response_code(403);
-    echo "Login required";
+    header("Location: main_index.php#login");
     exit;
 }
 

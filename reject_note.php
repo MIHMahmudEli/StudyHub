@@ -3,7 +3,7 @@ session_start();
 include("includes/db.php");
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: index.php#login");
+    header("Location: main_index.php#login");
     exit();
 }
 

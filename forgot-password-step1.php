@@ -4,7 +4,8 @@ include("includes/db.php");
 include("mailer.php"); 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = htnmlspecialchars(trim($_POST['email']));
+    $email = HTMLspecialchars(trim($_POST['email']));
+
 
     $stmt = $conn->prepare("SELECT id, name FROM users WHERE email=?");
     $stmt->bind_param("s", $email);
