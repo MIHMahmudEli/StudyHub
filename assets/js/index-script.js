@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const registerPassword = document.getElementById('registerPassword');
     const confirmPassword = document.getElementById('confirmPassword');
     const errorMessage = document.querySelector('#registerForm .error-message');
+    const registerSubmit = document.getElementById('registerSubmit');
+    const passwordRulesBox = document.getElementById('passwordRules');
 
     // ---------- Show form based on URL hash ----------
     if (window.location.hash === '#register') {
@@ -24,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
             registerForm.classList.toggle('active');
             errorMessage.textContent = "";
             errorMessage.style.display = "none";
-
             window.location.hash = registerForm.classList.contains('active') ? 'register' : '';
         });
     });
@@ -43,45 +44,62 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ---------- Password validation ----------
-    function validatePassword(password) {
-        if (!/.{8,}/.test(password)) return "Password must be at least 8 characters long.";
-        if (!/[A-Z]/.test(password)) return "Password must contain at least 1 uppercase letter.";
-        if (!/[a-z]/.test(password)) return "Password must contain at least 1 lowercase letter.";
-        if (!/[0-9]/.test(password)) return "Password must contain at least 1 number.";
-        if (!/[@$!%*?&#]/.test(password)) return "Password must contain at least 1 special character (@$!%*?&#).";
-        return "";
+    // ---------- Show/hide password rules ----------
+    const allInputs = registerForm.querySelectorAll('input');
+
+    registerPassword.addEventListener('focus', () => {
+        passwordRulesBox.classList.add('show');
+    });
+
+    allInputs.forEach(input => {
+        if (input !== registerPassword) {
+            input.addEventListener('focus', () => {
+                passwordRulesBox.classList.remove('show');
+            });
+        }
+    });
+
+    // ---------- Password rules ----------
+    const rules = {
+        length: document.getElementById('rule-length'),
+        uppercase: document.getElementById('rule-uppercase'),
+        lowercase: document.getElementById('rule-lowercase'),
+        number: document.getElementById('rule-number'),
+        special: document.getElementById('rule-special')
+    };
+
+    function allRulesValid() {
+        return Object.values(rules).every(rule => rule.classList.contains('valid')) &&
+               registerPassword.value === confirmPassword.value;
     }
 
-    // ---------- Live confirm password check ----------
+    // ---------- Live password validation ----------
+    registerPassword.addEventListener('input', () => {
+        const val = registerPassword.value;
+        rules.length.classList.toggle('valid', /.{8,}/.test(val));
+        rules.uppercase.classList.toggle('valid', /[A-Z]/.test(val));
+        rules.lowercase.classList.toggle('valid', /[a-z]/.test(val));
+        rules.number.classList.toggle('valid', /[0-9]/.test(val));
+        rules.special.classList.toggle('valid', /[@$!%*?&#]/.test(val));
+
+        registerSubmit.disabled = !allRulesValid();
+    });
+
+    // ---------- Confirm password validation ----------
     confirmPassword.addEventListener('input', () => {
         if (confirmPassword.value !== registerPassword.value) {
             showError("Passwords do not match!");
         } else {
             hideError();
         }
-    });
-
-    // ---------- Live password validation ----------
-    registerPassword.addEventListener('input', () => {
-        const message = validatePassword(registerPassword.value);
-
-        if (message) {
-            showError(message);
-        } else if (confirmPassword.value && confirmPassword.value !== registerPassword.value) {
-            showError("Passwords do not match!");
-        } else {
-            hideError();
-        }
+        registerSubmit.disabled = !allRulesValid();
     });
 
     // ---------- Form submit check ----------
     registerForm.addEventListener('submit', (e) => {
-        const message = validatePassword(registerPassword.value);
-
-        if (message || confirmPassword.value !== registerPassword.value) {
+        if (!allRulesValid()) {
             e.preventDefault();
-            showError(message || "Passwords do not match!");
+            showError("Please fix password rules before submitting.");
         }
     });
 

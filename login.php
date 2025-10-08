@@ -3,8 +3,8 @@ session_start();
 include("includes/db.php"); // connect to database
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = trim($_POST['email']);
-    $password = $_POST['password'];
+    $email = htmlspecialchars(trim($_POST['email']));
+    $password = htmlspecialchars(trim($_POST['password']));
 
     // Prepared statement for security
     $stmt = $conn->prepare("SELECT id, name, password, role, verified, points FROM users WHERE email = ?");

@@ -100,7 +100,7 @@ body {
 .note-preview embed:hover,
 .note-preview iframe:hover,
 .note-preview img:hover {
-    transform: scale(1.02);
+    transform: scale(1.002);
 }
 
 /* Responsive */
@@ -167,6 +167,70 @@ body {
 .no-preview .download-link:hover {
     background: linear-gradient(90deg, #2563eb, #1d4ed8);
     transform: translateY(-2px);
+}
+
+/* rate note css */
+
+.rating-section {
+    margin-top: 30px;
+    padding: 15px;
+    border-top: 1px solid #ddd;
+    background: #f8f8f8;
+    border-radius: 8px;
+}
+
+.rating-section h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #333;
+}
+
+.stars {
+    font-size: 28px;
+    color: #ccc;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.star.filled, .star.hovered {
+    color: #f5b301;
+}
+
+#ratingComment {
+    width: 100%;
+    height: 60px;
+    margin-top: 10px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    resize: none;
+}
+
+#submitRating {
+    margin-top: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#submitRating:hover {
+    background-color: #0056b3;
+}
+
+#ratingMsg {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.avg-rating {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #333;
 }
 
 

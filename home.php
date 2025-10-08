@@ -19,14 +19,17 @@ $query = "";
 
 if (isset($_GET['bookmarks'])) {
     // Show only bookmarked notes
-    $query = "SELECT n.id, n.title, n.subject, n.avg_rating, n.file_type
-              FROM notes n
-              INNER JOIN bookmarks b ON n.id = b.note_id
-              WHERE b.user_id = $userId";
+    $query = "
+        SELECT n.id, n.title, n.subject, n.avg_rating, n.file_type, u.name AS author_name
+        FROM notes n
+        INNER JOIN bookmarks b ON n.id = b.note_id
+        LEFT JOIN users u ON n.uploader_id = u.id
+        WHERE b.user_id = $userId
+    ";
 
     if (isset($_GET['q']) && !empty(trim($_GET['q']))) {
         $searchTerm = mysqli_real_escape_string($conn, trim($_GET['q']));
-        $query .= " AND (n.title LIKE '%$searchTerm%' OR n.subject LIKE '%$searchTerm%')";
+        $query .= " AND (n.title LIKE '%$searchTerm%' OR n.subject LIKE '%$searchTerm%' OR u.name LIKE '%$searchTerm%')";
     }
 
     $query .= " ORDER BY n.created_at DESC";
@@ -34,17 +37,24 @@ if (isset($_GET['bookmarks'])) {
 } elseif (isset($_GET['q']) && !empty(trim($_GET['q']))) {
     // Regular search
     $searchTerm = mysqli_real_escape_string($conn, trim($_GET['q']));
-    $query = "SELECT id, title, subject, avg_rating, file_type 
-              FROM notes 
-              WHERE title LIKE '%$searchTerm%' OR subject LIKE '%$searchTerm%' 
-              ORDER BY created_at DESC";
+    $query = "
+        SELECT n.id, n.title, n.subject, n.avg_rating, n.file_type, u.name AS author_name
+        FROM notes n
+        LEFT JOIN users u ON n.uploader_id = u.id
+        WHERE (n.title LIKE '%$searchTerm%' OR n.subject LIKE '%$searchTerm%' OR u.name LIKE '%$searchTerm%')
+          AND n.status = 'approved'
+        ORDER BY n.created_at DESC
+    ";
 
 } else {
     // Show all approved notes
-    $query = "SELECT id, title, subject, avg_rating, file_type 
-              FROM notes 
-              WHERE status = 'approved'
-              ORDER BY created_at DESC";
+    $query = "
+        SELECT n.id, n.title, n.subject, n.avg_rating, n.file_type, u.name AS author_name
+        FROM notes n
+        LEFT JOIN users u ON n.uploader_id = u.id
+        WHERE n.status = 'approved'
+        ORDER BY n.created_at DESC
+    ";
 }
 
 $result = mysqli_query($conn, $query);
@@ -102,11 +112,12 @@ $result = mysqli_query($conn, $query);
                             $type = strtolower($row['file_type']);
                             if ($type === 'pdf') echo "📘";
                             elseif (in_array($type, ['jpg','jpeg','png'])) echo "🖼️";
-                            else echo "📘";
+                            else echo "📄";
                             ?>
                         </div>
                         <h3 class="note-title"><?php echo htmlspecialchars($row['title']); ?></h3>
                         <p class="note-subject"><?php echo htmlspecialchars($row['subject']); ?></p>
+                        <!-- <p class="note-author"><small><?php echo htmlspecialchars($row['author_name'] ?? 'Unknown'); ?></small></p> -->
                         <div class="note-rating">
                             <?php
                             $rating = round($row['avg_rating']);

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>StudyHub — Learn, Share & Grow Together</title>
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/index_html_style.css" />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12v5l10 5 10-5v-5'/%3E%3C/svg%3E"
+    />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">🎓 StudyHub</div>
+      <nav>
+        <a href="#features">Features</a>
+        <a href="#how">How it Works</a>
+        <a href="#contact">Contact</a>
+        <a href="index.php" class="btn">Login</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-text reveal">
+        <h1>
+          Learn, Share & Grow <br />with <span class="highlight">StudyHub</span>
+        </h1>
+        <p>
+          A collaborative space where students exchange notes, slides, and ideas
+          — empowering peer learning with ease.
+        </p>
+        <div class="hero-buttons">
+          <a href="index.php#register" class="btn">Join Now</a>
+          <a href="#features" class="btn btn-outline">Explore</a>
+        </div>
+      </div>
+
+      <div class="hero-illustration">
+        <div
+          class="bubble"
+          style="width: 120px; height: 120px; top: 20%; left: 10%"
+        ></div>
+        <div
+          class="bubble"
+          style="
+            width: 200px;
+            height: 200px;
+            bottom: 15%;
+            right: 15%;
+            animation-delay: 2s;
+          "
+        ></div>
+        <div
+          class="bubble"
+          style="
+            width: 80px;
+            height: 80px;
+            bottom: 30%;
+            left: 45%;
+            animation-delay: 4s;
+          "
+        ></div>
+      </div>
+    </section>
+
+    <section id="features" class="features reveal">
+      <div class="card">
+        <h3>👩‍🎓 Student</h3>
+        <p>
+          Upload and browse study materials, download resources, rate content,
+          and earn badges for your contributions.
+        </p>
+      </div>
+      <div class="card">
+        <h3>🛡️ Moderator</h3>
+        <p>
+          Ensure content quality by reviewing uploads, flagging duplicates, and
+          maintaining community standards.
+        </p>
+      </div>
+      <div class="card">
+        <h3>👑 Admin</h3>
+        <p>
+          Oversee users, analyze trends, and generate insightful reports to keep
+          StudyHub growing efficiently.
+        </p>
+      </div>
+    </section>
+
+    <section id="how" class="how reveal">
+      <h2>How It Works</h2>
+      <div class="steps">
+        <div class="step">
+          <h3>1️⃣ Sign Up</h3>
+          <p>Register as a student, moderator, or admin.</p>
+        </div>
+        <div class="step">
+          <h3>2️⃣ Share</h3>
+          <p>Upload notes and slides with easy tagging.</p>
+        </div>
+        <div class="step">
+          <h3>3️⃣ Grow</h3>
+          <p>Engage with the community and earn recognition.</p>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div>
+          <div class="counter" data-target="5312">0</div>
+          <div class="label">Notes Shared</div>
+        </div>
+        <div>
+          <div class="counter" data-target="3200">0</div>
+          <div class="label">Active Users</div>
+        </div>
+        <div>
+          <div class="counter" data-target="4.8">0</div>
+          <div class="label">Average Rating</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="contact reveal">
+      <h2>Contact Us</h2>
+      <p>Get in touch with us through any of the following channels</p>
+
+      <div class="contact-icons">
+        <a href="mailto:mihmahmud1002@gmail.com" class="contact-item">
+          <i class="fa fa-envelope"></i>
+          <span>Email</span>
+        </a>
+        <a href="tel:+8801716099707" class="contact-item">
+          <i class="fa fa-phone"></i>
+          <span>Call</span>
+        </a>
+        <a
+          href="https://www.facebook.com/mihmahmudali"
+          target="_blank"
+          class="contact-item"
+        >
+          <i class="fab fa-facebook"></i>
+          <span>Facebook</span>
+        </a>
+        <a
+          href="https://www.instagram.com/mihmahmudeli1002"
+          target="_blank"
+          class="contact-item"
+        >
+          <i class="fab fa-instagram"></i>
+          <span>Instagram</span>
+        </a>
+      </div>
+    </section>
+
+    <footer class="reveal">
+      <p>
+        © <span id="year"></span> StudyHub. Built for collaborative learning.
+      </p>
+    </footer>
+
+    <button id="topBtn">↑</button>
+
+    <!-- JS -->
+    <script src="assets/js/index_html_script.js"></script>
+  </body>
+</html>

@@ -70,7 +70,7 @@ function getTitleIcon($rank, $points) {
             <button type="submit">Search</button>
         </form>
 
-        <a href="profile.php">
+        <a href="user_dashboard.php">
             👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
         </a>
         <p>⭐ <?php echo isset($_SESSION['points']) ? intval($_SESSION['points']) : 0; ?> pts</p>
