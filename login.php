@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Check if email is verified
         if ($row['verified'] == 0) {
             $_SESSION['error'] = "⚠ Please verify your email before logging in. Check your inbox.";
-            header("Location: index.php#login");
+            header("Location: main_index.php#login");
             exit();
         }
 
@@ -39,12 +39,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         } else {
                     $_SESSION['error'] = "Invalid email or password.";
-                    header("Location: index.php#login");
+                    header("Location: main_index.php#login");
                     exit();
                 }
     } else {
         $_SESSION['error'] = "Invalid email or password.";
-        header("Location: index.php#login");
+        header("Location: main_index.php#login");
         exit();
     }
 }
