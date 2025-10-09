@@ -4,7 +4,7 @@ include("includes/db.php");
 
 // Only admin can access
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: main_index.php");
+    header("Location: main_index.php#login");
     exit();
 }
 
@@ -23,9 +23,9 @@ $users = $conn->query("
 <head>
     <meta charset="UTF-8">
     <title>Active Users - Admin</title>
-    <link rel="stylesheet" href="assets/css/admin_dashboard.css"> <!-- sidebar/topbar -->
-    <link rel="stylesheet" href="assets/css/manage_users.css"> <!-- buttons + table style -->
-    <link rel="stylesheet" href="assets/css/trending_subjects.css"> <!-- new table styling -->
+    <link rel="stylesheet" href="assets/css/admin_dashboard.css">
+    <link rel="stylesheet" href="assets/css/manage_users.css">
+    <link rel="stylesheet" href="assets/css/trending_subjects.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
@@ -39,7 +39,7 @@ $users = $conn->query("
             <li><a href="admin_dashboard.php"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
             <li><a href="pending_notes.php"><i class="fa fa-file"></i> <span>Notes</span></a></li>
             <li><a href="manage_users.php"><i class="fa fa-users"></i> <span>Users</span></a></li>
-            <li class="active"><i class="fa fa-chart-bar"></i> <span>Analytics</span></a></li>
+            <li class="active"><i class="fa fa-chart-bar"></i> <span>Analytics</span></li>
             <li><a href="#"><i class="fa fa-file-alt"></i> <span>Reports</span></a></li>
             <li><a href="home.php"><i class="fa fa-book"></i> <span>Browse Notes</span></a></li>
             <li><a href="show_uploaded.php"><i class="fa fa-upload"></i> <span>Uploaded Notes</span></a></li>
@@ -91,7 +91,16 @@ $users = $conn->query("
                                 <td><?php echo htmlspecialchars($u['email']); ?></td>
                                 <td><?php echo $u['role']; ?></td>
                                 <td><?php echo $u['activity']; ?></td>
-                                <td><?php echo $u['last_active'] ?: 'N/A'; ?></td>
+                                <td>
+                                    <?php 
+                                    if ($u['last_active']) {
+                                        // Convert TIMESTAMP to 12-hour AM/PM format
+                                        echo date('Y-m-d h:i:s A', strtotime($u['last_active']));
+                                    } else {
+                                        echo 'N/A';
+                                    }
+                                    ?>
+                                </td>
                             </tr>
                             <?php endwhile; ?>
                         <?php else: ?>

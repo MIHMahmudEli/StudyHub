@@ -48,10 +48,16 @@ if (isset($_POST['upload'])) {
                         $message = "✅ Note uploaded successfully!";
 
                         // upload event
+                        date_default_timezone_set('Asia/Dhaka');
+                        $timestamp = date('Y-m-d h:i:s'); // e.g., 2025-10-09 03:45:12 PM
                         $type = 'upload';
-                        $event = $conn->prepare("INSERT INTO events (user_id, `type`) VALUES (?, ?)");
-                        $event->bind_param("is", $_SESSION['user_id'], $type);
+                        $event = $conn->prepare("INSERT INTO events (user_id, `type`, `at`)  VALUES (?, ?, ?) ");
+                        $event->bind_param("iss", $_SESSION['user_id'], $type, $timestamp);
                         $event->execute();
+
+                        if ($event->error) {
+                        die("Execute failed: " . $event->error);
+                        }
                         
                     } else {
                         $message = "❌ Database error: " . $stmt->error;

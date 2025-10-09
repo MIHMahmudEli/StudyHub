@@ -35,9 +35,19 @@ $update->bind_param("i", $noteId);
 $update->execute();
 
 // 2. Log event
-$event = $conn->prepare("INSERT INTO events (user_id, note_id, type) VALUES (?, ?, 'download')");
-$event->bind_param("ii", $userId, $noteId);
-$event->execute();
+    // Always use UTC time to avoid timezone mismatch
+    date_default_timezone_set('Asia/Dhaka');
+    $timestamp = date('Y-m-d h:i:s');
+    $eventType = 'download';
+
+    $event = $conn->prepare("INSERT INTO events (user_id, note_id, `type`, `at`)  VALUES (?, ?, ?, ?) ");
+    $event->bind_param("iiss", $userId, $noteId, $eventType, $timestamp);
+    $event->execute();
+
+    if ($event->error) {
+    die("Execute failed: " . $event->error);
+    }
+
 
 // 3. Award points to downloader (+1 per download)
 $points = $conn->prepare("UPDATE users SET points = points + 1 WHERE id = ?");

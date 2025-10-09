@@ -30,11 +30,6 @@ if (isset($_GET['id'])) {
             $p->execute();
             $p->close();
 
-            // upload event
-            $type = 'upload';
-            $event = $conn->prepare("INSERT INTO events (user_id, `type`) VALUES (?, ?)");
-            $event->bind_param("is", $_SESSION['user_id'], $type);
-            $event->execute();
         }
     }
     $stmt->close();
