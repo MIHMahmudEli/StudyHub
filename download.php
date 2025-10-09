@@ -39,15 +39,15 @@ $event = $conn->prepare("INSERT INTO events (user_id, note_id, type) VALUES (?, 
 $event->bind_param("ii", $userId, $noteId);
 $event->execute();
 
-// 3. Award points to downloader (+5 per download)
-$points = $conn->prepare("UPDATE users SET points = points + 5 WHERE id = ?");
+// 3. Award points to downloader (+1 per download)
+$points = $conn->prepare("UPDATE users SET points = points + 1 WHERE id = ?");
 $points->bind_param("i", $userId);
 $points->execute();
 
-// 4. Award points to uploader (+5 when their note is downloaded)
+// 4. Award points to uploader (+2 when their note is downloaded)
 if ($uploaderId && $uploaderId != $userId) { 
     // prevent giving points twice if uploader downloads their own file
-    $ownerPoints = $conn->prepare("UPDATE users SET points = points + 5 WHERE id = ?");
+    $ownerPoints = $conn->prepare("UPDATE users SET points = points + 2 WHERE id = ?");
     $ownerPoints->bind_param("i", $uploaderId);
     $ownerPoints->execute();
     $ownerPoints->close();

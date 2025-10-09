@@ -24,11 +24,17 @@ if (isset($_GET['id'])) {
         $q->close();
 
         if ($uploaderId) {
-            //  Award +10 points to uploader
-            $p = $conn->prepare("UPDATE users SET points = points + 10 WHERE id=?");
+            //  Award +5 points to uploader
+            $p = $conn->prepare("UPDATE users SET points = points + 5 WHERE id=?");
             $p->bind_param("i", $uploaderId);
             $p->execute();
             $p->close();
+
+            // upload event
+            $type = 'upload';
+            $event = $conn->prepare("INSERT INTO events (user_id, `type`) VALUES (?, ?)");
+            $event->bind_param("is", $_SESSION['user_id'], $type);
+            $event->execute();
         }
     }
     $stmt->close();

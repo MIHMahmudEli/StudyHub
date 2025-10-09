@@ -46,6 +46,13 @@ if (isset($_POST['upload'])) {
 
                     if ($stmt->execute()) {
                         $message = "✅ Note uploaded successfully!";
+
+                        // upload event
+                        $type = 'upload';
+                        $event = $conn->prepare("INSERT INTO events (user_id, `type`) VALUES (?, ?)");
+                        $event->bind_param("is", $_SESSION['user_id'], $type);
+                        $event->execute();
+                        
                     } else {
                         $message = "❌ Database error: " . $stmt->error;
                     }

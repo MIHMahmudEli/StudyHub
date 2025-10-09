@@ -30,6 +30,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_name'] = $row['name'];
             $_SESSION['points']    = $row['points'];
 
+            // 2. Login event
+            $type = 'view';
+            $event = $conn->prepare("INSERT INTO events (user_id, `type`) VALUES (?, ?)");
+            $event->bind_param("is", $_SESSION['user_id'], $type);
+            $event->execute();
+
+
             // Redirect based on role
             if ($row['role'] === 'admin' || $row['role'] === 'moderator') {
                 header("Location: admin_dashboard.php");
