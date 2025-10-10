@@ -9,8 +9,12 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $userId = intval($_SESSION['user_id']);
-$message = "";
-$error = "";
+
+// Separate messages for each form
+$profile_message = "";
+$profile_error = "";
+$password_message = "";
+$password_error = "";
 
 // --- Fetch current user info ---
 $stmt = $conn->prepare("SELECT name, email, role, points, password FROM users WHERE id=?");
@@ -30,9 +34,9 @@ if (isset($_POST['update_profile'])) {
         $_SESSION['user_name'] = $new_name;
         $user['name'] = $new_name;
 
-        $message = "Profile updated successfully!";
+        $profile_message = "✅ Profile updated successfully!";
     } else {
-        $error = "Name cannot be empty.";
+        $profile_error = "❌ Name cannot be empty.";
     }
 }
 
@@ -43,21 +47,32 @@ if (isset($_POST['update_password'])) {
     $confirm_pass = trim($_POST['confirm_password']);
 
     if (empty($new_pass) || empty($confirm_pass)) {
-        $error = "Please enter and confirm your new password.";
+        $password_error = "❌ Please enter and confirm your new password.";
     } elseif ($new_pass !== $confirm_pass) {
-        $error = "New password and confirm password do not match.";
+        $password_error = "❌ New password and confirm password do not match.";
     } else {
-        // Validate password strength
-        if (!preg_match("/.{8,}/", $new_pass)) {
-            $error = "Password must be at least 8 characters long.";
-        } elseif (!preg_match("/[A-Z]/", $new_pass)) {
-            $error = "Password must contain at least 1 uppercase letter.";
-        } elseif (!preg_match("/[a-z]/", $new_pass)) {
-            $error = "Password must contain at least 1 lowercase letter.";
-        } elseif (!preg_match("/[0-9]/", $new_pass)) {
-            $error = "Password must contain at least 1 number.";
-        } elseif (!preg_match("/[@$!%*?&#]/", $new_pass)) {
-            $error = "Password must contain at least 1 special character (@$!%*?&#).";
+        // Collect all validation errors
+        $errors = [];
+
+        if (strlen($new_pass) < 8) {
+            $errors[] = "❌ Password must be at least 8 characters long.";
+        }
+        if (!preg_match("/[A-Z]/", $new_pass)) {
+            $errors[] = "❌ Password must contain at least 1 uppercase letter.";
+        }
+        if (!preg_match("/[a-z]/", $new_pass)) {
+            $errors[] = "❌ Password must contain at least 1 lowercase letter.";
+        }
+        if (!preg_match("/[0-9]/", $new_pass)) {
+            $errors[] = "❌ Password must contain at least 1 number.";
+        }
+        if (!preg_match("/[@$!%*?&#]/", $new_pass)) {
+            $errors[] = "❌ Password must contain at least 1 special character (@$!%*?&#).";
+        }
+
+        if (!empty($errors)) {
+            // Join all validation messages
+            $password_error = implode("<br>", $errors);
         } else {
             // Verify current password
             if (password_verify($current_pass, $user['password'])) {
@@ -65,9 +80,9 @@ if (isset($_POST['update_password'])) {
                 $stmt = $conn->prepare("UPDATE users SET password=? WHERE id=?");
                 $stmt->bind_param("si", $hashed, $userId);
                 $stmt->execute();
-                $message = "Password updated successfully!";
+                $password_message = "✅ Password updated successfully!";
             } else {
-                $error = "Current password is incorrect.";
+                $password_error = "❌ Current password is incorrect.";
             }
         }
     }
@@ -118,15 +133,14 @@ if (isset($_POST['update_password'])) {
             </div>
         </header>
 
-
         <!-- Page Content -->
         <div class="profile-container">
-            <!-- Messages -->
-            <?php if (!empty($message)) echo "<p class='success'>$message</p>"; ?>
-            <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
 
             <!-- Profile Info Section -->
             <section class="settings-section">
+                <?php if (!empty($profile_message)) echo "<p class='success'>$profile_message</p>"; ?>
+                <?php if (!empty($profile_error)) echo "<p class='error'>$profile_error</p>"; ?>
+
                 <h3>👤 Update Profile Info</h3>
                 <form method="post">
                     <label>Name:</label>
@@ -147,6 +161,9 @@ if (isset($_POST['update_password'])) {
 
             <!-- Password Update Section -->
             <section class="settings-section">
+                <?php if (!empty($password_message)) echo "<p class='success'>$password_message</p>"; ?>
+                <?php if (!empty($password_error)) echo "<p class='error'>$password_error</p>"; ?>
+
                 <h3>🔒 Change Password</h3>
                 <form method="post" name="password_form">
                     <label>Current Password:</label>
@@ -164,7 +181,7 @@ if (isset($_POST['update_password'])) {
         </div>
     </main>
 
-    <script src="assets/js/profile-script.js"></script>
+    <!-- <script src="assets/js/profile-script.js"></script> -->
     <script src="assets/js/admin_dashboard.js"></script>
 </body>
 </html>

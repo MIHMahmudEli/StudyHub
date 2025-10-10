@@ -126,8 +126,8 @@ $result = mysqli_query($conn, $query);
                         </div>
                     </a>
 
-                    <!-- Actions only for students -->
-                    <?php if (!$isAdmin && !$isModerator): ?>
+                    <!-- Actions only for students & moderator -->
+                    <?php if (!$isAdmin): ?>
                         <div class="note-actions">
                             <button class="bookmark-btn" data-id="<?php echo $row['id']; ?>">🔖 Bookmark</button>
                             <a href="download.php?id=<?php echo $row['id']; ?>" class="download-btn">⬇️ Download</a>

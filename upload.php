@@ -38,14 +38,18 @@ if (isset($_POST['upload'])) {
                 $message = "⚠️ File exceeds 40 MB limit!";
             } else {
                 if (move_uploaded_file($tmp_name, $file_path)) {
+                    date_default_timezone_set('Asia/Dhaka');
+                    $created_at = date('Y-m-d H:i:s');
+
                     $stmt = $conn->prepare("
-                        INSERT INTO notes (uploader_id, title, description, subject, course_code, file_path, file_type)
-                        VALUES (?, ?, ?, ?, ?, ?, ?)
+                        INSERT INTO notes (uploader_id, title, description, subject, course_code, file_path, file_type, created_at)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                     ");
-                    $stmt->bind_param("issssss", $uploader, $title, $description, $subject, $course_code, $file_path, $file_type);
+                    $stmt->bind_param("isssssss", $uploader, $title, $description, $subject, $course_code, $file_path, $file_type, $created_at);
+                    $stmt->execute();
 
                     if ($stmt->execute()) {
-                        $message = "✅ Note uploaded successfully!";
+                        $message = "✅ Note uploaded successfully! Awaiting admin approval.";
 
                         // upload event
                         date_default_timezone_set('Asia/Dhaka');
