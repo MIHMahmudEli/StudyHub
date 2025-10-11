@@ -78,7 +78,7 @@ $courses = json_decode(file_get_contents("assets/data/courses.json"), true);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
     <!-- External CSS -->
-    <link rel="stylesheet" href="assets/css/upload-style.css">
+    <link rel="stylesheet" href="assets/css/upload-style.css?v=3.0">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
@@ -129,8 +129,8 @@ $courses = json_decode(file_get_contents("assets/data/courses.json"), true);
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="assets/js/upload-script.js"></script>
-<script src="assets/js/course-autocomplete.js"></script>
+<script src="assets/js/upload-script.js?v3.0"></script>
+<script src="assets/js/course-autocomplete.js?v3.0"></script>
 
 </body>
 </html>

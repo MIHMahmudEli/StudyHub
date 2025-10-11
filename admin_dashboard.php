@@ -45,7 +45,7 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/admin_dashboard.css">
+    <link rel="stylesheet" href="assets/css/admin_dashboard.css?v=3.0">
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
@@ -144,6 +144,6 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/admin_dashboard.js"></script>
+    <script src="assets/js/admin_dashboard.js?v=3.0"></script>
 </body>
 </html>

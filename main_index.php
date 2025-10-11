@@ -9,7 +9,7 @@ session_start();
 <title>StudyHub - Login/Register</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-<link rel="stylesheet" href="assets/css/index-style.css">
+<link rel="stylesheet" href="assets/css/index-style.css?v=3.0">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
@@ -110,7 +110,7 @@ session_start();
     </form>
 </div>
 
-<script src="assets/js/index-script.js"></script>
+<script src="assets/js/index-script.js?v=3.0"></script>
 </body>
 </html>
 

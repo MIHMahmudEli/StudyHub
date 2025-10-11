@@ -29,7 +29,7 @@ $user = $stmt->get_result()->fetch_assoc();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/admin_dashboard.css">
+    <link rel="stylesheet" href="assets/css/admin_dashboard.css?v=3.0">
 </head>
 <body>
 
@@ -39,11 +39,11 @@ $user = $stmt->get_result()->fetch_assoc();
             <i class="fa fa-graduation-cap me-2"></i> <span>StudyHub</span>
         </div>
         <ul class="nav flex-column px-2">
-            <li><a href="user_dashboard.php" class="nav-link active"><i class="fa fa-home me-2"></i>Dashboard</a></li>
+            <li class="active"><a href="user_dashboard.php" class="nav-link"><i class="fa fa-home me-2"></i>Dashboard</a></li>
             <li><a href="home.php" class="nav-link"><i class="fa fa-book me-2"></i>Browse Notes</a></li>
             <li><a href="upload.php" class="nav-link"><i class="fa fa-upload me-2"></i>Upload Notes</a></li>
             <li><a href="leaderboard.php" class="nav-link"><i class="fa fa-trophy me-2"></i>Leaderboard</a></li>
-            <li class="active"><a href="show_uploaded.php" class="nav-link"><i class="fa fa-file me-2"></i>Uploaded Notes</a></li>
+            <li><a href="show_uploaded.php" class="nav-link"><i class="fa fa-file me-2"></i>Uploaded Notes</a></li>
             <li><a href="profile.php" class="nav-link"><i class="fa fa-user me-2"></i>Profile</a></li>
         </ul>
         <div class="logout px-3 mt-auto pb-3">
@@ -104,6 +104,6 @@ $user = $stmt->get_result()->fetch_assoc();
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/admin_dashboard.js"></script>
+    <script src="assets/js/admin_dashboard.js?v=3.0"></script>
 </body>
 </html>

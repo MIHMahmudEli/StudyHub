@@ -50,9 +50,9 @@ while ($row = $subjects->fetch_assoc()) {
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Custom CSS -->
-<link rel="stylesheet" href="assets/css/admin_dashboard.css">
-<link rel="stylesheet" href="assets/css/manage_users.css">
-<link rel="stylesheet" href="assets/css/trending_subjects.css">
+<link rel="stylesheet" href="assets/css/admin_dashboard.css?v=3.0">
+<link rel="stylesheet" href="assets/css/manage_users.css?v=3.0">
+<link rel="stylesheet" href="assets/css/trending_subjects.css?v=3.0">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
 </head>
@@ -146,6 +146,6 @@ while ($row = $subjects->fetch_assoc()) {
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="assets/js/admin_dashboard.js"></script>
+<script src="assets/js/admin_dashboard.js?v=3.0"></script>
 </body>
 </html>

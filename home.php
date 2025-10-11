@@ -63,13 +63,13 @@ $result = mysqli_query($conn, $query);
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Custom CSS -->
-<link rel="stylesheet" href="assets/css/home-style.css">
+<link rel="stylesheet" href="assets/css/home-style.css?v=3.0">
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
-<script src="assets/js/home-script.js" defer></script>
+<script src="assets/js/home-script.js?v=3.0" defer></script>
 </head>
 <body class="bg-light">
 
