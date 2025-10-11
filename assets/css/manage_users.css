@@ -1,120 +1,50 @@
-/* Global */
-body {
-    font-family: 'Poppins', sans-serif;
-    background: #eef2f7;
-    color: #333;
-    margin: 0;
-    padding: 20px;
+/* Hover effect for desktop table rows */
+.user-row {
+    transition: background 0.3s, transform 0.15s;
+    cursor: pointer;
+    font-size: 0.85rem;
 }
 
-h2 {
+.user-row:hover {
+    background: #f1f5f9; /* Light blue/gray background on hover */
+    transform: scale(1.01); /* Slight zoom effect */
+}
+
+/* Desktop action rows hidden by default */
+.action-row td {
+    padding: 10px;
     text-align: center;
-    margin-bottom: 25px;
-    font-weight: 600;
-    color: #222;
+    background: #f8f9fa;
 }
 
-/* Table Container */
-.table-wrapper {
-    width: 95%;
-    margin: auto;
-    overflow: hidden;
-    border-radius: 12px;
-    background: #fff;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+.action-row .btn {
+    min-width: 100px;
 }
 
-/* Table */
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-thead {
-    background: linear-gradient(90deg, #6a11cb, #2575fc);
-    color: #fff;
+/* Mobile cards spacing */
+.d-md-none .card {
+    padding: 10px;
 }
 
 thead th {
-    padding: 14px;
     font-weight: 600;
-    text-align: left;
     letter-spacing: 0.5px;
-    font-size: 15px;
+    background-color: #172e57 !important;
+    color: #fff !important;
+    
 }
 
-tbody tr {
-    border-bottom: 1px solid #f0f0f0;
-    transition: background 0.25s ease, transform 0.15s ease;
-    cursor: pointer;
+/* Smaller text for tables */
+.table-wrapper table td,
+.table-wrapper table th {
+    font-size: 13px; /* Reduce from default 14px */
+    padding: 8px 10px;
 }
 
-tbody tr:hover {
-    background: #f9fbff;
-    transform: scale(1.01);
-    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-}
-
-td {
-    padding: 12px 16px;
-    font-size: 14px;
-}
-
-/* Action Row (hidden by default) */
-.action-row {
-    display: none;
-    background: #fafafa;
-    text-align: center;
-    padding: 12px 0;
-    border-top: 1px solid #ddd;
-    animation: fadeIn 0.3s ease;
-}
-
-.action-row a {
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 8px 16px;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    margin: 0 6px;
-}
-
-.action-row a:hover {
-    opacity: 0.85;
-    transform: translateY(-2px);
-}
-
-/* Buttons */
-.action-row .promote {
-    background: #27ae60;
-    color: #fff;
-}
-
-.action-row .delete {
-    background: #e74c3c;
-    color: #fff;
-}
-
-/* Animation */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    td {
-        font-size: 13px;
-        padding: 10px;
+/* Sidebar toggle fix for small screens */
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0;
+        overflow-x: auto;
     }
-}
-
-a{
-    text-decoration: none;
-    color: white;
-}
-
-.fa-bars{
-    color: white;
 }

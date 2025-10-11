@@ -37,10 +37,17 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
 <head>
     <meta charset="UTF-8">
     <title><?php echo ucfirst($role); ?> Dashboard - StudyHub</title>
-    <link rel="stylesheet" href="assets/css/admin_dashboard.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap & Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/admin_dashboard.css">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
     <!-- Sidebar -->
@@ -48,82 +55,95 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
         <div class="logo">
             <i class="fa fa-graduation-cap"></i> <span>StudyHub</span>
         </div>
-        <ul class="nav">
-            <li class="active"><a href="admin_dashboard.php"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
-            <li><a href="pending_notes.php"><i class="fa fa-file"></i> <span>Notes</span></a></li>
-
+        <ul class="nav flex-column">
+            <li class="active"><a href="admin_dashboard.php" class="nav-link"><i class="fa fa-home me-2"></i>Dashboard</a></li>
+            <li class="nav-item"><a href="pending_notes.php" class="nav-link"><i class="fa fa-file me-2"></i>Pending Notes</a></li>
             <?php if ($role === 'admin') { ?>
-                <li><a href="manage_users.php"><i class="fa fa-users"></i> <span>Users</span></a></li>
+                <li class="nav-item"><a href="manage_users.php" class="nav-link"><i class="fa fa-users me-2"></i>Users</a></li>
             <?php } ?>
 
-            <li><a href="trending_subjects.php"><i class="fa fa-chart-bar"></i> <span>Analytics</span></a></li>
+            <li class="nav-item"><a href="trending_subjects.php" class="nav-link"><i class="fa fa-chart-bar me-2"></i>Analytics</a></li>
 
             <?php if ($role === 'admin') { ?>
-                <li><a href="#"><i class="fa fa-file-alt"></i> <span>Reports</span></a></li>
+                <li class="nav-item"><a href="#" class="nav-link"><i class="fa fa-file-alt me-2"></i>Reports</a></li>
             <?php } ?>
 
-            <li><a href="home.php"><i class="fa fa-book"></i> <span>Browse Notes</span></a></li>
-            <li><a href="show_uploaded.php"><i class="fa fa-upload"></i> <span>Uploaded Notes</span></a></li>
-            <li><a href="settings.php"><i class="fa fa-cog"></i> <span>Settings</span></a></li>
+            <li class="nav-item"><a href="home.php" class="nav-link"><i class="fa fa-book me-2"></i>Browse Notes</a></li>
+            <li class="nav-item"><a href="show_uploaded.php" class="nav-link"><i class="fa fa-upload me-2"></i>Uploaded Notes</a></li>
+            <li class="nav-item"><a href="settings.php" class="nav-link"><i class="fa fa-cog me-2"></i>Settings</a></li>
         </ul>
-        <div class="logout">
-            <a href="logout.php" ><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a>
+        <div class="logout mt-auto px-3 pb-3">
+            <a href="logout.php" class="btn btn-light w-100"><i class="fa fa-sign-out-alt me-2"></i>Logout</a>
         </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="main">
-        <!-- Top Bar -->
-        <header class="topbar">
-            <div class="topbar-left">
-                <div class="menu-toggle">
+    <main class="main-content flex-grow-1">
+        <!-- Topbar -->
+        <header class="topbar d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center gap-3">
+                <button class="menu-toggle btn text-white p-0 border-0">
                     <i class="fa fa-bars"></i>
-                </div>
-                <h2>Welcome back, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h2>
+                </button>
+                <h5 class="mb-0 fw-semibold">Welcome back, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h5>
             </div>
-            <div class="topbar-right">
-                <span class="role"><?php echo $role; ?></span>
-                <a href="logout.php" class="btn btn-danger">Logout</a>
+            <div class="d-flex align-items-center gap-3">
+                <span class="badge bg-light text-dark"><?php echo ucfirst($role); ?></span>
+                <a href="logout.php" class="btn btn-danger btn-sm">Logout</a>
             </div>
         </header>
 
         <!-- Dashboard Cards -->
-        <section class="cards">
-            <div class="card">
-                <h3>📄 Pending Notes</h3>
-                <p class="metric"><?php echo $pendingCount; ?></p>
-                <a href="pending_notes.php">View Details</a>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card dash-card p-3">
+                        <h6>📄 Pending Notes</h6>
+                        <p class="metric"><?php echo $pendingCount; ?></p>
+                        <a href="pending_notes.php" class="stretched-link">View Details</a>
+                    </div>
+                </div>
+
+                <?php if ($role === 'admin') { ?>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card dash-card p-3">
+                        <h6>👥 Total Users</h6>
+                        <p class="metric"><?php echo $userCount; ?></p>
+                        <a href="manage_users.php" class="stretched-link">View Details</a>
+                    </div>
+                </div>
+                <?php } ?>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card dash-card p-3">
+                        <h6>📚 Trending Courses</h6>
+                        <p class="metric"><?php echo count($trendingSubjects); ?> Courses</p>
+                        <a href="trending_subjects.php" class="stretched-link">View Details</a>
+                    </div>
+                </div>
+
+                <?php if ($role === 'admin') { ?>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card dash-card p-3">
+                        <h6>🔥 Active Users</h6>
+                        <p class="metric"><?php echo count($activeUsers); ?> Users</p>
+                        <a href="active_users.php" class="stretched-link">View Details</a>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card dash-card p-3">
+                        <h6>📑 Reports</h6>
+                        <p class="metric">Generate</p>
+                        <a href="#" class="stretched-link">View Details</a>
+                    </div>
+                </div>
+                <?php } ?>
             </div>
-
-            <?php if ($role === 'admin') { ?>
-                <div class="card">
-                    <h3>👥 Total Users</h3>
-                    <p class="metric"><?php echo $userCount; ?></p>
-                    <a href="manage_users.php">View Details</a>
-                </div>
-            <?php } ?>
-
-            <div class="card">
-                <h3>📚 Trending Courses</h3>
-                <p class="metric"><?php echo count($trendingSubjects); ?> Courses</p>
-                <a href="trending_subjects.php">View Details</a> 
-            </div>
-
-            <?php if ($role === 'admin') { ?>
-                <div class="card">
-                    <h3>🔥 Active Users</h3>
-                    <p class="metric"><?php echo count($activeUsers); ?> Users</p>
-                    <a href="active_users.php">View Details</a>
-                </div>
-                <div class="card">
-                    <h3>📑 Reports</h3>
-                    <p class="metric">Generate</p>
-                    <a href="#">View Details</a>
-                </div>
-            <?php } ?>
-        </section>
+        </div>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/admin_dashboard.js"></script>
 </body>
 </html>

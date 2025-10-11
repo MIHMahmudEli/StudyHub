@@ -1,55 +1,48 @@
 <?php
 session_start();
-include("includes/db.php"); // DB connection
+include("includes/db.php");
 
-// Make sure the user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: main_index.php#login");
     exit;
 }
 
 $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
-$isModerator = isset($_SESSION['role']) && $_SESSION['role'] === 'moderator';
 $userId = intval($_SESSION['user_id']);
 $role = $_SESSION['role'];
 
-// Handle search or bookmark filter
 $searchTerm = '';
 $query = "";
+$isBookmarksView = isset($_GET['bookmarks']);
 
-if (isset($_GET['bookmarks'])) {
-    // Show only bookmarked notes
+if ($isBookmarksView) {
     $query = "
-        SELECT n.id, n.title, n.subject, n.avg_rating, n.file_type, u.name AS author_name
+        SELECT n.id, n.title, n.subject, n.avg_rating, n.file_type, u.name AS author_name,
+               b.user_id AS bookmarked
         FROM notes n
-        INNER JOIN bookmarks b ON n.id = b.note_id
+        INNER JOIN bookmarks b ON n.id = b.note_id AND b.user_id = $userId
         LEFT JOIN users u ON n.uploader_id = u.id
-        WHERE b.user_id = $userId
     ";
-
     if (isset($_GET['q']) && !empty(trim($_GET['q']))) {
         $searchTerm = mysqli_real_escape_string($conn, trim($_GET['q']));
         $query .= " AND (n.title LIKE '%$searchTerm%' OR n.subject LIKE '%$searchTerm%' OR u.name LIKE '%$searchTerm%')";
     }
-
     $query .= " ORDER BY n.created_at DESC";
-
 } elseif (isset($_GET['q']) && !empty(trim($_GET['q']))) {
-    // Regular search
     $searchTerm = mysqli_real_escape_string($conn, trim($_GET['q']));
     $query = "
-        SELECT n.id, n.title, n.subject, n.avg_rating, n.file_type, u.name AS author_name
+        SELECT n.id, n.title, n.subject, n.avg_rating, n.file_type, u.name AS author_name,
+               (SELECT 1 FROM bookmarks WHERE user_id=$userId AND note_id=n.id) AS bookmarked
         FROM notes n
         LEFT JOIN users u ON n.uploader_id = u.id
         WHERE (n.title LIKE '%$searchTerm%' OR n.subject LIKE '%$searchTerm%' OR u.name LIKE '%$searchTerm%')
           AND n.status = 'approved'
         ORDER BY n.created_at DESC
     ";
-
 } else {
-    // Show all approved notes
     $query = "
-        SELECT n.id, n.title, n.subject, n.avg_rating, n.file_type, u.name AS author_name
+        SELECT n.id, n.title, n.subject, n.avg_rating, n.file_type, u.name AS author_name,
+               (SELECT 1 FROM bookmarks WHERE user_id=$userId AND note_id=n.id) AS bookmarked
         FROM notes n
         LEFT JOIN users u ON n.uploader_id = u.id
         WHERE n.status = 'approved'
@@ -62,83 +55,113 @@ $result = mysqli_query($conn, $query);
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes Hub</title>
-    <link rel="stylesheet" href="assets/css/home-style.css">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <script src="assets/js/home-script.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notes Hub</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Custom CSS -->
+<link rel="stylesheet" href="assets/css/home-style.css">
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
+<script src="assets/js/home-script.js" defer></script>
 </head>
-<body>
-<header>
-    <section class="nav-center">
-        <a href="home.php">🏠 Home</a>
-        <a href="home.php?bookmarks=1" class="<?php echo isset($_GET['bookmarks']) ? 'active-link' : ''; ?>">🔖 Bookmark</a>
-        <a href="leaderboard.php">🏆 Leaderboard</a>
-        <a href="upload.php">📘 Upload Notes</a>
-    </section>
-    <section class="nav-right">
-        <form method="GET" action="home.php" class="search-form">
-            <input type="text" name="q" id="searchBox" placeholder="🔍 Search notes..." value="<?php echo htmlspecialchars($searchTerm); ?>">
-            <button type="submit">Search</button>
-            <?php if (isset($_GET['bookmarks'])): ?>
-                <input type="hidden" name="bookmarks" value="1">
-            <?php endif; ?>
-        </form>
-        
-        <?php if ($role === 'student') { ?>
-            <a href="user_dashboard.php">
+<body class="bg-light">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg shadow-sm sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="home.php">Notes Hub</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link <?php echo !$isBookmarksView ? 'active' : ''; ?>" href="home.php">Home</a></li>
+        <li class="nav-item"><a class="nav-link <?php echo $isBookmarksView ? 'active' : ''; ?>" href="home.php?bookmarks=1">Bookmarks</a></li>
+        <li class="nav-item"><a class="nav-link" href="leaderboard.php">Leaderboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="upload.php">Upload Notes</a></li>
+      </ul>
+
+      <form class="d-flex me-3" method="GET" action="home.php">
+        <input class="form-control me-2 rounded-pill" type="search" placeholder="Search notes..." name="q" value="<?php echo htmlspecialchars($searchTerm); ?>">
+        <?php if ($isBookmarksView): ?><input type="hidden" name="bookmarks" value="1"><?php endif; ?>
+        <button class="btn btn-outline-light rounded-pill" type="submit">Search</button>
+      </form>
+
+      <?php if ($role === 'student') { ?>
+            <a href="user_dashboard.php" class="name me-3 text-white fw-bold">
                 👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
             </a>
-        <?php } elseif ($role === 'admin' || $role === 'moderator') { ?>
-            <a href="admin_dashboard.php">
+      <?php } elseif ($role === 'admin' || $role === 'moderator') { ?>
+            <a href="admin_dashboard.php" class="name me-3 text-white fw-bold">
                 👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
             </a>
         <?php } ?>
 
-        <p>⭐ <?php echo isset($_SESSION['points']) ? intval($_SESSION['points']) : 0; ?> pts</p>
-    </section>
-</header>
 
-<main>
-    <div class="notes-grid">
-        <?php if ($result && mysqli_num_rows($result) > 0): ?>
-            <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                <div class="note-card">
-                    <!-- Clickable content area -->
-                    <a href="preview_note.php?id=<?php echo $row['id']; ?>&track=true" class="note-content">
-                        <div class="note-file">
-                            <?php 
-                            $type = strtolower($row['file_type']);
-                            if ($type === 'pdf') echo "📘";
-                            elseif (in_array($type, ['jpg','jpeg','png'])) echo "🖼️";
-                            else echo "📄";
-                            ?>
-                        </div>
-                        <h3 class="note-title"><?php echo htmlspecialchars($row['title']); ?></h3>
-                        <p class="note-subject"><?php echo htmlspecialchars($row['subject']); ?></p>
-                        <!-- <p class="note-author"><small><?php echo htmlspecialchars($row['author_name'] ?? 'Unknown'); ?></small></p> -->
-                        <div class="note-rating">
-                            <?php
-                            $rating = round($row['avg_rating']);
-                            for ($i=1; $i<=5; $i++) echo $i <= $rating ? "★" : "☆";
-                            ?>
-                        </div>
-                    </a>
-
-                    <!-- Actions only for students & moderator -->
-                    <?php if (!$isAdmin): ?>
-                        <div class="note-actions">
-                            <button class="bookmark-btn" data-id="<?php echo $row['id']; ?>">🔖 Bookmark</button>
-                            <a href="download.php?id=<?php echo $row['id']; ?>" class="download-btn">⬇️ Download</a>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <p class="no-notes">No notes found.</p>
-        <?php endif; ?>
+      <span class="badge bg-warning text-dark">⭐ <?php echo isset($_SESSION['points']) ? intval($_SESSION['points']) : 0; ?> pts</span>
     </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="container my-5">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    <?php if ($result && mysqli_num_rows($result) > 0): ?>
+      <?php while ($row = mysqli_fetch_assoc($result)): ?>
+        <?php 
+          $alreadyBookmarked = $row['bookmarked'] ? true : false;
+          $bookmarkText = $isBookmarksView ? "Remove Bookmark" : "🔖 Bookmark";
+        ?>
+        <div class="col">
+          <div class="card h-100 shadow-sm note-card position-relative">
+            <a href="preview_note.php?id=<?php echo $row['id']; ?>&track=true" class="text-decoration-none text-dark">
+              <div class="card-body text-center py-4">
+                <div class="note-file mb-3">
+                  <?php 
+                  $type = strtolower($row['file_type']);
+                  if ($type === 'pdf') echo "📘";
+                  elseif (in_array($type, ['jpg','jpeg','png'])) echo "🖼️";
+                  else echo "📄";
+                  ?>
+                </div>
+                <h5 class="card-title"><?php echo htmlspecialchars($row['title']); ?></h5>
+                <p class="card-subtitle mb-2 text-muted"><?php echo htmlspecialchars($row['subject']); ?></p>
+                <div class="note-rating">
+                  <?php
+                  $rating = round($row['avg_rating']);
+                  for ($i=1; $i<=5; $i++) echo $i <= $rating ? "★" : "☆";
+                  ?>
+                </div>
+              </div>
+            </a>
+
+            <!-- Hover Actions -->
+            <div class="card-footer note-actions">
+              <?php if (!$alreadyBookmarked): ?>
+              <button class="btn btn-sm btn-primary bookmark-btn" data-id="<?php echo $row['id']; ?>"><?php echo $bookmarkText; ?></button>
+              <?php else: ?>
+              <?php if ($isBookmarksView): ?>
+              <button class="btn btn-sm btn-danger bookmark-btn" data-id="<?php echo $row['id']; ?>">Remove Bookmark</button>
+              <?php endif; ?>
+              <?php endif; ?>
+              <a href="download.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-success">⬇️ Download</a>
+            </div>
+
+          </div>
+        </div>
+      <?php endwhile; ?>
+    <?php else: ?>
+      <p class="text-center text-muted">No notes found.</p>
+    <?php endif; ?>
+  </div>
 </main>
 </body>
 </html>

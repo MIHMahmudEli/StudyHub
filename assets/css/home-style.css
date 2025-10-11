@@ -1,299 +1,139 @@
-/* Global Styles */
-body,
-h3,
-p {
-    margin: 0;
-    padding: 0;
-    font-family: "Segoe UI", Arial, sans-serif;
-    color: #333;
-
+/* ========== GLOBAL STYLES ========== */
+body {
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    background: #f5f7fa; /* Light gray background */
+    color: #333; /* Default text color */
+    font-size: 0.80rem;
 }
 
-/* Header */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #34495e;
-    padding: 12px 25px;
+/* ========== NAVBAR ========== */
+.navbar {
+    background: #34495e !important; /* Dark bluish-gray navbar */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Soft shadow under navbar */
+}
+
+/* Navbar Brand (site name/logo) */
+.navbar-brand {
+    font-weight: 700;
+    color: #fff !important;
+}
+
+/* Navbar links */
+.nav-link {
+    font-weight: 500;
     color: #fff;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    transition: color 0.2s, transform 0.2s; /* Smooth hover animation */
 }
 
-header .nav-center {
-    flex: 1;
-    text-align: center;
+/* On hover or active link */
+.nav-link:hover,
+.nav-link.active {
+    color: #1cc88a; /* Light green color */
+    transform: translateY(-2px); /* Slight upward movement */
 }
 
-header .nav-center a {
-    margin: 0 12px;
+/* Active link special color */
+.nav-link.active {
+    color: #2dbce3 !important; /* Light blue color */
+    font-weight: 600;
+}
+
+/* Custom name link (optional, probably your username or author link) */
+.name {
     text-decoration: none;
-    color: #ecf0f1;
-    font-weight: 500;
-    font-size: 14px;
-    transition: color 0.2s ease;
+    color: rgb(109, 229, 205) !important; /* Soft teal color */
 }
 
-header .nav-center a:hover {
-    color: #1abc9c;
-}
-
-header .nav-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-header .nav-right input {
-    padding: 6px 10px;
-    border-radius: 18px;
-    border: 1px solid #ccc;
-    outline: none;
-    transition: border 0.2s ease, box-shadow 0.2s ease;
-    font-size: 14px;
-}
-
-header .nav-right input:focus {
-    border-color: #1abc9c;
-    box-shadow: 0 0 5px rgba(26, 188, 156, 0.5);
-}
-
-header .nav-right a {
-    color: #1abc9c;
-    font-weight: 500;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-header .nav-right a:hover {
-    color: #16a085;
-}
-
-header .nav-right p {
-    font-size: 13px;
-    font-weight: bold;
-    color: #f39c12;
-    margin: 0;
-}
-
-/* Notes Grid */
-.notes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 18px;
-    padding: 25px;
-}
-
-/* Note Card - Compact Classic Style */
+/* ========== NOTE CARDS ========== */
 .note-card {
-    position: relative;
-    background: #fff;
-    border: 1px solid #dcdcdc;
-    border-radius: 10px;
-    padding: 15px 12px;
-    text-align: center;
-    transition: all 0.25s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    background: #fff; /* White card */
+    border: none;
+    border-radius: 15px;
     overflow: hidden;
-    min-height: 150px;
-    /* smaller card height */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
 }
 
+/* Hover effect: move up & add shadow */
 .note-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-6px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
 }
 
-/* Note Content */
+/* Big icon inside note card (like file icon) */
 .note-file {
-    font-size: 36px;
-    margin-bottom: 10px;
-    color: #7f8c8d;
+    font-size: 50px;
+    transition: transform 0.3s ease;
 }
 
-.note-title {
-    font-size: 15px;
-    font-weight: bold;
-    margin: 6px 0;
+/* Scale up icon when hovering card */
+.note-card:hover .note-file {
+    transform: scale(1.15);
+}
+
+/* Card Title (usually note name) */
+.card-title {
+    font-weight: 600;
+    font-size: 1rem;
     color: #2c3e50;
 }
 
-.note-subject {
-    color: #95a5a6;
-    font-size: 13px;
-    margin-bottom: 6px;
+/* Card Subtitle (maybe category or date) */
+.card-subtitle {
+    font-size: 0.85rem;
+    color: #6c757d;
 }
 
+/* Rating (stars or icons) */
 .note-rating {
-    font-size: 16px;
-    color: #f1c40f;
-    margin-bottom: 8px;
+    font-size: 1rem;
+    color: #f1c40f; /* Gold/yellow */
 }
 
-/* Note Actions - Overlay Buttons from Bottom */
+/* ========== CARD ACTION BUTTONS ========== */
+/* Hidden action area (like “View”, “Download”, “Delete”) */
 .note-actions {
     position: absolute;
-    bottom: 0;
+    bottom: -75px; /* Hidden below the card initially */
     left: 0;
     right: 0;
     display: flex;
     justify-content: center;
-    gap: 8px;
-    padding: 10px 0;
-    background: rgba(255, 255, 255, 0.85);
-    opacity: 1;
-    /* default opacity */
-    transform: translateY(100%);
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    gap: 0.5rem;
+    padding: 0.75rem 0;
+    background: rgba(255,255,255,0.95); /* Slightly transparent white */
+    transition: bottom 0.3s ease; /* Slide up smoothly */
 }
 
-/* Slide up on hover */
+/* Show actions when hovering card */
 .note-card:hover .note-actions {
-    transform: translateY(0);
-    opacity: 1;
+    bottom: 0; /* Slides up into view */
 }
 
-/* Buttons */
-.note-actions button,
-.note-actions a {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+/* Buttons inside action area */
+.note-actions .btn {
+    border-radius: 10px;
+    font-size: 0.85rem;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.bookmark-btn {
-    background: #2980b9;
-    color: #fff;
+/* Button hover effect */
+.note-actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-.download-btn {
-    background: #27ae60;
-    color: #fff;
-}
-
-.note-actions button:hover,
-.note-actions a:hover {
-    transform: translateY(-1px);
-    opacity: 0.95;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-    .notes-grid {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 16px;
-        padding: 20px;
-    }
-}
-
+/* ========== RESPONSIVE DESIGN ========== */
+/* Medium devices (tablets, up to 768px wide) */
 @media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        padding: 10px 15px;
-    }
-
-    .notes-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 14px;
-        padding: 15px;
-    }
-
-    .note-card {
-        min-height: 180px;
-        padding: 12px 10px;
-    }
-
-    .note-file {
-        font-size: 32px;
-    }
-
-    .note-title {
-        font-size: 14px;
-    }
-
-    .note-subject {
-        font-size: 12px;
-    }
+    .note-file { font-size: 40px; }
+    .card-title { font-size: 0.95rem; }
+    .card-subtitle { font-size: 0.8rem; }
 }
 
+/* Small devices (phones, up to 480px wide) */
 @media (max-width: 480px) {
-    .notes-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        padding: 10px;
-    }
-
-    .note-card {
-        min-height: 160px;
-        padding: 10px 8px;
-    }
-
-    .note-file {
-        font-size: 28px;
-    }
-
-    .note-title {
-        font-size: 13px;
-    }
-
-    .note-subject {
-        font-size: 11px;
-    }
-}
-
-/* Search button */
-.search-form button {
-    padding: 6px 12px;
-    border-radius: 5px;
-    border: none;
-    background-color: #ffc107;
-    /* Amber color */
-    color: #333;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.search-form button:hover {
-    background-color: #e0a800;
-    /* Darker on hover */
-    transform: scale(1.05);
-    /* Slight zoom effect */
-}
-
-.search-form button:active {
-    transform: scale(0.98);
-    /* Press effect */
-}
-
-/* Highlight active link / disable link style */
-.active-link {
-    pointer-events: none;
-    opacity: 0.6;
-    font-weight: bold;
-}
-
-/* Ensure clickable area works without breaking buttons */
-.note-content {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
-
-.note-card {
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-}
-
-.note-card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    .note-file { font-size: 36px; }
+    .card-title { font-size: 0.9rem; }
+    .card-subtitle { font-size: 0.75rem; }
 }

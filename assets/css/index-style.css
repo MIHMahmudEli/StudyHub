@@ -1,6 +1,6 @@
-/* ===========================
-   Global Reset & Base Styles
-   =========================== */
+/* ---------------------------------
+   🌐 GLOBAL STYLES (BASE)
+----------------------------------*/
 * {
   box-sizing: border-box;
   margin: 0;
@@ -15,56 +15,58 @@ body {
   align-items: center;
   background: radial-gradient(circle at top left, #3b82f6, #1e293b 70%);
   color: #fff;
-  overflow: hidden;
+  padding: 20px;
+  overflow-x: hidden;
 }
 
-/* ===========================
-   Header / Logo Section
-   =========================== */
+/* ---------------------------------
+   🧭 HEADER / LOGO SECTION
+----------------------------------*/
 .auth-header {
   position: absolute;
-  top: 24px;
-  left: 24px;
+  top: 20px;
+  left: 20px;
 }
 
 .auth-header .logo {
   color: #fff;
   font-size: 1.5rem;
-  text-decoration: none;
   font-weight: 700;
+  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: 0.3s ease;
+  transition: 0.3s;
 }
 
 .auth-header .logo:hover {
   color: #60a5fa;
 }
 
-/* ===========================
-   Main Container
-   =========================== */
+/* ---------------------------------
+   📦 MAIN CONTAINER (FORM BOX)
+----------------------------------*/
 .container {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(18px);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 40px;
   border-radius: 16px;
+  padding: 40px;
   width: 100%;
   max-width: 420px;
   box-shadow: 0 12px 50px rgba(0, 0, 0, 0.25);
   animation: fadeUp 0.8s ease;
 }
 
+/* Animation for container appearance */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(40px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ===========================
-   Headings & Text
-   =========================== */
+/* ---------------------------------
+   ✍️ TEXT / HEADINGS
+----------------------------------*/
 h2 {
   text-align: center;
   margin-bottom: 8px;
@@ -77,12 +79,13 @@ h2 {
   margin-bottom: 24px;
 }
 
-/* ===========================
-   Forms
-   =========================== */
+/* ---------------------------------
+   🧾 FORM ELEMENTS
+----------------------------------*/
 form {
   display: none;
   flex-direction: column;
+  width: 100%;
 }
 
 form.active {
@@ -90,17 +93,19 @@ form.active {
   animation: fadeIn 0.5s ease;
 }
 
+/* Animation for form switching */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ===========================
-   Input Fields
-   =========================== */
+/* ---------------------------------
+   🔤 INPUT FIELDS
+----------------------------------*/
 .input-group {
   position: relative;
   margin-bottom: 16px;
+  width: 100%;
 }
 
 .input-group input {
@@ -111,19 +116,23 @@ form.active {
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   outline: none;
-  transition: all 0.3s ease;
+  transition: 0.3s;
+  font-size: 0.95rem;
 }
 
+/* Placeholder text color */
 .input-group input::placeholder {
   color: #e0e7ff;
 }
 
+/* Focus effect on input */
 .input-group input:focus {
   border-color: #60a5fa;
   box-shadow: 0 0 8px rgba(96, 165, 250, 0.4);
 }
 
-.input-group i.icon-left {
+/* Icons inside input fields */
+.icon-left {
   position: absolute;
   top: 50%;
   left: 12px;
@@ -131,7 +140,8 @@ form.active {
   color: #94a3b8;
 }
 
-.input-group .toggle-password {
+/* Toggle password visibility */
+.toggle-password {
   position: absolute;
   top: 50%;
   right: 12px;
@@ -141,18 +151,19 @@ form.active {
   display: none;
 }
 
+/* Show toggle only when typing */
 .input-group input:not(:placeholder-shown) ~ .toggle-password {
   display: block;
 }
 
-/* ===========================
-   Password Rules
-   =========================== */
+/* ---------------------------------
+   🔒 PASSWORD RULES SECTION
+----------------------------------*/
 .password-rules {
+  display: none;
   margin-bottom: 12px;
   font-size: 14px;
   color: #f0f0f0;
-  display: none; /* Hidden by default */
 }
 
 .password-rules.show {
@@ -161,8 +172,8 @@ form.active {
 
 .password-rules p {
   margin-bottom: 6px;
-  font-weight: 500;
   color: #cbd5e1;
+  font-weight: 500;
 }
 
 .password-rules ul {
@@ -178,17 +189,19 @@ form.active {
   color: #fca5a5;
 }
 
+/* Valid password rule color */
 .password-rules li.valid {
   color: #22c55e;
 }
 
+/* Small circle icon */
 .password-rules li i.fa-circle {
   font-size: 10px;
 }
 
-/* ===========================
-   Buttons
-   =========================== */
+/* ---------------------------------
+   🔘 BUTTONS
+----------------------------------*/
 .primary-btn {
   padding: 12px;
   border: none;
@@ -198,6 +211,7 @@ form.active {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 1rem;
 }
 
 .primary-btn:hover {
@@ -210,23 +224,24 @@ form.active {
   cursor: not-allowed;
 }
 
+/* Button to switch forms (e.g., login/signup) */
 .toggle-btn {
   margin-top: 12px;
   background: none;
   color: #93c5fd;
   font-weight: 500;
-  text-align: center;
   border: none;
   cursor: pointer;
+  font-size: 0.95rem;
 }
 
 .toggle-btn:hover {
   text-decoration: underline;
 }
 
-/* ===========================
-   Links
-   =========================== */
+/* ---------------------------------
+   🔗 LINKS & STATUS MESSAGES
+----------------------------------*/
 .forgot-password {
   text-align: right;
   margin-bottom: 14px;
@@ -242,39 +257,73 @@ form.active {
   text-decoration: underline;
 }
 
-/* ===========================
-   Error & Success Messages
-   =========================== */
+/* Message boxes */
 .error-messages,
-.error-message {
-  color: #ff6b6b;
-  background: rgba(255, 0, 0, 0.1);
-  border-left: 4px solid #ef4444;
+.success-messages {
   border-radius: 6px;
   padding: 8px 10px;
   margin-bottom: 10px;
   text-align: center;
 }
 
+/* Error box */
+.error-messages {
+  color: #ff6b6b;
+  background: rgba(255, 0, 0, 0.1);
+  border-left: 4px solid #ef4444;
+}
+
+/* Success box */
 .success-messages {
   color: #22c55e;
   background: rgba(34, 197, 94, 0.1);
   border-left: 4px solid #22c55e;
-  border-radius: 6px;
-  padding: 8px 10px;
-  margin-bottom: 10px;
-  text-align: center;
 }
 
-.error-message {
-  display: none;
-}
-
-/* ===========================
-   Responsive Design
-   =========================== */
-@media (max-width: 480px) {
+/* ---------------------------------
+   📱 RESPONSIVE DESIGN
+----------------------------------*/
+@media (max-width: 768px) {
+  body {
+    padding: 30px;
+  }
   .container {
-    padding: 28px 22px;
+    max-width: 90%;
+    padding: 30px;
+  }
+  h2 {
+    font-size: 1.4rem;
+  }
+  .subtitle {
+    font-size: 13px;
+  }
+  .primary-btn,
+  .toggle-btn {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-header {
+    top: 10px;
+    left: 10px;
+  }
+  .container {
+    padding: 24px 18px;
+    max-width: 95%;
+  }
+  .input-group input {
+    padding: 12px 38px;
+    font-size: 0.9rem;
+  }
+  .primary-btn {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+  .toggle-btn {
+    font-size: 0.85rem;
+  }
+  .subtitle {
+    font-size: 12px;
   }
 }

@@ -1,103 +1,174 @@
-/* ---------------- Profile Page Content ---------------- */
-.profile-container {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-    flex-wrap: wrap; /* Responsive wrapping */
-    margin-top: 20px;
+/* ================== Profile Page ================== */
+
+/* Container adjustments */
+.main-content {
+    padding: 20px;
+    background-color: #f8fafc;
+    min-height: 100vh;
 }
 
-/* Each section (Profile Info & Password) */
-.settings-section {
-    background: #fff;
-    padding: 25px;
+/* Cards */
+.card {
     border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-    flex: 1 1 400px; /* Grow, shrink, minimum width */
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-/* Section headings */
-.settings-section h3 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 20px;
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Titles */
+.card-title {
     font-weight: 600;
-    color: #1f2937;
+    font-size: 1.1rem;
     display: flex;
     align-items: center;
     gap: 10px;
+    color: #1f2937;
 }
 
-/* Success & Error Messages */
-.success {
-    background: #d1fae5;
-    color: #065f46;
-    padding: 12px 15px;
-    border-radius: 8px;
+/* Form Labels */
+.form-label {
     font-weight: 500;
-    margin-bottom: 20px;
-    border-left: 4px solid #10b981;
-}
-.error {
-    background: #fee2e2;
-    color: #b91c1c;
-    padding: 12px 15px;
-    border-radius: 8px;
-    font-weight: 500;
-    margin-bottom: 20px;
-    border-left: 4px solid #ef4444;
-}
-
-/* Forms */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-form label {
-    font-weight: 500;
-    margin-bottom: 5px;
     color: #374151;
 }
-form input {
-    padding: 12px 14px;
-    border: 1px solid #d1d5db;
+
+/* Form Inputs */
+.form-control {
     border-radius: 8px;
-    font-size: 14px;
+    border: 1px solid #d1d5db;
     transition: border-color 0.3s, box-shadow 0.2s;
 }
-form input:focus {
+
+.form-control:focus {
     outline: none;
     border-color: #3b82f6;
     box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
 }
 
-/* Disabled inputs styling */
-form input[disabled] {
+/* Disabled Inputs */
+.form-control[disabled] {
     background-color: #f3f4f6;
     cursor: not-allowed;
 }
 
 /* Buttons */
-form button {
-    width: max-content;
-    background-color: #3b82f6;
-    color: #fff;
-    font-weight: 500;
-    padding: 12px 20px;
+.btn-primary {
     border-radius: 8px;
-    border: none;
-    cursor: pointer;
+    font-weight: 500;
     transition: background 0.3s, transform 0.2s;
 }
-form button:hover {
+
+.btn-primary:hover {
     background-color: #2563eb;
     transform: translateY(-2px);
 }
 
-/* Responsive adjustments */
-@media (max-width: 900px) {
-    .profile-container {
-        flex-direction: column;
+.btn-warning {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.btn-warning:hover {
+    background-color: #d97706;
+    transform: translateY(-2px);
+}
+
+/* Alerts */
+.alert {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+}
+
+/* Sidebar overrides */
+.sidebar {
+    background: linear-gradient(180deg, #1e3c72, #2a5298);
+    color: #fff;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    z-index: 1050;
+}
+
+.sidebar .logo {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #e2e8f0;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    transform: translateX(4px);
+}
+
+.sidebar .logout {
+    margin-top: auto;
+}
+
+/* Topbar */
+.topbar {
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Topbar buttons */
+.menu-toggle i {
+    font-size: 1.5rem;
+}
+
+/* Role Badge */
+.topbar .badge {
+    font-weight: 500;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .sidebar {
+        left: -260px;
+    }
+    .sidebar.open {
+        left: 0;
+    }
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+}
+
+/* Mobile Card Spacing */
+@media (max-width: 576px) {
+    .card {
+        padding: 15px;
     }
 }

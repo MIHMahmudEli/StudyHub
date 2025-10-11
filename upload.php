@@ -2,7 +2,6 @@
 session_start();
 include("includes/db.php");
 
-// Make sure the user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: main_index.php#login");
     exit;
@@ -15,13 +14,11 @@ if (isset($_POST['upload'])) {
     $title = trim($_POST['title']);
     $description = trim($_POST['description']);
     $subject = trim($_POST['subject']);
-    $course_code = trim($_POST['course_code']); // hidden field
+    $course_code = trim($_POST['course_code']);
     $uploader = $_SESSION['user_id'];
 
     if (isset($_FILES['file'])) {
         $fileError = $_FILES['file']['error'];
-
-        // Handle PHP upload errors
         if ($fileError === UPLOAD_ERR_INI_SIZE || $fileError === UPLOAD_ERR_FORM_SIZE) {
             $message = "⚠️ File is too large! Maximum upload size is 40 MB.";
         } elseif ($fileError !== UPLOAD_ERR_OK) {
@@ -33,7 +30,6 @@ if (isset($_POST['upload'])) {
             $file_path = $target_dir . basename($file_name);
             $file_type = pathinfo($file_name, PATHINFO_EXTENSION);
 
-            // Extra safety: server-side size check (40 MB)
             if ($_FILES['file']['size'] > 40 * 1024 * 1024) {
                 $message = "⚠️ File exceeds 40 MB limit!";
             } else {
@@ -46,27 +42,17 @@ if (isset($_POST['upload'])) {
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                     ");
                     $stmt->bind_param("isssssss", $uploader, $title, $description, $subject, $course_code, $file_path, $file_type, $created_at);
-                    $stmt->execute();
 
                     if ($stmt->execute()) {
                         $message = "✅ Note uploaded successfully! Awaiting admin approval.";
-
-                        // upload event
-                        date_default_timezone_set('Asia/Dhaka');
-                        $timestamp = date('Y-m-d h:i:s'); // e.g., 2025-10-09 03:45:12 PM
+                        $timestamp = date('Y-m-d h:i:s');
                         $type = 'upload';
-                        $event = $conn->prepare("INSERT INTO events (user_id, `type`, `at`)  VALUES (?, ?, ?) ");
+                        $event = $conn->prepare("INSERT INTO events (user_id, `type`, `at`) VALUES (?, ?, ?)");
                         $event->bind_param("iss", $_SESSION['user_id'], $type, $timestamp);
                         $event->execute();
-
-                        if ($event->error) {
-                        die("Execute failed: " . $event->error);
-                        }
-                        
                     } else {
                         $message = "❌ Database error: " . $stmt->error;
                     }
-
                     $stmt->close();
                 } else {
                     $message = "❌ Failed to move uploaded file.";
@@ -78,7 +64,6 @@ if (isset($_POST['upload'])) {
     }
 }
 
-// Load courses JSON
 $courses = json_decode(file_get_contents("assets/data/courses.json"), true);
 ?>
 <!DOCTYPE html>
@@ -86,45 +71,66 @@ $courses = json_decode(file_get_contents("assets/data/courses.json"), true);
 <head>
     <meta charset="UTF-8">
     <title>Upload Notes - StudyHub</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <!-- External CSS -->
     <link rel="stylesheet" href="assets/css/upload-style.css">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
-    <div class="upload-container">
-        <h2>Upload a Note</h2>
 
-        <?php if ($message) echo "<p class='message'>$message</p>"; ?>
+<div class="container py-5">
+    <div class="upload-card mx-auto shadow-lg p-4 rounded-4">
+        <h2 class="text-center mb-4 fw-bold text-primary"><i class="fa-solid fa-cloud-arrow-up me-2"></i>Upload a Note</h2>
 
-        <form method="POST" action="upload.php" enctype="multipart/form-data" class="upload-form" id="upload-form">
-            <div class="form-group">
-                <i class="fas fa-heading"></i>
-                <input type="text" name="title" placeholder="Note title" required>
+        <?php if ($message): ?>
+            <div class="alert alert-info text-center fw-medium"><?= $message; ?></div>
+        <?php endif; ?>
+
+        <form method="POST" action="upload.php" enctype="multipart/form-data" id="upload-form">
+            <div class="mb-3 position-relative">
+                <label class="form-label fw-semibold"><i class="fa fa-heading me-2"></i>Title</label>
+                <input type="text" class="form-control" name="title" placeholder="Enter note title" required>
             </div>
 
-            <div class="form-group">
-                <i class="fas fa-align-left"></i>
-                <textarea name="description" placeholder="Description"></textarea>
+            <div class="mb-3">
+                <label class="form-label fw-semibold"><i class="fa fa-align-left me-2"></i>Description</label>
+                <textarea class="form-control" name="description" placeholder="Write a short description" rows="3"></textarea>
             </div>
 
-            <div class="form-group">
-                <i class="fas fa-book"></i>
-                <input type="text" id="subject-input" name="subject" placeholder="Course/Subject" required autocomplete="off">
+            <div class="mb-3 position-relative">
+                <label class="form-label fw-semibold"><i class="fa fa-book me-2"></i>Subject / Course</label>
+                <input type="text" class="form-control" id="subject-input" name="subject" placeholder="Course/Subject" required autocomplete="off">
                 <input type="hidden" name="course_code" id="course-code">
                 <div id="suggestions" class="suggestions"></div>
             </div>
 
-            <div class="form-group file-input">
-                <input type="file" name="file" id="file" required>
-                <span id="file-name">No file chosen</span>
+            <div class="mb-3">
+                <label class="form-label fw-semibold"><i class="fa fa-file-arrow-up me-2"></i>Upload File</label>
+                <input type="file" class="form-control" name="file" id="file" required>
+                <div class="form-text" id="file-name">No file chosen</div>
             </div>
 
-            <button type="submit" name="upload" class="btn">Upload</button>
+            <button type="submit" name="upload" class="btn btn-gradient w-100 py-2 fw-semibold">
+                <i class="fa-solid fa-upload me-1"></i> Upload
+            </button>
         </form>
 
-        <p><a href="home.php">⬅ Back to Home</a></p>
+        <div class="text-center mt-3">
+            <a href="home.php" class="text-decoration-none text-secondary fw-semibold">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Home
+            </a>
+        </div>
     </div>
-    <script src="assets/js/upload-script.js"></script>
-    <script src="assets/js/course-autocomplete.js"></script>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/upload-script.js"></script>
+<script src="assets/js/course-autocomplete.js"></script>
+
 </body>
 </html>

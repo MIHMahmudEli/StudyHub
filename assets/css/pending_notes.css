@@ -1,112 +1,79 @@
+/* ================== Pending Notes Page ================== */
 
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #eef2f7;
+    color: #333;
+}
 
-/* Wrapper */
-.table-wrapper {
-    width: 95%;
-    margin: 20px auto;
+/* Table Card */
+.table-responsive {
     background: #fff;
+    padding: 20px;
     border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
 }
 
 /* Table */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'Poppins', sans-serif;
+table.table {
+    border-collapse: separate;
+    border-spacing: 0 8px;
 }
 
-thead {
-    background: linear-gradient(90deg, #1e3c72, #2a5298);
+thead.table-primary {
+    background: linear-gradient(90deg, #6a11cb, #2575fc);
     color: #fff;
 }
 
 thead th {
-    padding: 14px;
-    text-align: left;
     font-weight: 600;
-    font-size: 15px;
+    letter-spacing: 0.5px;
+    background-color: #172e57 !important;
+    color: #fff !important;
+    font-size: 0.80rem;
+    
 }
 
 tbody tr {
-    border-bottom: 1px solid #f0f0f0;
-    transition: background 0.25s ease;
+    background: #fdfdfd;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 10px;
 }
 
 tbody tr:hover {
-    background: #f9fbff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.08);
 }
 
-td {
-    padding: 12px 14px;
-    font-size: 14px;
+td, th {
+    padding: 12px 15px;
+    vertical-align: middle;
 }
 
-/* Buttons */
-table a {
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 8px 14px;
-    border-radius: 6px;
-    margin: 0 4px;
-    display: inline-block;
+/* Action Buttons */
+.btn-sm {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 5px 12px;
     transition: all 0.2s ease;
-    color: #fff !important;   /* always white text */
 }
 
-/* Approve = Green */
-table a.approve {
-    background: #28a745;
-    border: 1px solid #1f8a37;
-}
-table a.approve:hover {
-    background: #218838;
+.btn-sm:hover {
+    transform: translateY(-2px);
 }
 
-/* Reject = Red */
-table a.reject {
-    background: #dc3545;
-    border: 1px solid #b52a37;
-}
-table a.reject:hover {
-    background: #c82333;
-}
-
-/* Preview = Blue */
-table a.preview {
-    background: #007bff;
-    border: 1px solid #0069d9;
-}
-table a.preview:hover {
-    background: #0069d9;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    td, th {
+        font-size: 13px;
+        padding: 10px 8px;
+    }
+    .topbar h5 {
+        font-size: 16px;
+    }
 }
 
-.promote{
-    background: #17a2b8;
-    border: 1px solid #117a8b;
+.fa-bars {
+    color: #fff;
 }
-.promote:hover{
-    background: #138496;
-}
-
-.delete{
-    background: #ffc107;
-    border: 1px solid #d39e00;
-}
-
-.delete:hover{
-    background: #e0a800;
-}
-
-.btn{
-    background: #3498db;
-    border: 1px solid #2980b9;
-}
-.btn:hover{
-    background: #2980b9;
-}
-
-
-

@@ -9,63 +9,82 @@ session_start();
 <title>StudyHub - Forgot Password</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-<link rel="stylesheet" href="assets/css/forgot-password.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="assets/css/forgot-password.css">
 </head>
 <body>
 
-<div class="container">
+<header class="auth-header">
+    <a href="main_index.php" class="logo">
+        <i class="fa fa-graduation-cap"></i> StudyHub
+    </a>
+</header>
 
-    <!-- Show success/error messages -->
-    <?php if(isset($_SESSION['fp_error'])): ?>
-        <div class="form-message error-msg"><?= $_SESSION['fp_error']; 
-        unset($_SESSION['fp_error']); ?></div>
-    <?php endif; ?>
-    <?php if(isset($_SESSION['fp_success'])): ?>
-        <div class="form-message success-msg"><?= $_SESSION['fp_success']; 
-        unset($_SESSION['fp_success']); ?></div>
-    <?php endif; ?>
+<div class="container-fluid d-flex justify-content-center align-items-center min-vh-100">
+    <div class="glass-card p-4 rounded-4 shadow-lg" style="max-width: 420px; width: 100%;">
 
-    <!-- Step 1: Confirm Email -->
-    <form id="step1" method="POST" action="forgot-password-step1.php" class="form active">
-        <h2>Reset Your Password</h2>
-        <p>Please confirm your email:</p>
-        <div class="input-group">
-            <i class="fa fa-envelope icon-left"></i>
-            <input type="email" name="email" placeholder="Enter your registered Email" required>
-        </div>
-        <button type="submit">Confirm Email</button>
-        <button type="button" class="toggle-btn" id="backToLogin">Cancel</button>
-    </form>
+        <!-- Flash Messages -->
+        <?php if(isset($_SESSION['fp_error'])): ?>
+            <div class="alert alert-danger text-center py-2">
+                <?= htmlspecialchars($_SESSION['fp_error']); unset($_SESSION['fp_error']); ?>
+            </div>
+        <?php endif; ?>
+        <?php if(isset($_SESSION['fp_success'])): ?>
+            <div class="alert alert-success text-center py-2">
+                <?= htmlspecialchars($_SESSION['fp_success']); unset($_SESSION['fp_success']); ?>
+            </div>
+        <?php endif; ?>
 
-    <!-- Step 2: Enter Verification Code + New Password -->
-    <form id="step2" method="POST" action="forgot-password-step2.php" class="form">
-        <h2>Reset Your Password</h2>
+        <!-- Step 1 -->
+        <form id="step1" method="POST" action="forgot-password-step1.php" class="">
+            <h2 class="text-center mb-3">Forgot Password 🔑</h2>
+            <p class="text-center text-light mb-4">Enter your registered email to receive a verification code.</p>
 
-        <!-- Message placeholder inside form -->
-        <div id="formMessage" class="message"></div>
+            <div class="input-group mb-3 position-relative">
+                <span class="position-absolute top-50 translate-middle-y ps-2 text-muted"><i class="fa fa-envelope"></i></span>
+                <input type="email" name="email" class="form-control ps-5" placeholder="Enter your email" required>
+            </div>
 
-        <div class="input-group">
-            <i class="fa fa-key icon-left"></i>
-            <input type="text" name="verification_code" placeholder="Verification Code" required>
-        </div>
-        <div class="input-group">
-            <i class="fa fa-lock icon-left"></i>
-            <input type="password" name="new_password" id="newPassword" placeholder="New Password" required>
-        </div>
-        <div class="input-group">
-            <i class="fa fa-lock icon-left"></i>
-            <input type="password" name="confirm_password" id="confirmPassword" placeholder="Confirm Password" required>
-        </div>
-        <button type="submit">Reset Password</button>
-        <button type="button" class="toggle-btn" id="resendCode">Resend Code</button>
-        <button type="button" class="toggle-btn" id="cancelReset">Cancel</button>
-        <p class="info-text">Step 1: Enter the verification code you received by email.<br>
-        Step 2: If you didn’t receive the code, check spam or click resend.</p>
-    </form>
+            <button type="submit" class="btn btn-primary w-100 mb-2">Send Verification Code</button>
+            <a href="main_index.php#login" class="btn btn-secondary w-100">Cancel</a>
+        </form>
 
+        <!-- Step 2 -->
+        <form id="step2" method="POST" action="forgot-password-step2.php" class="d-none">
+            <h2 class="text-center mb-3">Reset Password 🔒</h2>
+            <p class="text-center text-light mb-4">Enter the verification code and set a new password.</p>
+
+            <div class="input-group mb-3 position-relative">
+                <span class="position-absolute top-50 translate-middle-y ps-2 text-muted"><i class="fa fa-key"></i></span>
+                <input type="text" name="verification_code" class="form-control ps-5" placeholder="Verification Code" required>
+            </div>
+
+            <div class="input-group mb-3 position-relative">
+                <span class="position-absolute top-50 translate-middle-y ps-2 text-muted"><i class="fa fa-lock"></i></span>
+                <input type="password" name="new_password" id="newPassword" class="form-control ps-5" placeholder="New Password" required>
+            </div>
+
+            <div class="input-group mb-3 position-relative">
+                <span class="position-absolute top-50 translate-middle-y ps-2 text-muted"><i class="fa fa-lock"></i></span>
+                <input type="password" name="confirm_password" id="confirmPassword" class="form-control ps-5" placeholder="Confirm Password" required>
+            </div>
+
+            <div id="formMessage" class="text-center small mb-2" style="display:none;"></div>
+
+            <button type="submit" class="btn btn-primary w-100 mb-2">Reset Password</button>
+            <button type="button" class="btn btn-outline-light w-100 mb-2" id="resendCode">Resend Code</button>
+            <a href="main_index.php#login" class="btn btn-secondary w-100" id="cancelReset">Cancel</a>
+
+            <p class="info-text mt-3 text-center small text-light">
+                Didn’t get the code? Check spam or click “Resend Code”.
+            </p>
+        </form>
+
+    </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="assets/js/forgot-password.js"></script>
 </body>
 </html>

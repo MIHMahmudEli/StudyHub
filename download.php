@@ -35,7 +35,6 @@ $update->bind_param("i", $noteId);
 $update->execute();
 
 // 2. Log event
-    // Always use UTC time to avoid timezone mismatch
     date_default_timezone_set('Asia/Dhaka');
     $timestamp = date('Y-m-d h:i:s');
     $eventType = 'download';

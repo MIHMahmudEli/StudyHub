@@ -10,22 +10,21 @@ if (!isset($_SESSION['user_id'])) {
 
 $userId = intval($_SESSION['user_id']);
 
-// Separate messages for each form
+// Messages
 $profile_message = "";
 $profile_error = "";
 $password_message = "";
 $password_error = "";
 
-// --- Fetch current user info ---
+// Fetch current user info
 $stmt = $conn->prepare("SELECT name, email, role, points, password FROM users WHERE id=?");
 $stmt->bind_param("i", $userId);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 
-// --- Handle Profile Update (Name only, email locked) ---
+// Handle Profile Update
 if (isset($_POST['update_profile'])) {
     $new_name = trim($_POST['name']);
-
     if (!empty($new_name)) {
         $stmt = $conn->prepare("UPDATE users SET name=? WHERE id=?");
         $stmt->bind_param("si", $new_name, $userId);
@@ -33,56 +32,41 @@ if (isset($_POST['update_profile'])) {
 
         $_SESSION['user_name'] = $new_name;
         $user['name'] = $new_name;
-
-        $profile_message = "✅ Profile updated successfully!";
+        $profile_message = " Profile updated successfully!";
     } else {
-        $profile_error = "❌ Name cannot be empty.";
+        $profile_error = " Name cannot be empty.";
     }
 }
 
-// --- Handle Password Update ---
+// Handle Password Update
 if (isset($_POST['update_password'])) {
     $current_pass = trim($_POST['current_password']);
     $new_pass = trim($_POST['new_password']);
     $confirm_pass = trim($_POST['confirm_password']);
 
     if (empty($new_pass) || empty($confirm_pass)) {
-        $password_error = "❌ Please enter and confirm your new password.";
+        $password_error = " Please enter and confirm your new password.";
     } elseif ($new_pass !== $confirm_pass) {
-        $password_error = "❌ New password and confirm password do not match.";
+        $password_error = " New password and confirm password do not match.";
     } else {
-        // Collect all validation errors
         $errors = [];
-
-        if (strlen($new_pass) < 8) {
-            $errors[] = "❌ Password must be at least 8 characters long.";
-        }
-        if (!preg_match("/[A-Z]/", $new_pass)) {
-            $errors[] = "❌ Password must contain at least 1 uppercase letter.";
-        }
-        if (!preg_match("/[a-z]/", $new_pass)) {
-            $errors[] = "❌ Password must contain at least 1 lowercase letter.";
-        }
-        if (!preg_match("/[0-9]/", $new_pass)) {
-            $errors[] = "❌ Password must contain at least 1 number.";
-        }
-        if (!preg_match("/[@$!%*?&#]/", $new_pass)) {
-            $errors[] = "❌ Password must contain at least 1 special character (@$!%*?&#).";
-        }
+        if (strlen($new_pass) < 8) $errors[] = " Password must be at least 8 characters.";
+        if (!preg_match("/[A-Z]/", $new_pass)) $errors[] = " Must include 1 uppercase letter.";
+        if (!preg_match("/[a-z]/", $new_pass)) $errors[] = " Must include 1 lowercase letter.";
+        if (!preg_match("/[0-9]/", $new_pass)) $errors[] = " Must include 1 number.";
+        if (!preg_match("/[@$!%*?&#]/", $new_pass)) $errors[] = " Must include 1 special character.";
 
         if (!empty($errors)) {
-            // Join all validation messages
             $password_error = implode("<br>", $errors);
         } else {
-            // Verify current password
             if (password_verify($current_pass, $user['password'])) {
                 $hashed = password_hash($new_pass, PASSWORD_BCRYPT);
                 $stmt = $conn->prepare("UPDATE users SET password=? WHERE id=?");
                 $stmt->bind_param("si", $hashed, $userId);
                 $stmt->execute();
-                $password_message = "✅ Password updated successfully!";
+                $password_message = " Password updated successfully!";
             } else {
-                $password_error = "❌ Current password is incorrect.";
+                $password_error = " Current password is incorrect.";
             }
         }
     }
@@ -93,11 +77,18 @@ if (isset($_POST['update_password'])) {
 <head>
     <meta charset="UTF-8">
     <title>Profile - StudyHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap & Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/admin_dashboard.css">
     <link rel="stylesheet" href="assets/css/profile.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <!-- Sidebar -->
@@ -105,83 +96,101 @@ if (isset($_POST['update_password'])) {
         <div class="logo">
             <i class="fa fa-graduation-cap"></i> <span>StudyHub</span>
         </div>
-        <ul class="nav">
-            <li><a href="user_dashboard.php"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
-            <li><a href="home.php"><i class="fa fa-book"></i> <span>Browse Notes</span></a></li>
-            <li><a href="upload.php"><i class="fa fa-upload"></i> <span>Upload Notes</span></a></li>
-            <li><a href="leaderboard.php"><i class="fa fa-trophy"></i> <span>Leaderboard</span></a></li>
-            <li class="active"><a href="profile.php"><i class="fa fa-user"></i> <span>Profile</span></a></li>
+        <ul class="nav flex-column">
+            <li><a href="user_dashboard.php" class="nav-link"><i class="fa fa-home me-2"></i>Dashboard</a></li>
+            <li><a href="home.php" class="nav-link"><i class="fa fa-book me-2"></i>Browse Notes</a></li>
+            <li><a href="upload.php" class="nav-link"><i class="fa fa-upload me-2"></i>Upload Notes</a></li>
+            <li><a href="leaderboard.php" class="nav-link"><i class="fa fa-trophy me-2"></i>Leaderboard</a></li>
+            <li class="active"><a href="show_uploaded.php" class="nav-link"><i class="fa fa-file me-2"></i>Uploaded Notes</a></li>
+            <li><a href="profile.php" class="nav-link active"><i class="fa fa-user me-2"></i>Profile</a></li>
         </ul>
-        <div class="logout">
-            <a href="logout.php"><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a>
+        <div class="logout mt-auto px-3 pb-3">
+            <a href="logout.php" class="btn btn-light w-100"><i class="fa fa-sign-out-alt me-2"></i>Logout</a>
         </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="main">
-        <!-- Top Bar -->
-        <header class="topbar">
-            <div class="topbar-left">
-                <div class="menu-toggle">
+    <main class="main-content flex-grow-1">
+        <!-- Topbar -->
+        <header class="topbar d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center gap-3">
+                <button class="menu-toggle btn text-white p-0 border-0">
                     <i class="fa fa-bars"></i>
-                </div>
-                <h2>My Profile - <?php echo htmlspecialchars($_SESSION['user_name']); ?></h2>
+                </button>
+                <h5 class="mb-0 fw-semibold">My Profile - <?php echo htmlspecialchars($_SESSION['user_name']); ?></h5>
             </div>
-            <div class="topbar-right">
-                <span class="role"><?php echo ucfirst($user['role']); ?></span>
-                <a href="logout.php" class="btn btn-danger">Logout</a>
+            <div class="d-flex align-items-center gap-3">
+                <span class="badge bg-light text-dark fw-bold"><?php echo ucfirst($user['role']); ?></span>
+                <a href="logout.php" class="btn btn-danger btn-sm">Logout</a>
             </div>
         </header>
 
-        <!-- Page Content -->
-        <div class="profile-container">
+        <!-- Profile & Password Sections -->
+        <div class="container py-2">
+            <div class="row g-4">
+                <!-- Profile Info -->
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <?php if (!empty($profile_message)) echo "<div class='alert alert-success'>$profile_message</div>"; ?>
+                            <?php if (!empty($profile_error)) echo "<div class='alert alert-danger'>$profile_error</div>"; ?>
 
-            <!-- Profile Info Section -->
-            <section class="settings-section">
-                <?php if (!empty($profile_message)) echo "<p class='success'>$profile_message</p>"; ?>
-                <?php if (!empty($profile_error)) echo "<p class='error'>$profile_error</p>"; ?>
+                            <h5 class="card-title mb-3"><i class="fa fa-user me-2 text-primary"></i>Profile Info</h5>
+                            <form method="post">
+                                <div class="mb-3">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" name="name" class="form-control" value="<?php echo htmlspecialchars($user['name']); ?>" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" value="<?php echo htmlspecialchars($user['email']); ?>" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Role</label>
+                                    <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['role']); ?>" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Points</label>
+                                    <input type="text" class="form-control" value="<?php echo intval($user['points']); ?>" disabled>
+                                </div>
+                                <button type="submit" name="update_profile" class="btn btn-primary w-100">Save Profile</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
-                <h3>👤 Update Profile Info</h3>
-                <form method="post">
-                    <label>Name:</label>
-                    <input type="text" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" required>
+                <!-- Password Update -->
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <?php if (!empty($password_message)) echo "<div class='alert alert-success'>$password_message</div>"; ?>
+                            <?php if (!empty($password_error)) echo "<div class='alert alert-danger'>$password_error</div>"; ?>
 
-                    <label>Email:</label>
-                    <input type="email" value="<?php echo htmlspecialchars($user['email']); ?>" disabled>
-
-                    <label>Role:</label>
-                    <input type="text" value="<?php echo htmlspecialchars($user['role']); ?>" disabled>
-
-                    <label>Points:</label>
-                    <input type="text" value="<?php echo intval($user['points']); ?>" disabled>
-
-                    <button type="submit" name="update_profile">Save Profile</button>
-                </form>
-            </section>
-
-            <!-- Password Update Section -->
-            <section class="settings-section">
-                <?php if (!empty($password_message)) echo "<p class='success'>$password_message</p>"; ?>
-                <?php if (!empty($password_error)) echo "<p class='error'>$password_error</p>"; ?>
-
-                <h3>🔒 Change Password</h3>
-                <form method="post" name="password_form">
-                    <label>Current Password:</label>
-                    <input type="password" name="current_password" placeholder="Enter current password" required>
-
-                    <label>New Password:</label>
-                    <input type="password" name="new_password" placeholder="Enter new password" required>
-
-                    <label>Confirm New Password:</label>
-                    <input type="password" name="confirm_password" placeholder="Confirm new password" required>
-
-                    <button type="submit" name="update_password">Update Password</button>
-                </form>
-            </section>
+                            <h5 class="card-title mb-3"><i class="fa fa-lock me-2 text-warning"></i>Change Password</h5>
+                            <form method="post">
+                                <div class="mb-3">
+                                    <label class="form-label">Current Password</label>
+                                    <input type="password" name="current_password" class="form-control" placeholder="Enter current password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">New Password</label>
+                                    <input type="password" name="new_password" class="form-control" placeholder="Enter new password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Confirm New Password</label>
+                                    <input type="password" name="confirm_password" class="form-control" placeholder="Confirm new password" required>
+                                </div>
+                                <button type="submit" name="update_password" class="btn btn-warning w-100 text-white">Update Password</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
-    <!-- <script src="assets/js/profile-script.js"></script> -->
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/admin_dashboard.js"></script>
 </body>
 </html>

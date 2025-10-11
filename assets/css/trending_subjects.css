@@ -45,6 +45,7 @@ h2 {
 table {
     width: 100%;
     border-collapse: collapse;
+    font-size: 0.80rem;
 }
 
 thead {
@@ -64,6 +65,7 @@ tbody tr {
     border-bottom: 1px solid #f0f0f0;
     transition: background 0.25s ease, transform 0.15s ease;
     cursor: pointer;
+    font-size: 0.80rem;
 }
 
 tbody tr:hover {
@@ -126,4 +128,13 @@ td:nth-child(4) {
         font-weight: 600;
         color: #444;
     }
+}
+
+thead th {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    background-color: #172e57 !important;
+    color: #fff !important;
+    font-size: 0.80rem;
+    
 }

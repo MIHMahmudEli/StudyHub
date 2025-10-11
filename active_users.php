@@ -21,98 +21,134 @@ $users = $conn->query("
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Active Users - Admin</title>
-    <link rel="stylesheet" href="assets/css/admin_dashboard.css">
-    <link rel="stylesheet" href="assets/css/manage_users.css">
-    <link rel="stylesheet" href="assets/css/trending_subjects.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta charset="UTF-8">
+<title>Active Users - Admin</title>
+
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Custom CSS -->
+<link rel="stylesheet" href="assets/css/admin_dashboard.css">
+<link rel="stylesheet" href="assets/css/manage_users.css">
+<link rel="stylesheet" href="assets/css/trending_subjects.css">
+
 </head>
 <body>
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="logo">
-            <i class="fa fa-graduation-cap"></i> <span>StudyHub</span>
-        </div>
-        <ul class="nav">
-            <li><a href="admin_dashboard.php"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
-            <li><a href="pending_notes.php"><i class="fa fa-file"></i> <span>Notes</span></a></li>
-            <li><a href="manage_users.php"><i class="fa fa-users"></i> <span>Users</span></a></li>
-            <li class="active"><i class="fa fa-chart-bar"></i> <span>Analytics</span></li>
-            <li><a href="#"><i class="fa fa-file-alt"></i> <span>Reports</span></a></li>
-            <li><a href="home.php"><i class="fa fa-book"></i> <span>Browse Notes</span></a></li>
-            <li><a href="show_uploaded.php"><i class="fa fa-upload"></i> <span>Uploaded Notes</span></a></li>
-            <li><a href="settings.php"><i class="fa fa-cog"></i> <span>Settings</span></a></li>
-        </ul>
-        <div class="logout">
-            <a href="logout.php"><i class="fa fa-sign-out-alt"></i> <span>Logout</span></a>
-        </div>
-    </aside>
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="logo">
+        <i class="fa fa-graduation-cap"></i> <span>StudyHub</span>
+    </div>
+    <ul class="nav flex-column px-2">
+        <li class="nav-item"><a href="admin_dashboard.php" class="nav-link"><i class="fa fa-home me-2"></i>Dashboard</a></li>
+        <li class="nav-item"><a href="pending_notes.php" class="nav-link"><i class="fa fa-file me-2"></i>Pending Notes</a></li>
+        <li><a href="manage_users.php" class="nav-link active"><i class="fa fa-users me-2"></i>Users</a></li>
+        <li class="nav-item"><a href="active_users.php" class="nav-link"><i class="fa fa-users me-2"></i>Analytics</a></li>
+        <li><a href="#" class="nav-link"><i class="fa fa-file-alt me-2"></i>Reports</a></li>
+        <li><a href="home.php" class="nav-link"><i class="fa fa-book me-2"></i>Browse Notes</a></li>
+        <li><a href="show_uploaded.php" class="nav-link"><i class="fa fa-upload me-2"></i>Uploaded Notes</a></li>
+        <li><a href="settings.php" class="nav-link"><i class="fa fa-cog me-2"></i>Settings</a></li>
+    </ul>
+    <div class="logout px-3 mt-auto pb-3">
+        <a href="logout.php" class="btn btn-light w-100"><i class="fa fa-sign-out-alt me-2"></i>Logout</a>
+    </div>
+</aside>
 
-    <!-- Main -->
-    <main class="main">
-        <header class="topbar">
-            <div class="topbar-left">
-                <div class="menu-toggle">
-                    <i class="fa fa-bars"></i>
-                </div>
-                <h2>Most Active Users</h2>
-            </div>
-            <div class="topbar-right">
-                <span class="role">Admin</span>
-                <a href="admin_dashboard.php" class="btn btn-primary">
-                    <i class="fa fa-arrow-left"></i> Back
-                </a>
-            </div>
-        </header>
+<!-- Main Content -->
+<main class="main-content flex-grow-1">
+    <!-- Topbar -->
+    <header class="topbar d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle btn text-white p-0 border-0">
+                <i class="fa fa-bars"></i>
+            </button>
+            <h5 class="mb-0 fw-semibold">Most Active Users</h5>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <span class="badge bg-light text-dark">Admin</span>
+            <a href="admin_dashboard.php" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left me-1"></i>Back</a>
+        </div>
+    </header>
 
-        <!-- Active Users Table -->
-        <section class="content">
-            <h2>Top 20 Active Users</h2>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
+    <section class="container py-4">
+        <h4 class="mb-3">Top 20 Active Users</h4>
+
+        <!-- Desktop Table -->
+        <div class="d-none d-md-block table-responsive mb-4">
+            <table class="table table-hover align-middle">
+                <thead class="table-primary">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Activity Count</th>
+                        <th>Last Active</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($users->num_rows > 0): ?>
+                        <?php while ($u = $users->fetch_assoc()): ?>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Activity Count</th>
-                            <th>Last Active</th>
+                            <td><?php echo $u['id']; ?></td>
+                            <td><?php echo htmlspecialchars($u['name']); ?></td>
+                            <td><?php echo htmlspecialchars($u['email']); ?></td>
+                            <td><?php echo $u['role']; ?></td>
+                            <td><?php echo $u['activity']; ?></td>
+                            <td>
+                                <?php 
+                                if ($u['last_active']) {
+                                    echo date('Y-m-d h:i:s A', strtotime($u['last_active']));
+                                } else {
+                                    echo 'N/A';
+                                }
+                                ?>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php if ($users->num_rows > 0): ?>
-                            <?php while ($u = $users->fetch_assoc()): ?>
-                            <tr>
-                                <td><?php echo $u['id']; ?></td>
-                                <td><?php echo htmlspecialchars($u['name']); ?></td>
-                                <td><?php echo htmlspecialchars($u['email']); ?></td>
-                                <td><?php echo $u['role']; ?></td>
-                                <td><?php echo $u['activity']; ?></td>
-                                <td>
-                                    <?php 
-                                    if ($u['last_active']) {
-                                        // Convert TIMESTAMP to 12-hour AM/PM format
-                                        echo date('Y-m-d h:i:s A', strtotime($u['last_active']));
-                                    } else {
-                                        echo 'N/A';
-                                    }
-                                    ?>
-                                </td>
-                            </tr>
-                            <?php endwhile; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="6" class="empty-message">No activity found</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </main>
-    <script src="assets/js/admin_dashboard.js"></script>
-</body>
-</html>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6" class="text-center">No activity found</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="d-md-none">
+            <?php if ($users->num_rows > 0): ?>
+                <?php
+                // Reset pointer to fetch rows again
+                $users->data_seek(0);
+                while ($u = $users->fetch_assoc()):
+                ?>
+                <div class="card mb-2 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-title"><?php echo htmlspecialchars($u['name']); ?> <span class="badge bg-secondary"><?php echo $u['role']; ?></span></h6>
+                        <p class="mb-1"><i class="fa fa-envelope me-1"></i><?php echo htmlspecialchars($u['email']); ?></p>
+                        <p class="mb-1"><i class="fa fa-list me-1"></i>Activity: <?php echo $u['activity']; ?></p>
+                        <p class="mb-0"><i class="fa fa-clock me-1"></i>Last Active: 
+                            <?php 
+                            if ($u['last_active']) {
+                                echo date('Y-m-d h:i:s A', strtotime($u['last_active']));
+                            } else {
+                                echo 'N/A';
+                            }
+                            ?>
+                        </p>
+                    </div>
+                </div>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <p class="text-center">No activity found</p>
+            <?php endif; ?>
+        </div>
+    </section>
+</main>
+
+<script s

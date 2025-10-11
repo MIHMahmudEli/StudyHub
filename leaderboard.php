@@ -7,24 +7,20 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Get search term if any
+$userId = intval($_SESSION['user_id']);
+$role = $_SESSION['role'] ?? 'student';
 $searchTerm = '';
+
 if (isset($_GET['q']) && !empty(trim($_GET['q']))) {
     $searchTerm = mysqli_real_escape_string($conn, trim($_GET['q']));
 }
 
-// Fetch users sorted by points descending, optionally filtered
-if ($searchTerm !== '') {
-    $query = "SELECT id, name, points FROM users 
-              WHERE name LIKE '%$searchTerm%' 
-              ORDER BY points DESC";
-} else {
-    $query = "SELECT id, name, points FROM users ORDER BY points DESC";
-}
+// Fetch users sorted by points descending
+$query = "SELECT id, name, points FROM users " . 
+         ($searchTerm ? "WHERE name LIKE '%$searchTerm%' " : "") . 
+         "ORDER BY points DESC";
 
 $result = mysqli_query($conn, $query);
-
-// Collect results
 $players = [];
 if ($result) {
     while ($row = mysqli_fetch_assoc($result)) {
@@ -32,7 +28,6 @@ if ($result) {
     }
 }
 
-// Function to get title and icon based on rank/points
 function getTitleIcon($rank, $points) {
     if ($rank <= 5) return ["Titan", "👑"];
     if ($rank <= 10) return ["Champion", "🏆"];
@@ -48,65 +43,83 @@ function getTitleIcon($rank, $points) {
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Leaderboard - Notes Hub</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Custom CSS -->
 <link rel="stylesheet" href="assets/css/home-style.css">
 <link rel="stylesheet" href="assets/css/leaderboard.css">
+
+<!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
+
 </head>
-<body>
-<header>
-    <section class="nav-center">
-        <a href="home.php">🏠 Home</a>
-        <a href="home.php?bookmarks=1">🔖 Bookmark</a>
-        <a href="leaderboard.php" class="active-link">🏆 Leaderboard</a>
-        <a href="upload.php">📘 Upload Notes</a>
-    </section>
+<body class="bg-light">
 
-    <!-- Nav right with search -->
-    <section class="nav-right">
-        <form method="GET" action="leaderboard.php" class="search-form">
-            <input type="text" name="q" id="searchBox" placeholder="🔍 Search user..." value="<?php echo htmlspecialchars($searchTerm); ?>">
-            <button type="submit">Search</button>
-        </form>
+<!-- Navbar (same as home.php) -->
+<nav class="navbar navbar-expand-lg shadow-sm sticky-top bg-primary">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-white" href="home.php">Notes Hub</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <a href="user_dashboard.php">
-            👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
-        </a>
-        <p>⭐ <?php echo isset($_SESSION['points']) ? intval($_SESSION['points']) : 0; ?> pts</p>
-    </section>
-</header>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link text-white <?php echo basename($_SERVER['PHP_SELF'])=='home.php' ? 'active' : ''; ?>" href="home.php">Home</a></li>
+        <li class="nav-item"><a class="nav-link text-white <?php echo isset($_GET['bookmarks']) ? 'active' : ''; ?>" href="home.php?bookmarks=1">Bookmarks</a></li>
+        <li class="nav-item"><a class="nav-link text-white <?php echo basename($_SERVER['PHP_SELF'])=='leaderboard.php' ? 'active' : ''; ?>" href="leaderboard.php">Leaderboard</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="upload.php">Upload Notes</a></li>
+      </ul>
 
-<main>
-    <div class="leaderboard">
-        <h2>Leaderboard</h2>
+      <form class="d-flex me-3" method="GET" action="leaderboard.php">
+        <input class="form-control me-2 rounded-pill" type="search" placeholder="Search user..." name="q" value="<?php echo htmlspecialchars($searchTerm); ?>">
+        <button class="btn btn-outline-light rounded-pill" type="submit">Search</button>
+      </form>
 
-        <?php 
+      <?php if ($role === 'student') { ?>
+            <a href="user_dashboard.php" class="name me-3 text-white fw-bold">
+                👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
+            </a>
+      <?php } else { ?>
+            <a href="admin_dashboard.php" class="name me-3 text-white fw-bold">
+                👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
+            </a>
+      <?php } ?>
+      <span class="badge bg-warning text-dark">⭐ <?php echo isset($_SESSION['points']) ? intval($_SESSION['points']) : 0; ?> pts</span>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="container my-5">
+    <h2 class="text-center mb-4">Leaderboard</h2>
+    
+    <div class="d-flex flex-column">
+        <?php
         $rank = 1;
-        foreach ($players as $player): 
+        foreach ($players as $player):
             $points = intval($player['points']);
             list($title, $icon) = getTitleIcon($rank, $points);
         ?>
-        <div class="player-card rank-<?php echo $rank; ?>">
-            <div class="rank-badge"><?php echo $rank; ?>.</div>
-            <div class="player-info">
-                <div class="player-top">
-                    <span class="player-name"><?php echo htmlspecialchars($player['name']); ?></span>
-                </div>
-                <div class="player-title">
-                    <span class="title-icon"><?php echo $icon; ?></span>
-                    <?php echo $title; ?>
+        <div class="player-card">
+            <div class="d-flex align-items-center">
+                <div class="rank-badge"><?php echo $rank; ?>.</div>
+                <div class="player-info">
+                    <div class="player-name"><?php echo htmlspecialchars($player['name']); ?></div>
+                    <div class="player-title"><?php echo $icon . ' ' . $title; ?></div>
                 </div>
             </div>
-            <div class="trophy-count">
-                <span><?php echo $points; ?></span> <span class="trophy-icon">🏆</span>
-            </div>
+            <div class="trophy-count"><?php echo $points; ?> 🏆</div>
         </div>
-        <?php 
-            $rank++;
-        endforeach; 
-        ?>
+        <?php $rank++; endforeach; ?>
     </div>
 </main>
+
 </body>
 </html>
