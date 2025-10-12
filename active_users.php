@@ -15,13 +15,13 @@ $users = $conn->query("
     LEFT JOIN events e ON u.id = e.user_id
     GROUP BY u.id
     ORDER BY activity DESC
-    LIMIT 20
 ");
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Active Users - Admin</title>
 
 <!-- Fonts & Icons -->

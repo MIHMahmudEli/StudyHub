@@ -29,7 +29,7 @@ $user = $stmt->get_result()->fetch_assoc();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/admin_dashboard.css?v=3.0">
+    <link rel="stylesheet" href="assets/css/admin_dashboard.css?v=3.1">
 </head>
 <body>
 
@@ -104,6 +104,6 @@ $user = $stmt->get_result()->fetch_assoc();
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/admin_dashboard.js?v=3.0"></script>
+    <script src="assets/js/admin_dashboard.js?v=3.1"></script>
 </body>
 </html>

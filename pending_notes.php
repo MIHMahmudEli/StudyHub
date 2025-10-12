@@ -20,6 +20,7 @@ $pendingNotes = $conn->query("SELECT n.id, n.title, n.created_at, u.name AS uplo
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pending Notes - Admin</title>
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -68,7 +69,7 @@ $pendingNotes = $conn->query("SELECT n.id, n.title, n.created_at, u.name AS uplo
             <button class="menu-toggle btn text-white p-0 border-0">
                 <i class="fa fa-bars"></i>
             </button>
-            <h5 class="mb-0 fw-semibold">Trending Subjects</h5>
+            <h5 class="mb-0 fw-semibold">Pending Notes</h5>
         </div>
         <div class="d-flex align-items-center gap-3">
             <span class="badge bg-light text-dark"><?php echo $role; ?></span>

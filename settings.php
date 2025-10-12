@@ -73,6 +73,7 @@ $moderators = $conn->query("SELECT id, name, email FROM users WHERE role='modera
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Settings - StudyHub</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 

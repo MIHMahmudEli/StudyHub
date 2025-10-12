@@ -63,7 +63,7 @@ $result = mysqli_query($conn, $query);
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Custom CSS -->
-<link rel="stylesheet" href="assets/css/home-style.css?v=3.0">
+<link rel="stylesheet" href="assets/css/home-style.css?v=3.0.2">
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="favicon.svg">

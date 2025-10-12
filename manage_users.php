@@ -33,6 +33,7 @@ $users = $conn->query("SELECT id, name, email, role, points, created_at FROM use
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manage Users - StudyHub</title>
 
 <!-- Fonts & Icons -->
@@ -77,7 +78,7 @@ $users = $conn->query("SELECT id, name, email, role, points, created_at FROM use
             <button class="menu-toggle btn text-white p-0 border-0">
                 <i class="fa fa-bars"></i>
             </button>
-            <h5 class="mb-0 fw-semibold">Trending Subjects</h5>
+            <h5 class="mb-0 fw-semibold">Manage Users</h5>
         </div>
         <div class="d-flex align-items-center gap-3">
             <span class="badge bg-light text-dark"><?php echo $role; ?></span>

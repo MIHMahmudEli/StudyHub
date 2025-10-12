@@ -51,7 +51,7 @@ function getTitleIcon($rank, $points) {
 
 <!-- Custom CSS -->
 <link rel="stylesheet" href="assets/css/home-style.css?v=3.0">
-<link rel="stylesheet" href="assets/css/leaderboard.css?v=3.0">
+<link rel="stylesheet" href="assets/css/leaderboard.css?v=3.0.2">
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
