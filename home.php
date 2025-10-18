@@ -1,9 +1,10 @@
 <?php
 session_start();
 include("includes/db.php");
+include("includes/redirect_helper.php"); // Include the redirect helper
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: main_index.php#login");
+    redirect("main_index#login");
     exit;
 }
 
@@ -76,35 +77,34 @@ $result = mysqli_query($conn, $query);
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg shadow-sm sticky-top">
   <div class="container">
-    <a class="navbar-brand fw-bold" href="home.php">Notes Hub</a>
+    <a class="navbar-brand fw-bold" href="<?php echo url('home.php'); ?>">Notes Hub</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link <?php echo !$isBookmarksView ? 'active' : ''; ?>" href="home.php">Home</a></li>
-        <li class="nav-item"><a class="nav-link <?php echo $isBookmarksView ? 'active' : ''; ?>" href="home.php?bookmarks=1">Bookmarks</a></li>
-        <li class="nav-item"><a class="nav-link" href="leaderboard.php">Leaderboard</a></li>
-        <li class="nav-item"><a class="nav-link" href="upload.php">Upload Notes</a></li>
+        <li class="nav-item"><a class="nav-link <?php echo !$isBookmarksView ? 'active' : ''; ?>" href="<?php echo url('home.php'); ?>">Home</a></li>
+        <li class="nav-item"><a class="nav-link <?php echo $isBookmarksView ? 'active' : ''; ?>" href="<?php echo url('home.php'); ?>?bookmarks=1">Bookmarks</a></li>
+        <li class="nav-item"><a class="nav-link" href="<?php echo url('leaderboard.php'); ?>">Leaderboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="<?php echo url('upload.php'); ?>">Upload Notes</a></li>
       </ul>
 
-      <form class="d-flex me-3" method="GET" action="home.php">
+      <form class="d-flex me-3" method="GET" action="<?php echo url('home.php'); ?>">
         <input class="form-control me-2 rounded-pill" type="search" placeholder="Search notes..." name="q" value="<?php echo htmlspecialchars($searchTerm); ?>">
         <?php if ($isBookmarksView): ?><input type="hidden" name="bookmarks" value="1"><?php endif; ?>
         <button class="btn btn-outline-light rounded-pill" type="submit">Search</button>
       </form>
 
       <?php if ($role === 'student') { ?>
-            <a href="user_dashboard.php" class="name me-3 text-white fw-bold">
+            <a href="<?php echo url('user_dashboard.php'); ?>" class="name me-3 text-white fw-bold">
                 👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
             </a>
       <?php } elseif ($role === 'admin' || $role === 'moderator') { ?>
-            <a href="admin_dashboard.php" class="name me-3 text-white fw-bold">
+            <a href="<?php echo url('admin_dashboard.php'); ?>" class="name me-3 text-white fw-bold">
                 👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
             </a>
         <?php } ?>
-
 
       <span class="badge bg-warning text-dark">⭐ <?php echo isset($_SESSION['points']) ? intval($_SESSION['points']) : 0; ?> pts</span>
     </div>
@@ -122,7 +122,7 @@ $result = mysqli_query($conn, $query);
         ?>
         <div class="col">
           <div class="card h-100 shadow-sm note-card position-relative">
-            <a href="preview_note.php?id=<?php echo $row['id']; ?>&track=true" class="text-decoration-none text-dark">
+            <a href="<?php echo url('preview_note.php'); ?>?id=<?php echo $row['id']; ?>&track=true" class="text-decoration-none text-dark">
               <div class="card-body text-center py-4">
                 <div class="note-file mb-3">
                   <?php 
@@ -152,7 +152,7 @@ $result = mysqli_query($conn, $query);
               <button class="btn btn-sm btn-danger bookmark-btn" data-id="<?php echo $row['id']; ?>">Remove Bookmark</button>
               <?php endif; ?>
               <?php endif; ?>
-              <a href="download.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-success">⬇️ Download</a>
+              <a href="<?php echo url('download.php'); ?>?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-success">⬇️ Download</a>
             </div>
 
           </div>

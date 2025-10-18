@@ -1,5 +1,6 @@
 <?php
 session_start();
+include("includes/redirect_helper.php"); // Include the redirect helper
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,14 +17,14 @@ session_start();
 
 <!-- Logo Header -->
 <header class="auth-header">
-    <a href="index.html" class="logo">
+    <a href="<?php echo url('index.html'); ?>" class="logo">
         <i class="fa fa-graduation-cap"></i> StudyHub
     </a>
 </header>
 
 <div class="container">
     <!-- Login Form -->
-    <form id="loginForm" class="active" method="POST" action="login.php">
+    <form id="loginForm" class="active" method="POST" action="<?php echo url('login.php'); ?>">
         <h2>Welcome Back 👋</h2>
         <p class="subtitle">Sign in to continue your learning journey</p>
 
@@ -45,15 +46,15 @@ session_start();
         </div>
 
         <div class="forgot-password">
-            <a href="forgot-password.php">Forgot Password?</a>
+            <a href="<?php echo url('forgot-password.php'); ?>">Forgot Password?</a>
         </div>
 
         <button type="submit" class="primary-btn">Login</button>
-        <button type="button" class="toggle-btn">Don’t have an account? Register</button>
+        <button type="button" class="toggle-btn">Don't have an account? Register</button>
     </form>
 
     <!-- Register Form -->
-    <form id="registerForm" method="POST" action="register.php">
+    <form id="registerForm" method="POST" action="<?php echo url('register.php'); ?>">
         <h2>Join StudyHub ✨</h2>
         <p class="subtitle">Create your account and start sharing knowledge</p>
 

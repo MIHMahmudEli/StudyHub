@@ -1,7 +1,15 @@
 <?php
 session_start();
-include("includes/db.php"); // connect to database
+include("includes/db.php");
+include("includes/redirect_helper.php");
 
+// If accessed via GET, redirect to main index
+if ($_SERVER["REQUEST_METHOD"] != "POST") {
+    redirect("main_index#login");
+    exit();
+}
+
+// Process POST login request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = htmlspecialchars(trim($_POST['email']));
     $password = htmlspecialchars(trim($_POST['password']));
@@ -18,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Check if email is verified
         if ($row['verified'] == 0) {
             $_SESSION['error'] = "⚠ Please verify your email before logging in. Check your inbox.";
-            header("Location: main_index.php#login");
+            redirect("main_index#login");
             exit();
         }
 
@@ -30,34 +38,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_name'] = $row['name'];
             $_SESSION['points']    = $row['points'];
 
-            // 2. Login event
+            // Login event
             date_default_timezone_set('Asia/Dhaka');
             $timestamp = date('Y-m-d H:i:s');
             $type = 'view';
-            $event = $conn->prepare("INSERT INTO events (user_id, `type`, `at`)  VALUES (?, ?, ?) ");
+            $event = $conn->prepare("INSERT INTO events (user_id, `type`, `at`) VALUES (?, ?, ?)");
             $event->bind_param("iss", $_SESSION['user_id'], $type, $timestamp);
             $event->execute();
 
             if ($event->error) {
-            die("Execute failed: " . $event->error);
+                // Log error but don't die - allow login to continue
+                error_log("Event logging failed: " . $event->error);
             }
-
 
             // Redirect based on role
             if ($row['role'] === 'admin' || $row['role'] === 'moderator') {
-                header("Location: admin_dashboard.php");
+                redirect("admin_dashboard");
             } else {
-                header("Location: home.php"); // normal student/user dashboard
+                redirect("home");
             }
             exit();
         } else {
-                    $_SESSION['error'] = "Invalid email or password.";
-                    header("Location: main_index.php#login");
-                    exit();
-                }
+            $_SESSION['error'] = "Invalid email or password.";
+            redirect("main_index#login");
+            exit();
+        }
     } else {
         $_SESSION['error'] = "Invalid email or password.";
-        header("Location: main_index.php#login");
+        redirect("main_index#login");
         exit();
     }
 }

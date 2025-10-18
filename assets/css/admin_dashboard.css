@@ -124,6 +124,7 @@ body.no-scroll {
 @media (max-width: 576px) {
   .dashboard-card {
     padding: 1rem !important;
+    border-radius: 15px 15px 15px 15px !important;
   }
 }
 
