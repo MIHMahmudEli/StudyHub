@@ -1,10 +1,21 @@
 <?php
 session_start();
 include("includes/db.php");
+include("includes/redirect_helper.php");
 
 if (!isset($_SESSION['user_id'])) {
     http_response_code(403);
-    header("Location: main_index.php#login");
+    
+    // Check if it's an AJAX request
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+        strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        // AJAX request - return JSON error
+        header('Content-Type: application/json');
+        echo json_encode(['error' => 'Not authenticated']);
+    } else {
+        // Regular request - redirect
+        redirect("main_index#login");
+    }
     exit;
 }
 

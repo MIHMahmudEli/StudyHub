@@ -1,7 +1,7 @@
 <?php
 session_start();
 include("includes/db.php");
-include("includes/redirect_helper.php"); // Include the redirect helper
+include("includes/redirect_helper.php");
 
 if (!isset($_SESSION['user_id'])) {
     redirect("main_index#login");
@@ -63,31 +63,37 @@ $result = mysqli_query($conn, $query);
 <!-- Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<!-- Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
 <!-- Custom CSS -->
-<link rel="stylesheet" href="assets/css/home-style.css?v=3.0.2">
+<link rel="stylesheet" href="assets/css/home-style.css?v=3.0.6">
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
-<script src="assets/js/home-script.js?v=3.0" defer></script>
+<script src="assets/js/home-script.js?v=3.4" defer></script>
 </head>
 <body class="bg-light">
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg shadow-sm sticky-top">
+<nav class="navbar navbar-expand-lg shadow-sm sticky-top bg-dark">
   <div class="container">
-    <a class="navbar-brand fw-bold" href="<?php echo url('home.php'); ?>">Notes Hub</a>
+    <a class="navbar-brand fw-bold text-white" href="<?php echo url('home.php'); ?>">Notes Hub</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link <?php echo !$isBookmarksView ? 'active' : ''; ?>" href="<?php echo url('home.php'); ?>">Home</a></li>
-        <li class="nav-item"><a class="nav-link <?php echo $isBookmarksView ? 'active' : ''; ?>" href="<?php echo url('home.php'); ?>?bookmarks=1">Bookmarks</a></li>
-        <li class="nav-item"><a class="nav-link" href="<?php echo url('leaderboard.php'); ?>">Leaderboard</a></li>
-        <li class="nav-item"><a class="nav-link" href="<?php echo url('upload.php'); ?>">Upload Notes</a></li>
+        <li class="nav-item"><a class="nav-link <?php echo !$isBookmarksView ? 'active' : ''; ?> text-white" href="<?php echo url('home.php'); ?>">Home</a></li>
+        <li class="nav-item"><a class="nav-link <?php echo $isBookmarksView ? 'active' : ''; ?> text-white" href="<?php echo url('home.php'); ?>?bookmarks=1">Bookmarks</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="<?php echo url('leaderboard.php'); ?>">Leaderboard</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="<?php echo url('upload.php'); ?>">Upload Notes</a></li>
       </ul>
 
       <form class="d-flex me-3" method="GET" action="<?php echo url('home.php'); ?>">
@@ -97,14 +103,14 @@ $result = mysqli_query($conn, $query);
       </form>
 
       <?php if ($role === 'student') { ?>
-            <a href="<?php echo url('user_dashboard.php'); ?>" class="name me-3 text-white fw-bold">
-                👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
-            </a>
+        <a href="<?php echo url('user_dashboard.php'); ?>" class="name me-3 text-white fw-bold">
+            👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
+        </a>
       <?php } elseif ($role === 'admin' || $role === 'moderator') { ?>
-            <a href="<?php echo url('admin_dashboard.php'); ?>" class="name me-3 text-white fw-bold">
-                👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
-            </a>
-        <?php } ?>
+        <a href="<?php echo url('admin_dashboard.php'); ?>" class="name me-3 text-white fw-bold">
+            👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
+        </a>
+      <?php } ?>
 
       <span class="badge bg-warning text-dark">⭐ <?php echo isset($_SESSION['points']) ? intval($_SESSION['points']) : 0; ?> pts</span>
     </div>
@@ -113,13 +119,22 @@ $result = mysqli_query($conn, $query);
 
 <!-- Main Content -->
 <main class="container my-5">
+  <?php if ($isBookmarksView): ?>
+    <div class="mb-4 p-3 rounded-4 shadow-sm bg-white d-flex justify-content-between align-items-center flex-wrap">
+        <div class="d-flex align-items-center gap-3">
+            <i class="fa fa-bookmark fa-2x text-primary"></i>
+            <h4 class="mb-0 fw-bold text-dark">Your Bookmarked Notes</h4>
+        </div>
+        <span class="badge bg-primary fs-6 py-2 px-3 shadow-sm number-of-bookmarks">
+            <?php echo $result ? mysqli_num_rows($result) : 0; ?> <?php echo mysqli_num_rows($result) === 1 ? 'bookmark' : 'bookmarks'; ?>
+        </span>
+    </div>
+  <?php endif; ?>
+
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
     <?php if ($result && mysqli_num_rows($result) > 0): ?>
       <?php while ($row = mysqli_fetch_assoc($result)): ?>
-        <?php 
-          $alreadyBookmarked = $row['bookmarked'] ? true : false;
-          $bookmarkText = $isBookmarksView ? "Remove Bookmark" : "🔖 Bookmark";
-        ?>
+        <?php $alreadyBookmarked = $row['bookmarked'] ? true : false; ?>
         <div class="col">
           <div class="card h-100 shadow-sm note-card position-relative">
             <a href="<?php echo url('preview_note.php'); ?>?id=<?php echo $row['id']; ?>&track=true" class="text-decoration-none text-dark">
@@ -145,12 +160,12 @@ $result = mysqli_query($conn, $query);
 
             <!-- Hover Actions -->
             <div class="card-footer note-actions">
-              <?php if (!$alreadyBookmarked): ?>
-              <button class="btn btn-sm btn-primary bookmark-btn" data-id="<?php echo $row['id']; ?>"><?php echo $bookmarkText; ?></button>
-              <?php else: ?>
               <?php if ($isBookmarksView): ?>
-              <button class="btn btn-sm btn-danger bookmark-btn" data-id="<?php echo $row['id']; ?>">Remove Bookmark</button>
-              <?php endif; ?>
+                <button class="btn btn-sm btn-danger bookmark-btn" data-id="<?php echo $row['id']; ?>">Remove Bookmark</button>
+              <?php else: ?>
+                <?php if (!$alreadyBookmarked): ?>
+                  <button class="btn btn-sm btn-primary bookmark-btn" data-id="<?php echo $row['id']; ?>">🔖 Bookmark</button>
+                <?php endif; ?>
               <?php endif; ?>
               <a href="<?php echo url('download.php'); ?>?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-success">⬇️ Download</a>
             </div>
@@ -159,7 +174,25 @@ $result = mysqli_query($conn, $query);
         </div>
       <?php endwhile; ?>
     <?php else: ?>
-      <p class="text-center text-muted">No notes found.</p>
+      <!-- Centered No Content -->
+      <div class="col-12 d-flex flex-column justify-content-center align-items-center text-center no-content">
+        <div class="mb-4">
+            <i class="fa fa-bookmark fa-5x text-primary animate__animated animate__bounce"></i>
+        </div>
+        <h3 class="mb-3 text-secondary fw-semibold">
+            <?php echo $isBookmarksView ? 'No bookmarks yet!' : 'No notes found.'; ?>
+        </h3>
+        <p class="text-muted fs-5 mb-4" style="max-width: 500px;">
+            <?php echo $isBookmarksView 
+                ? 'You haven’t bookmarked any notes yet. Start exploring and bookmark your favorites!' 
+                : 'It looks like there are no notes matching your search. Try a different keyword or browse popular notes.'; ?>
+        </p>
+        <?php if ($isBookmarksView): ?>
+            <a href="<?php echo url('home.php'); ?>" class="btn btn-lg btn-primary shadow-lg">
+                Browse Notes
+            </a>
+        <?php endif; ?>
+      </div>
     <?php endif; ?>
   </div>
 </main>
