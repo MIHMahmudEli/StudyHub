@@ -70,7 +70,7 @@ $result = mysqli_query($conn, $query);
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <!-- Custom CSS -->
-<link rel="stylesheet" href="assets/css/home-style.css?v=3.0.6">
+<link rel="stylesheet" href="assets/css/home-style.css?v=3.0.8">
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="favicon.svg">

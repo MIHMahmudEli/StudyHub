@@ -1,236 +1,217 @@
-/* Reset */
+/* =======================
+   Base Styles
+======================= */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Body and background */
 body {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+  font-family: "Inter", sans-serif;
+  background: #f0f4f8;
+  color: #333;
+  height: 100vh;
+  overflow: hidden;
 }
 
-/* Container: sidebar + preview */
-.container {
-    display: flex;
-    width: 100%;
-    max-width: 1200px;
-    height: 90vh;
-    gap: 20px;
+/* =======================
+   Wrapper Layout
+======================= */
+.preview-wrapper {
+  display: flex;
+  height: 100vh;
 }
 
-/* Sidebar */
+/* =======================
+   Sidebar
+======================= */
 .sidebar {
-    flex: 0 0 300px; /* fixed width */
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(15px);
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+  width: 350px;
+  background: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
 }
 
-/* Title in sidebar */
-.note-title {
-    font-size: 28px;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 20px;
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+/* =======================
+   Note Card
+======================= */
+.note-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1; /* take all available height */
+  overflow: hidden;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 20px;
 }
 
-/* Meta info */
-.note-meta p {
-    color: #f0f0f0;
-    font-size: 14px;
-    margin-bottom: 12px;
+/* Title */
+.note-card h1 {
+  font-size: 1.5rem;
+  color: #1e293b;
 }
 
-/* Back button */
-.btn-back {
-    display: inline-block;
-    margin-top: auto; /* push to bottom */
-    padding: 10px 20px;
-    background: linear-gradient(90deg, #ff512f, #dd2476);
-    color: #fff;
-    font-weight: 600;
-    border-radius: 50px;
-    text-decoration: none;
-    text-align: center;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* Info Items */
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #475569;
 }
 
-.btn-back:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+.info-item i {
+  color: #2563eb;
 }
 
-/* Note preview area */
-.note-preview {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border-radius: 20px;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* Labels / Badges */
+.badge-info {
+  display: inline-block;
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 8px;
+  margin-right: 6px;
 }
 
-/* Preview content */
-.note-preview embed,
-.note-preview iframe,
-.note-preview img {
+/* Scrollable Description */
+.desc {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 10px;
+  padding-right: 5px;
+}
+
+.desc::-webkit-scrollbar {
+  width: 6px;
+}
+
+.desc::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+/* =======================
+   Buttons
+======================= */
+.buttons {
+  position: sticky;
+  bottom: 0;
+  background: #ffffff;
+  padding: 15px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.buttons a,
+.buttons button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 10px 0;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  transition: all 0.3s;
+  font-weight: 600;
+  width: 100%;
+}
+
+.download-btn {
+  background: #16a34a;
+  color: #fff;
+}
+
+.download-btn:hover {
+  background: #15803d;
+}
+
+.read-btn {
+  background: #2563eb;
+  color: #fff;
+}
+
+.read-btn:hover {
+  background: #1d4ed8;
+}
+
+/* =======================
+   Main View
+======================= */
+.main-view {
+  flex: 1;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+.preview-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.preview-image {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+/* =======================
+   Reading Mode
+======================= */
+body.reading-mode .sidebar {
+  display: none;
+}
+
+body.reading-mode .main-view {
+  width: 100%;
+  height: 100vh;
+  background: #fff;
+}
+
+body.reading-mode .preview-frame,
+body.reading-mode .preview-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+
+/* =======================
+   Mobile Responsiveness
+======================= */
+@media (max-width: 768px) {
+  .sidebar {
     width: 100%;
-    height: 100%;
-    border-radius: 15px;
-    object-fit: contain;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-    transition: transform 0.3s ease;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .buttons {
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+  .preview-frame {
+    height: calc(100vh - 220px);
+  }
 }
-
-.note-preview embed:hover,
-.note-preview iframe:hover,
-.note-preview img:hover {
-    transform: scale(1.002);
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-    .container {
-        flex-direction: column;
-        height: auto;
-    }
-    .sidebar {
-        flex: none;
-        width: 100%;
-        margin-bottom: 20px;
-    }
-    .note-preview {
-        height: 70vh;
-    }
-}
-
-/* No preview message */
-.no-preview {
-    background: #fef2f2;
-    color: #991b1b;
-    padding: 12px 15px;
-    border: 1px solid #fecaca;
-    border-radius: 8px;
-    font-size: 14px;
-    margin-top: 15px;
-    font-weight: 500;
-}
-
-/* No preview container */
-.no-preview {
-    background: #f9fafb; /* light gray background */
-    border: 1px solid #e5e7eb; /* subtle border */
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    margin-top: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-/* Message text */
-.no-preview p {
-    font-size: 16px;
-    font-weight: 500;
-    color: #374151; /* neutral dark gray */
-    margin-bottom: 12px;
-}
-
-/* Download button */
-.no-preview .download-link {
-    display: inline-block;
-    padding: 10px 18px;
-    border-radius: 8px;
-    background: linear-gradient(90deg, #3b82f6, #2563eb);
-    color: #fff;
-    font-weight: 600;
-    font-size: 14px;
-    text-decoration: none;
-    transition: background 0.3s, transform 0.2s;
-}
-
-/* Hover effect */
-.no-preview .download-link:hover {
-    background: linear-gradient(90deg, #2563eb, #1d4ed8);
-    transform: translateY(-2px);
-}
-
-/* rate note css */
-
-.rating-section {
-    margin-top: 30px;
-    padding: 15px;
-    border-top: 1px solid #ddd;
-    background: #f8f8f8;
-    border-radius: 8px;
-}
-
-.rating-section h3 {
-    margin-bottom: 10px;
-    font-size: 18px;
-    color: #333;
-}
-
-.stars {
-    font-size: 28px;
-    color: #ccc;
-    cursor: pointer;
-    margin-bottom: 10px;
-}
-
-.star.filled, .star.hovered {
-    color: #f5b301;
-}
-
-#ratingComment {
-    width: 100%;
-    height: 60px;
-    margin-top: 10px;
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    resize: none;
-}
-
-#submitRating {
-    margin-top: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-#submitRating:hover {
-    background-color: #0056b3;
-}
-
-#ratingMsg {
-    margin-top: 10px;
-    font-size: 14px;
-}
-
-.avg-rating {
-    margin-top: 15px;
-    font-size: 16px;
-    color: #333;
-}
-
-

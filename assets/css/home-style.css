@@ -220,3 +220,60 @@ body {
     .no-content h3 { font-size: 1.5rem; }
     .no-content p { font-size: 0.95rem; max-width: 90%; }
 }
+
+/* ======= Username Styling ======= */
+.name {
+    max-width: 160px;              /* keeps name from overflowing navbar */
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;       /* show "..." when name is too long */
+    vertical-align: middle;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: default;
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.name:hover {
+    color: #ffc107; /* subtle golden highlight on hover */
+}
+
+/* ======= Tooltip on Hover ======= */
+.name {
+    max-width: 160px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    font-weight: 600;
+    font-size: 1rem;
+    position: relative;
+    cursor: pointer; /* 👈 makes the cursor a hand on hover */
+}
+
+/* Simple tooltip */
+.name::after {
+    content: attr(data-fullname);
+    position: absolute;
+    bottom: -28px;  /* tooltip below name */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 10;
+}
+
+.name:hover::after {
+    opacity: 1; /* show tooltip on hover */
+}
+

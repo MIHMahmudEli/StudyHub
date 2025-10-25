@@ -1,4 +1,7 @@
 <?php
+// ==========================================================
+// 🔐 START SESSION + DATABASE CONNECTION
+// ==========================================================
 session_start();
 include("includes/db.php");
 
@@ -9,7 +12,9 @@ if (!isset($_SESSION['user_id'])) {
 
 $message = "";
 
-// Handle upload
+// ==========================================================
+// 📤 HANDLE UPLOAD
+// ==========================================================
 if (isset($_POST['upload'])) {
     $title = trim($_POST['title']);
     $description = trim($_POST['description']);
@@ -33,6 +38,10 @@ if (isset($_POST['upload'])) {
             if ($_FILES['file']['size'] > 40 * 1024 * 1024) {
                 $message = "⚠️ File exceeds 40 MB limit!";
             } else {
+                if (!is_dir($target_dir)) {
+                    mkdir($target_dir, 0777, true);
+                }
+
                 if (move_uploaded_file($tmp_name, $file_path)) {
                     date_default_timezone_set('Asia/Dhaka');
                     $created_at = date('Y-m-d H:i:s');
@@ -42,18 +51,17 @@ if (isset($_POST['upload'])) {
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                     ");
                     $stmt->bind_param("isssssss", $uploader, $title, $description, $subject, $course_code, $file_path, $file_type, $created_at);
+                    $stmt->execute();
 
-                    if ($stmt->execute()) {
-                        $message = "✅ Note uploaded successfully! Awaiting admin approval.";
-                        $timestamp = date('Y-m-d h:i:s');
-                        $type = 'upload';
-                        $event = $conn->prepare("INSERT INTO events (user_id, `type`, `at`) VALUES (?, ?, ?)");
-                        $event->bind_param("iss", $_SESSION['user_id'], $type, $timestamp);
-                        $event->execute();
-                    } else {
-                        $message = "❌ Database error: " . $stmt->error;
-                    }
-                    $stmt->close();
+                    $message = "Note uploaded successfully! Awaiting admin approval.";
+
+                    // Record event
+                    $timestamp = date('Y-m-d H:i:s');
+                    $type = 'upload';
+                    $event = $conn->prepare("INSERT INTO events (user_id, `type`, `at`) VALUES (?, ?, ?)");
+                    $event->bind_param("iss", $_SESSION['user_id'], $type, $timestamp);
+                    $event->execute();
+
                 } else {
                     $message = "❌ Failed to move uploaded file.";
                 }
@@ -64,7 +72,13 @@ if (isset($_POST['upload'])) {
     }
 }
 
-$courses = json_decode(file_get_contents("assets/data/courses.json"), true);
+// ==========================================================
+// 📚 LOAD COURSES
+// ==========================================================
+$courses = [];
+if (file_exists("assets/data/courses.json")) {
+    $courses = json_decode(file_get_contents("assets/data/courses.json"), true);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -78,20 +92,22 @@ $courses = json_decode(file_get_contents("assets/data/courses.json"), true);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
     <!-- External CSS -->
-    <link rel="stylesheet" href="assets/css/upload-style.css?v=3.0">
+    <link rel="stylesheet" href="assets/css/upload-style.css?v=3.1">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
 
 <div class="container py-5">
     <div class="upload-card mx-auto shadow-lg p-4 rounded-4">
-        <h2 class="text-center mb-4 fw-bold text-primary"><i class="fa-solid fa-cloud-arrow-up me-2"></i>Upload a Note</h2>
+        <h2 class="text-center mb-4 fw-bold text-primary">
+            <i class="fa-solid fa-cloud-arrow-up me-2"></i>Upload a Note
+        </h2>
 
         <?php if ($message): ?>
-            <div class="alert alert-info text-center fw-medium"><?= $message; ?></div>
+            <div id="upload-message" class="alert alert-info text-center fw-medium"><?= $message; ?></div>
         <?php endif; ?>
 
-        <form method="POST" action="upload.php" enctype="multipart/form-data" id="upload-form">
+        <form method="POST" action="" enctype="multipart/form-data" id="upload-form">
             <div class="mb-3 position-relative">
                 <label class="form-label fw-semibold"><i class="fa fa-heading me-2"></i>Title</label>
                 <input type="text" class="form-control" name="title" placeholder="Enter note title" required>

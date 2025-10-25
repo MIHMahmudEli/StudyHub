@@ -49,6 +49,7 @@ tbody tr:hover {
 td, th {
     padding: 12px 15px;
     vertical-align: middle;
+    font-size: 0.9rem;
 }
 
 /* Action Buttons */

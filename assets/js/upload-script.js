@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Show selected file name
     fileInput.addEventListener('change', () => {
-        if(fileInput.files.length > 0){
+        if (fileInput.files.length > 0) {
             fileName.textContent = fileInput.files[0].name;
         } else {
             fileName.textContent = "No file chosen";
@@ -15,9 +15,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Validate file size on submit
     form.addEventListener('submit', (e) => {
-        if(fileInput.files.length > 0 && fileInput.files[0].size > maxSize){
+        if (fileInput.files.length > 0 && fileInput.files[0].size > maxSize) {
             e.preventDefault();
             alert("File is too large! Maximum allowed size is 40MB.");
         }
     });
+
+    // Fade out PHP message after 5 seconds
+    const uploadMsg = document.getElementById('upload-message');
+    if (uploadMsg) {
+        setTimeout(() => {
+            uploadMsg.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+            uploadMsg.style.opacity = 0;
+            uploadMsg.style.transform = "translateY(-20px)";
+            setTimeout(() => uploadMsg.remove(), 500); // remove after fade out
+        }, 5000); // 5 seconds
+    }
 });
