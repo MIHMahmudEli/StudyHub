@@ -251,7 +251,7 @@ body {
     font-weight: 600;
     font-size: 1rem;
     position: relative;
-    cursor: pointer; /* 👈 makes the cursor a hand on hover */
+    cursor: pointer; 
 }
 
 /* Simple tooltip */
@@ -276,4 +276,43 @@ body {
 .name:hover::after {
     opacity: 1; /* show tooltip on hover */
 }
+
+
+/* ====== Skeleton Loader with Smooth Fade ====== */
+#skeleton-loader {
+  opacity: 1;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#skeleton-loader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.placeholder-card {
+  border-radius: 15px;
+  background: #fff;
+  overflow: hidden;
+  animation: pulse 1.5s infinite;
+}
+
+.placeholder {
+  display: inline-block;
+  height: 1em;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 37%, #e0e0e0 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+
 

@@ -70,13 +70,13 @@ $result = mysqli_query($conn, $query);
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <!-- Custom CSS -->
-<link rel="stylesheet" href="assets/css/home-style.css?v=3.0.8">
+<link rel="stylesheet" href="assets/css/home-style.css?v=4.0.3">
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
-<script src="assets/js/home-script.js?v=3.4" defer></script>
+<script src="assets/js/home-script.js?v=4.0.3" defer></script>
 </head>
 <body class="bg-light">
 
@@ -103,12 +103,12 @@ $result = mysqli_query($conn, $query);
       </form>
 
       <?php if ($role === 'student') { ?>
-        <a href="<?php echo url('user_dashboard.php'); ?>" class="name me-3 text-white fw-bold">
-            👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
+        <a href="<?php echo url('user_dashboard.php'); ?>" class="name me-3 text-white fw-bold" data-fullname="<?php echo htmlspecialchars($_SESSION['user_name']); ?>">
+            👤 Hello, <?php echo htmlspecialchars($_SESSION['user_name']); ?>
         </a>
       <?php } elseif ($role === 'admin' || $role === 'moderator') { ?>
-        <a href="<?php echo url('admin_dashboard.php'); ?>" class="name me-3 text-white fw-bold">
-            👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
+        <a href="<?php echo url('admin_dashboard.php'); ?>" class="name me-3 text-white fw-bold" data-fullname="<?php echo htmlspecialchars($_SESSION['user_name']); ?>">
+            👤 Hello, <?php echo htmlspecialchars($_SESSION['user_name']); ?>
         </a>
       <?php } ?>
 
@@ -131,69 +131,91 @@ $result = mysqli_query($conn, $query);
     </div>
   <?php endif; ?>
 
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-    <?php if ($result && mysqli_num_rows($result) > 0): ?>
-      <?php while ($row = mysqli_fetch_assoc($result)): ?>
-        <?php $alreadyBookmarked = $row['bookmarked'] ? true : false; ?>
-        <div class="col">
-          <div class="card h-100 shadow-sm note-card position-relative">
-            <a href="<?php echo url('preview_note.php'); ?>?id=<?php echo $row['id']; ?>&track=true" class="text-decoration-none text-dark">
-              <div class="card-body text-center py-4">
-                <div class="note-file mb-3">
-                  <?php 
-                  $type = strtolower($row['file_type']);
-                  if ($type === 'pdf') echo "📘";
-                  elseif (in_array($type, ['jpg','jpeg','png'])) echo "🖼️";
-                  else echo "📄";
-                  ?>
-                </div>
-                <h5 class="card-title"><?php echo htmlspecialchars($row['title']); ?></h5>
-                <p class="card-subtitle mb-2 text-muted"><?php echo htmlspecialchars($row['subject']); ?></p>
-                <div class="note-rating">
-                  <?php
-                  $rating = round($row['avg_rating']);
-                  for ($i=1; $i<=5; $i++) echo $i <= $rating ? "★" : "☆";
-                  ?>
-                </div>
-              </div>
-            </a>
-
-            <!-- Hover Actions -->
-            <div class="card-footer note-actions">
-              <?php if ($isBookmarksView): ?>
-                <button class="btn btn-sm btn-danger bookmark-btn" data-id="<?php echo $row['id']; ?>">Remove Bookmark</button>
-              <?php else: ?>
-                <?php if (!$alreadyBookmarked): ?>
-                  <button class="btn btn-sm btn-primary bookmark-btn" data-id="<?php echo $row['id']; ?>">🔖 Bookmark</button>
-                <?php endif; ?>
-              <?php endif; ?>
-              <a href="<?php echo url('download.php'); ?>?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-success">⬇️ Download</a>
+  <!-- 🦴 Skeleton Loader -->
+  <div id="skeleton-loader" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    <?php for ($i=0; $i<8; $i++): ?>
+      <div class="col">
+        <div class="card h-100 shadow-sm placeholder-card">
+          <div class="card-body text-center py-4">
+            <div class="placeholder-glow mb-3">
+              <div class="placeholder rounded-circle bg-secondary" style="width:60px; height:60px; margin:auto;"></div>
             </div>
-
+            <div class="placeholder-glow">
+              <span class="placeholder col-8"></span>
+            </div>
+            <div class="placeholder-glow mt-2">
+              <span class="placeholder col-6"></span>
+            </div>
+            <div class="placeholder-glow mt-3">
+              <span class="placeholder col-5"></span>
+            </div>
           </div>
         </div>
-      <?php endwhile; ?>
-    <?php else: ?>
-      <!-- Centered No Content -->
-      <div class="col-12 d-flex flex-column justify-content-center align-items-center text-center no-content">
-        <div class="mb-4">
-            <i class="fa fa-bookmark fa-5x text-primary animate__animated animate__bounce"></i>
-        </div>
-        <h3 class="mb-3 text-secondary fw-semibold">
+      </div>
+    <?php endfor; ?>
+  </div>
+
+  <!-- Actual Note Results -->
+  <div id="note-results" style="display:none;">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+      <?php if ($result && mysqli_num_rows($result) > 0): ?>
+        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+          <?php $alreadyBookmarked = $row['bookmarked'] ? true : false; ?>
+          <div class="col">
+            <div class="card h-100 shadow-sm note-card position-relative">
+              <a href="<?php echo url('preview_note.php'); ?>?id=<?php echo $row['id']; ?>&track=true" class="text-decoration-none text-dark">
+                <div class="card-body text-center py-4">
+                  <div class="note-file mb-3">
+                    <?php 
+                    $type = strtolower($row['file_type']);
+                    if ($type === 'pdf') echo "📘";
+                    elseif (in_array($type, ['jpg','jpeg','png'])) echo "🖼️";
+                    else echo "📄";
+                    ?>
+                  </div>
+                  <h5 class="card-title"><?php echo htmlspecialchars($row['title']); ?></h5>
+                  <p class="card-subtitle mb-2 text-muted"><?php echo htmlspecialchars($row['subject']); ?></p>
+                  <div class="note-rating">
+                    <?php
+                    $rating = round($row['avg_rating']);
+                    for ($i=1; $i<=5; $i++) echo $i <= $rating ? "★" : "☆";
+                    ?>
+                  </div>
+                </div>
+              </a>
+
+              <!-- Hover Actions -->
+              <div class="card-footer note-actions">
+                <?php if ($isBookmarksView): ?>
+                  <button class="btn btn-sm btn-danger bookmark-btn" data-id="<?php echo $row['id']; ?>">Remove Bookmark</button>
+                <?php else: ?>
+                  <?php if (!$alreadyBookmarked): ?>
+                    <button class="btn btn-sm btn-primary bookmark-btn" data-id="<?php echo $row['id']; ?>">🔖 Bookmark</button>
+                  <?php endif; ?>
+                <?php endif; ?>
+                <a href="<?php echo url('download.php'); ?>?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-success">⬇️ Download</a>
+              </div>
+
+            </div>
+          </div>
+        <?php endwhile; ?>
+      <?php else: ?>
+        <div class="col-12 d-flex flex-column justify-content-center align-items-center text-center no-content">
+          <div class="mb-4"><i class="fa fa-bookmark fa-5x text-primary animate__animated animate__bounce"></i></div>
+          <h3 class="mb-3 text-secondary fw-semibold">
             <?php echo $isBookmarksView ? 'No bookmarks yet!' : 'No notes found.'; ?>
-        </h3>
-        <p class="text-muted fs-5 mb-4" style="max-width: 500px;">
+          </h3>
+          <p class="text-muted fs-5 mb-4" style="max-width: 500px;">
             <?php echo $isBookmarksView 
                 ? 'You haven’t bookmarked any notes yet. Start exploring and bookmark your favorites!' 
                 : 'It looks like there are no notes matching your search. Try a different keyword or browse popular notes.'; ?>
-        </p>
-        <?php if ($isBookmarksView): ?>
-            <a href="<?php echo url('home.php'); ?>" class="btn btn-lg btn-primary shadow-lg">
-                Browse Notes
-            </a>
-        <?php endif; ?>
-      </div>
-    <?php endif; ?>
+          </p>
+          <?php if ($isBookmarksView): ?>
+              <a href="<?php echo url('home.php'); ?>" class="btn btn-lg btn-primary shadow-lg">Browse Notes</a>
+          <?php endif; ?>
+        </div>
+      <?php endif; ?>
+    </div>
   </div>
 </main>
 </body>

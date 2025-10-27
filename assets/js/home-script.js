@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Bookmark functionality
+    // ====================== Bookmark Functionality ======================
     const bookmarkButtons = document.querySelectorAll('.bookmark-btn');
     
     bookmarkButtons.forEach(button => {
@@ -17,14 +17,11 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('bookmark', {
             method: 'POST',
             body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
         .then(response => response.text())
         .then(data => {
             if (data === 'added') {
-                // Bookmark was added - hide the button on home page
                 if (!window.location.href.includes('bookmarks=1')) {
                     buttonElement.style.display = 'none';
                 } else {
@@ -35,11 +32,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 showNotification('Bookmark added!', 'success');
             } else if (data === 'removed') {
                 if (window.location.href.includes('bookmarks=1')) {
-                    // If on bookmarks page, remove the entire card
                     buttonElement.closest('.col').remove();
                     showNotification('Bookmark removed!', 'info');
-                    
-                    // Check if no bookmarks left
                     const remainingCards = document.querySelectorAll('.col');
                     if (remainingCards.length === 0) {
                         document.querySelector('main .container').innerHTML = `
@@ -51,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         `;
                     }
                 } else {
-                    // On home page - button should already be hidden, but just in case
                     buttonElement.style.display = 'none';
                     showNotification('Bookmark removed!', 'info');
                 }
@@ -64,11 +57,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function showNotification(message, type) {
-        // Remove existing notifications
         const existingNotification = document.querySelector('.bookmark-notification');
-        if (existingNotification) {
-            existingNotification.remove();
-        }
+        if (existingNotification) existingNotification.remove();
 
         const notification = document.createElement('div');
         notification.className = `bookmark-notification alert alert-${type === 'error' ? 'danger' : type} position-fixed`;
@@ -81,24 +71,50 @@ document.addEventListener('DOMContentLoaded', function() {
         notification.textContent = message;
 
         document.body.appendChild(notification);
-
-        // Auto remove after 3 seconds
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
+        setTimeout(() => notification.remove(), 3000);
     }
 
-    // Note card hover effects
+    // ====================== Card Hover Effect ======================
     const noteCards = document.querySelectorAll('.note-card');
-    
     noteCards.forEach(card => {
         card.addEventListener('mouseenter', function() {
             this.style.transform = 'translateY(-5px)';
             this.style.transition = 'transform 0.3s ease';
         });
-
         card.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0)';
         });
     });
+
+    // ====================== Skeleton Loader (Initial + Smooth Fade) ======================
+    const skeleton = document.getElementById('skeleton-loader');
+    const results = document.getElementById('note-results');
+
+    if (skeleton && results) {
+        // Initial page load skeleton
+        setTimeout(() => {
+            skeleton.classList.add('fade-out');
+            setTimeout(() => {
+                skeleton.style.display = 'none';
+                results.style.display = 'block';
+                results.style.opacity = '0';
+                results.style.transition = 'opacity 0.6s ease';
+                requestAnimationFrame(() => results.style.opacity = '1');
+            }, 600);
+        }, 800);
+    }
+
+    // ====================== Search Skeleton (AJAX-like UX) ======================
+    const searchForm = document.querySelector('form[action*="home.php"]');
+    if (searchForm) {
+        searchForm.addEventListener('submit', function() {
+            // Before submitting, show skeleton again
+            if (skeleton && results) {
+                results.style.display = 'none';
+                skeleton.style.display = 'flex';
+                skeleton.classList.remove('fade-out');
+                skeleton.style.opacity = '1';
+            }
+        });
+    }
 });
