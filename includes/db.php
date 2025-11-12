@@ -1,9 +1,6 @@
 <?php
 $host = "localhost";
-$user = "studyhub_user";
-$pass = "StudyHub@123"; 
 $db   = "studyhub";
-
 $user = "root";
 $pass = ""; 
 

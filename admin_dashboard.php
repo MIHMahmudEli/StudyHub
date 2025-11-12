@@ -1,7 +1,7 @@
 <?php
 session_start();
 include("includes/db.php");
-include("includes/redirect_helper.php"); // Include the redirect helper
+include("includes/redirect_helper.php");
 
 // Security: only admin or moderator allowed
 if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'moderator'])) {
@@ -11,12 +11,19 @@ if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'moderat
 
 $role = $_SESSION['role'];
 
-// queries
-$pendingCount = $conn->query("SELECT COUNT(*) as c FROM notes WHERE status='pending'")
-                     ->fetch_assoc()['c'];
+// ---------------------- Dashboard Queries ---------------------- //
 
-$userCount    = $conn->query("SELECT COUNT(*) as c FROM users")
-                     ->fetch_assoc()['c'];
+// Notes
+$pendingNotes = $conn->query("SELECT COUNT(*) as c FROM notes WHERE status='pending'")->fetch_assoc()['c'];
+
+// Users (only for admin)
+$userCount = ($role === 'admin')
+    ? $conn->query("SELECT COUNT(*) as c FROM users")->fetch_assoc()['c']
+    : 0;
+
+// Resources
+$pendingResources = $conn->query("SELECT COUNT(*) as c FROM resources WHERE status='pending'")->fetch_assoc()['c'];
+$totalResources   = $conn->query("SELECT COUNT(*) as c FROM resources")->fetch_assoc()['c'];
 
 // Trending subjects (top 10)
 $trendingSubjects = $conn->query("SELECT subject, COUNT(*) as c 
@@ -46,7 +53,7 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/admin_dashboard.css?v=3.0">
+    <link rel="stylesheet" href="assets/css/admin_dashboard.css?v=3.1">
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
@@ -59,6 +66,8 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
         <ul class="nav flex-column">
             <li class="active"><a href="<?php echo url('admin_dashboard.php'); ?>" class="nav-link"><i class="fa fa-home me-2"></i>Dashboard</a></li>
             <li class="nav-item"><a href="<?php echo url('pending_notes.php'); ?>" class="nav-link"><i class="fa fa-file me-2"></i>Pending Notes</a></li>
+            <li class="nav-item"><a href="<?php echo url('manage_resources.php'); ?>" class="nav-link"><i class="fa fa-folder-open me-2"></i>Manage Resources</a></li>
+            
             <?php if ($role === 'admin') { ?>
                 <li class="nav-item"><a href="<?php echo url('manage_users.php'); ?>" class="nav-link"><i class="fa fa-users me-2"></i>Users</a></li>
             <?php } ?>
@@ -70,6 +79,7 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
             <?php } ?>
 
             <li class="nav-item"><a href="<?php echo url('home.php'); ?>" class="nav-link"><i class="fa fa-book me-2"></i>Browse Notes</a></li>
+            <li class="nav-item"><a href="<?php echo url('resources.php'); ?>" class="nav-link"><i class="fa fa-download me-2"></i>Browse Resources</a></li>
             <li class="nav-item"><a href="<?php echo url('show_uploaded.php'); ?>" class="nav-link"><i class="fa fa-upload me-2"></i>Uploaded Notes</a></li>
             <li class="nav-item"><a href="<?php echo url('settings.php'); ?>" class="nav-link"><i class="fa fa-cog me-2"></i>Settings</a></li>
         </ul>
@@ -97,14 +107,34 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
         <!-- Dashboard Cards -->
         <div class="container">
             <div class="row g-4">
+                <!-- Pending Notes -->
                 <div class="col-md-6 col-lg-4">
                     <div class="card dash-card p-3">
                         <h6>📄 Pending Notes</h6>
-                        <p class="metric"><?php echo $pendingCount; ?></p>
+                        <p class="metric"><?php echo $pendingNotes; ?></p>
                         <a href="<?php echo url('pending_notes.php'); ?>" class="stretched-link">View Details</a>
                     </div>
                 </div>
 
+                <!-- Pending Resources -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card dash-card p-3">
+                        <h6>🗂 Pending Resources</h6>
+                        <p class="metric"><?php echo $pendingResources; ?></p>
+                        <a href="<?php echo url('manage_resources.php'); ?>" class="stretched-link">Review Now</a>
+                    </div>
+                </div>
+
+                <!-- Total Resources -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card dash-card p-3">
+                        <h6>📘 Total Resources</h6>
+                        <p class="metric"><?php echo $totalResources; ?></p>
+                        <a href="<?php echo url('manage_resources.php'); ?>" class="stretched-link">View All</a>
+                    </div>
+                </div>
+
+                <!-- Total Users (Admin Only) -->
                 <?php if ($role === 'admin') { ?>
                 <div class="col-md-6 col-lg-4">
                     <div class="card dash-card p-3">
@@ -115,6 +145,7 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
                 </div>
                 <?php } ?>
 
+                <!-- Trending Courses -->
                 <div class="col-md-6 col-lg-4">
                     <div class="card dash-card p-3">
                         <h6>📚 Trending Courses</h6>
@@ -123,6 +154,7 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
                     </div>
                 </div>
 
+                <!-- Active Users -->
                 <?php if ($role === 'admin') { ?>
                 <div class="col-md-6 col-lg-4">
                     <div class="card dash-card p-3">
@@ -132,6 +164,7 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
                     </div>
                 </div>
 
+                <!-- Reports -->
                 <div class="col-md-6 col-lg-4">
                     <div class="card dash-card p-3">
                         <h6>📑 Reports</h6>
@@ -145,6 +178,6 @@ $activeUsers = $conn->query("SELECT u.name, COUNT(e.id) as activity
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/admin_dashboard.js?v=3.0"></script>
+    <script src="assets/js/admin_dashboard.js?v=3.1"></script>
 </body>
 </html>

@@ -14,13 +14,13 @@ function sendOTP($email, $name, $otp, $type) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'noreply.studyhubteam@gmail.com';
-        $mail->Password   = 'nlfmxiavepbvssky';
+        $mail->Username   = 'studyhubteam.official@gmail.com';
+        $mail->Password   = 'flalqppbuuqrrkxd';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 
         // Sender and recipient
-        $mail->setFrom('noreply.studyhubteam@gmail.com', 'StudyHub');
+        $mail->setFrom('studyhubteam.official@gmail.com', 'StudyHub');
         $mail->addAddress($email, $name);
         $mail->isHTML(true);
 

@@ -314,5 +314,59 @@ body {
   50% { opacity: 0.6; }
 }
 
+/* Modern Gradient Badge */
+.modern-points-badge {
+  background: linear-gradient(135deg, #ffc404, #FFCA28, #FFC107);
+  color: #ffee00;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.modern-points-badge:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 15px rgba(255, 193, 7, 0.6);
+}
+
+/* Tooltip Container */
+.modern-tooltip {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  min-width: 230px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: all 0.25s ease-in-out;
+  z-index: 999;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Tooltip visible on hover */
+#pointsBadge:hover + #pointsTooltip,
+#pointsTooltip:hover {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+#pointsBadge{
+    color: white !important;
+
+}
+
+/* Fancy glow animation */
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 5px rgba(255, 221, 51, 0.5); }
+  50% { box-shadow: 0 0 15px rgba(255, 221, 51, 0.9); }
+  100% { box-shadow: 0 0 5px rgba(255, 221, 51, 0.5); }
+}
+.modern-points-badge:hover {
+  animation: glowPulse 1.5s infinite ease-in-out;
+}
+
+
+
 
 

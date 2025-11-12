@@ -50,7 +50,7 @@ function getTitleIcon($rank, $points) {
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Custom CSS -->
-<link rel="stylesheet" href="assets/css/home-style.css?v=3.0">
+<link rel="stylesheet" href="assets/css/home-style.css?v=4.0.4">
 <link rel="stylesheet" href="assets/css/leaderboard.css?v=3.0.2">
 
 <!-- Favicon -->
@@ -91,7 +91,23 @@ function getTitleIcon($rank, $points) {
                 👤 Hello, <?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : "Guest"; ?>
             </a>
       <?php } ?>
-      <span class="badge bg-warning text-dark">⭐ <?php echo isset($_SESSION['points']) ? intval($_SESSION['points']) : 0; ?> pts</span>
+      <!-- Points Badge -->
+        <div class="position-relative d-inline-block">
+          <span id="pointsBadge"
+                class="badge bg-gradient text-dark fw-semibold shadow-sm px-3 py-2 modern-points-badge">
+            ⭐ <?php echo isset($_SESSION['points']) ? intval($_SESSION['points']) : 0; ?> pts
+          </span>
+
+          <!-- Custom Tooltip -->
+          <div id="pointsTooltip" class="modern-tooltip shadow-lg rounded-4 p-3 bg-white border border-2 border-warning">
+            <h6 class="fw-bold text-dark mb-2">🌟 How to Earn Points</h6>
+            <ul class="list-unstyled small text-secondary mb-0">
+              <li>📥 <b>Download a note</b> → +1 point</li>
+              <li>📤 <b>Upload a note</b> → +5 points</li>
+              <li>👥 <b>Someone downloads your note</b> → +2 points</li>
+            </ul>
+          </div>
+        </div>
     </div>
   </div>
 </nav>
@@ -120,6 +136,8 @@ function getTitleIcon($rank, $points) {
         <?php $rank++; endforeach; ?>
     </div>
 </main>
+
+<script src="assets/js/home-script.js?v=4.0.3"></script>
 
 </body>
 </html>
