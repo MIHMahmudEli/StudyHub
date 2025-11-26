@@ -25,9 +25,9 @@ if (isset($_POST['upload'])) {
     if (isset($_FILES['file'])) {
         $fileError = $_FILES['file']['error'];
         if ($fileError === UPLOAD_ERR_INI_SIZE || $fileError === UPLOAD_ERR_FORM_SIZE) {
-            $message = "⚠️ File is too large! Maximum upload size is 40 MB.";
+            $message = "File is too large! Maximum upload size is 40 MB.";
         } elseif ($fileError !== UPLOAD_ERR_OK) {
-            $message = "❌ File upload error. Code: " . $fileError;
+            $message = "File upload error. Code: " . $fileError;
         } else {
             $file_name = $_FILES['file']['name'];
             $tmp_name  = $_FILES['file']['tmp_name'];
@@ -36,7 +36,7 @@ if (isset($_POST['upload'])) {
             $file_type = pathinfo($file_name, PATHINFO_EXTENSION);
 
             if ($_FILES['file']['size'] > 40 * 1024 * 1024) {
-                $message = "⚠️ File exceeds 40 MB limit!";
+                $message = "File exceeds 40 MB limit!";
             } else {
                 if (!is_dir($target_dir)) {
                     mkdir($target_dir, 0777, true);
@@ -63,12 +63,12 @@ if (isset($_POST['upload'])) {
                     $event->execute();
 
                 } else {
-                    $message = "❌ Failed to move uploaded file.";
+                    $message = "Failed to move uploaded file.";
                 }
             }
         }
     } else {
-        $message = "⚠️ Please select a file to upload.";
+        $message = "Please select a file to upload.";
     }
 }
 

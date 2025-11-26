@@ -3,9 +3,8 @@ session_start();
 include("includes/db.php");
 include("mailer.php"); 
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = HTMLspecialchars(trim($_POST['email']));
-
+if ($_SERVER["REQUEST_METHOD"] === "GET") {
+    $email = htmlspecialchars(trim($_GET['email']));
 
     $stmt = $conn->prepare("SELECT id, name FROM users WHERE email=?");
     $stmt->bind_param("s", $email);
@@ -35,3 +34,4 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit();
     }
 }
+?>

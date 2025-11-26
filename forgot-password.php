@@ -11,7 +11,7 @@ session_start();
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="stylesheet" href="assets/css/forgot-password.css?v=3.0">
+<link rel="stylesheet" href="assets/css/forgot-password.css?v=3.1">
 </head>
 <body>
 
@@ -37,13 +37,13 @@ session_start();
         <?php endif; ?>
 
         <!-- Step 1 -->
-        <form id="step1" method="POST" action="forgot-password-step1.php" class="">
+        <form id="step1" method="GET" action="forgot-password-step1.php">
             <h2 class="text-center mb-3">Forgot Password 🔑</h2>
             <p class="text-center text-light mb-4">Enter your registered email to receive a verification code.</p>
 
             <div class="input-group mb-3 position-relative">
-                <span class="position-absolute top-50 translate-middle-y ps-2 text-muted"><i class="fa fa-envelope"></i></span>
-                <input type="email" name="email" class="form-control ps-5" placeholder="Enter your email" required>
+                <span class="input-icon"><i class="fa fa-envelope"></i></span>
+                <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
             </div>
 
             <button type="submit" class="btn btn-primary w-100 mb-2">Send Verification Code</button>
@@ -51,23 +51,23 @@ session_start();
         </form>
 
         <!-- Step 2 -->
-        <form id="step2" method="POST" action="forgot-password-step2.php" class="d-none">
+        <form id="step2" method="GET" action="forgot-password-step2.php" class="d-none">
             <h2 class="text-center mb-3">Reset Password 🔒</h2>
             <p class="text-center text-light mb-4">Enter the verification code and set a new password.</p>
 
             <div class="input-group mb-3 position-relative">
-                <span class="position-absolute top-50 translate-middle-y ps-2 text-muted"><i class="fa fa-key"></i></span>
-                <input type="text" name="verification_code" class="form-control ps-5" placeholder="Verification Code" required>
+                <span class="input-icon"><i class="fa fa-key"></i></span>
+                <input type="text" name="verification_code" class="form-control" placeholder="Verification Code" required>
             </div>
 
             <div class="input-group mb-3 position-relative">
-                <span class="position-absolute top-50 translate-middle-y ps-2 text-muted"><i class="fa fa-lock"></i></span>
-                <input type="password" name="new_password" id="newPassword" class="form-control ps-5" placeholder="New Password" required>
+                <span class="input-icon"><i class="fa fa-lock"></i></span>
+                <input type="password" name="new_password" id="newPassword" class="form-control" placeholder="New Password" required>
             </div>
 
             <div class="input-group mb-3 position-relative">
-                <span class="position-absolute top-50 translate-middle-y ps-2 text-muted"><i class="fa fa-lock"></i></span>
-                <input type="password" name="confirm_password" id="confirmPassword" class="form-control ps-5" placeholder="Confirm Password" required>
+                <span class="input-icon"><i class="fa fa-lock"></i></span>
+                <input type="password" name="confirm_password" id="confirmPassword" class="form-control" placeholder="Confirm Password" required>
             </div>
 
             <div id="formMessage" class="text-center small mb-2" style="display:none;"></div>
@@ -85,6 +85,6 @@ session_start();
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="assets/js/forgot-password.js?v=3.0"></script>
+<script src="assets/js/forgot-password.js?v=3.1"></script>
 </body>
 </html>

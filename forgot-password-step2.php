@@ -2,11 +2,11 @@
 session_start();
 include("includes/db.php");
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $otp_input = trim($_POST['verification_code']);
-    $new_password = $_POST['new_password'];
-    $confirm_password = $_POST['confirm_password'];
-
+if ($_SERVER["REQUEST_METHOD"] === "GET") {
+    $otp_input = trim($_GET['verification_code']);
+    $new_password =htmlspecialchars( $_GET['new_password']);
+    $confirm_password = htmlspecialchars( $_GET['confirm_password']);
+    
     if(!isset($_SESSION['fp_email']) || !isset($_SESSION['fp_otp'])){
         $_SESSION['fp_error'] = "Session expired. Try again.";
         header("Location: forgot-password.php");
@@ -41,3 +41,4 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit();
     }
 }
+?>

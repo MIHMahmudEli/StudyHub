@@ -12,15 +12,24 @@ $role = $_SESSION['role'] ?? 'student';
 $searchTerm = '';
 
 if (isset($_GET['q']) && !empty(trim($_GET['q']))) {
-    $searchTerm = mysqli_real_escape_string($conn, trim($_GET['q']));
+    $searchTerm = trim($_GET['q']);
 }
 
-// Fetch users sorted by points descending
-$query = "SELECT id, name, points FROM users " . 
-         ($searchTerm ? "WHERE name LIKE '%$searchTerm%' " : "") . 
-         "ORDER BY points DESC";
+// Prepare the query with a limit of 30
+if ($searchTerm) {
+    $query = "SELECT id, name, points FROM users WHERE name LIKE ? ORDER BY points DESC LIMIT 30";
+    $stmt = mysqli_prepare($conn, $query);
+    $likeTerm = "%{$searchTerm}%";
+    mysqli_stmt_bind_param($stmt, "s", $likeTerm);
+} else {
+    $query = "SELECT id, name, points FROM users ORDER BY points DESC LIMIT 30";
+    $stmt = mysqli_prepare($conn, $query);
+}
 
-$result = mysqli_query($conn, $query);
+// Execute the statement
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+
 $players = [];
 if ($result) {
     while ($row = mysqli_fetch_assoc($result)) {
@@ -28,6 +37,7 @@ if ($result) {
     }
 }
 
+// Function to get title and icon based on rank and points
 function getTitleIcon($rank, $points) {
     if ($rank <= 5) return ["Titan", "👑"];
     if ($rank <= 10) return ["Champion", "🏆"];
@@ -39,6 +49,7 @@ function getTitleIcon($rank, $points) {
     return ["Player", "🎖️"];
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -20,12 +20,24 @@ document.addEventListener("DOMContentLoaded", function() {
     // Cancel button → back to login
     cancelReset.addEventListener("click", () => window.location.href = "main_index.php#login");
 
-    // Resend OTP
+    // Resend OTP with countdown
     resendCode.addEventListener("click", () => {
         resendCode.disabled = true;
+        let countdown = 30; // seconds
         const originalText = resendCode.textContent;
-        resendCode.textContent = "Sending...";
 
+        // Countdown interval
+        const timer = setInterval(() => {
+            resendCode.textContent = `Resend in ${countdown}s`;
+            countdown--;
+            if (countdown < 0) {
+                clearInterval(timer);
+                resendCode.disabled = false;
+                resendCode.textContent = originalText;
+            }
+        }, 1000);
+
+        // Send request
         fetch("resend-otp.php")
             .then(res => res.json())
             .then(data => {
@@ -42,18 +54,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 formMessage.textContent = "Something went wrong. Try again.";
                 formMessage.className = "text-danger";
                 formMessage.style.display = "block";
-            })
-            .finally(() => {
-                setTimeout(() => {
-                    resendCode.disabled = false;
-                    resendCode.textContent = originalText;
-                }, 2000);
             });
     });
 
     // Password regex
     function validatePassword(password) {
-        // at least 8 chars, one uppercase, one lowercase, one number, one special char
         const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
         return regex.test(password);
     }

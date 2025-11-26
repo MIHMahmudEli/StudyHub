@@ -19,9 +19,9 @@ if (isset($_GET['delete'])) {
     $stmt = $conn->prepare("DELETE FROM notes WHERE id=? AND uploader_id=?");
     $stmt->bind_param("ii", $noteId, $userId);
     if ($stmt->execute()) {
-        $message = "✅ Note deleted successfully.";
+        $message = "Note deleted successfully.";
     } else {
-        $error = "❌ Failed to delete note.";
+        $error = "Failed to delete note.";
     }
 }
 
@@ -38,9 +38,9 @@ if (isset($_POST['update_note'])) {
                             WHERE id=? AND uploader_id=?");
     $stmt->bind_param("ssssii", $title, $description, $subject, $course_code, $noteId, $userId);
     if ($stmt->execute()) {
-        $message = "✅ Note updated successfully.";
+        $message = "Note updated successfully.";
     } else {
-        $error = "❌ Failed to update note.";
+        $error = "Failed to update note.";
     }
 }
 

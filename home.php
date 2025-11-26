@@ -13,45 +13,75 @@ $userId = intval($_SESSION['user_id']);
 $role = $_SESSION['role'];
 
 $searchTerm = '';
-$query = "";
 $isBookmarksView = isset($_GET['bookmarks']);
 
+// Parameters for prepared statement
+$params = [];
+$types = "";
+
+// Base queries
 if ($isBookmarksView) {
     $query = "
         SELECT n.id, n.title, n.subject, n.avg_rating, n.file_type, u.name AS author_name,
                b.user_id AS bookmarked
         FROM notes n
-        INNER JOIN bookmarks b ON n.id = b.note_id AND b.user_id = $userId
+        INNER JOIN bookmarks b ON n.id = b.note_id AND b.user_id = ?
         LEFT JOIN users u ON n.uploader_id = u.id
     ";
+    $types .= "i";
+    $params[] = $userId;
+
     if (isset($_GET['q']) && !empty(trim($_GET['q']))) {
-        $searchTerm = mysqli_real_escape_string($conn, trim($_GET['q']));
-        $query .= " AND (n.title LIKE '%$searchTerm%' OR n.subject LIKE '%$searchTerm%' OR u.name LIKE '%$searchTerm%')";
+        $searchTerm = trim($_GET['q']);
+        $query .= " AND (n.title LIKE ? OR n.subject LIKE ? OR u.name LIKE ?)";
+        $types .= "sss";
+        $likeTerm = "%$searchTerm%";
+        $params[] = $likeTerm;
+        $params[] = $likeTerm;
+        $params[] = $likeTerm;
     }
+
     $query .= " ORDER BY n.created_at DESC";
-} elseif (isset($_GET['q']) && !empty(trim($_GET['q']))) {
-    $searchTerm = mysqli_real_escape_string($conn, trim($_GET['q']));
-    $query = "
-        SELECT n.id, n.title, n.subject, n.avg_rating, n.file_type, u.name AS author_name,
-               (SELECT 1 FROM bookmarks WHERE user_id=$userId AND note_id=n.id) AS bookmarked
-        FROM notes n
-        LEFT JOIN users u ON n.uploader_id = u.id
-        WHERE (n.title LIKE '%$searchTerm%' OR n.subject LIKE '%$searchTerm%' OR u.name LIKE '%$searchTerm%')
-          AND n.status = 'approved'
-        ORDER BY n.created_at DESC
-    ";
+
 } else {
     $query = "
         SELECT n.id, n.title, n.subject, n.avg_rating, n.file_type, u.name AS author_name,
-               (SELECT 1 FROM bookmarks WHERE user_id=$userId AND note_id=n.id) AS bookmarked
+               (SELECT 1 FROM bookmarks WHERE user_id=? AND note_id=n.id) AS bookmarked
         FROM notes n
         LEFT JOIN users u ON n.uploader_id = u.id
-        WHERE n.status = 'approved'
-        ORDER BY n.created_at DESC
+        WHERE n.status='approved'
     ";
+    $types .= "i";
+    $params[] = $userId;
+
+    if (isset($_GET['q']) && !empty(trim($_GET['q']))) {
+        $searchTerm = trim($_GET['q']);
+        $query .= " AND (n.title LIKE ? OR n.subject LIKE ? OR u.name LIKE ?)";
+        $types .= "sss";
+        $likeTerm = "%$searchTerm%";
+        $params[] = $likeTerm;
+        $params[] = $likeTerm;
+        $params[] = $likeTerm;
+    }
+
+    $query .= " ORDER BY n.created_at DESC";
 }
 
-$result = mysqli_query($conn, $query);
+// Prepare statement
+$stmt = mysqli_prepare($conn, $query);
+if ($types) {
+    mysqli_stmt_bind_param($stmt, $types, ...$params);
+}
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+
+// Fetch notes into array
+$notes = [];
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $notes[] = $row;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,7 +100,7 @@ $result = mysqli_query($conn, $query);
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <!-- Custom CSS -->
-<link rel="stylesheet" href="assets/css/home-style.css?v=4.0.3">
+<link rel="stylesheet" href="assets/css/home-style.css?v=4.0.4">
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -112,25 +142,23 @@ $result = mysqli_query($conn, $query);
         </a>
       <?php } ?>
 
-        <!-- Points Badge -->
-        <div class="position-relative d-inline-block">
-          <span id="pointsBadge"
-                class="badge bg-gradient text-dark fw-semibold shadow-sm px-3 py-2 modern-points-badge">
-            ⭐ <?php echo isset($_SESSION['points']) ? intval($_SESSION['points']) : 0; ?> pts
-          </span>
+      <!-- Points Badge -->
+      <div class="position-relative d-inline-block">
+        <span id="pointsBadge"
+              class="badge bg-gradient text-dark fw-semibold shadow-sm px-3 py-2 modern-points-badge">
+          ⭐ <?php echo isset($_SESSION['points']) ? intval($_SESSION['points']) : 0; ?> pts
+        </span>
 
-          <!-- Custom Tooltip -->
-          <div id="pointsTooltip" class="modern-tooltip shadow-lg rounded-4 p-3 bg-white border border-2 border-warning">
-            <h6 class="fw-bold text-dark mb-2">🌟 How to Earn Points</h6>
-            <ul class="list-unstyled small text-secondary mb-0">
-              <li>📥 <b>Download a note</b> → +1 point</li>
-              <li>📤 <b>Upload a note</b> → +5 points</li>
-              <li>👥 <b>Someone downloads your note</b> → +2 points</li>
-            </ul>
-          </div>
+        <!-- Custom Tooltip -->
+        <div id="pointsTooltip" class="modern-tooltip shadow-lg rounded-4 p-3 bg-white border border-2 border-warning">
+          <h6 class="fw-bold text-dark mb-2">🌟 How to Earn Points</h6>
+          <ul class="list-unstyled small text-secondary mb-0">
+            <li>📥 <b>Download a note</b> → +1 point</li>
+            <li>📤 <b>Upload a note</b> → +5 points</li>
+            <li>👥 <b>Someone downloads your note</b> → +2 points</li>
+          </ul>
         </div>
-
-
+      </div>
     </div>
   </div>
 </nav>
@@ -144,7 +172,7 @@ $result = mysqli_query($conn, $query);
             <h4 class="mb-0 fw-bold text-dark">Your Bookmarked Notes</h4>
         </div>
         <span class="badge bg-primary fs-6 py-2 px-3 shadow-sm number-of-bookmarks">
-            <?php echo $result ? mysqli_num_rows($result) : 0; ?> <?php echo mysqli_num_rows($result) === 1 ? 'bookmark' : 'bookmarks'; ?>
+            <?php echo count($notes); ?> <?php echo count($notes) === 1 ? 'bookmark' : 'bookmarks'; ?>
         </span>
     </div>
   <?php endif; ?>
@@ -176,8 +204,8 @@ $result = mysqli_query($conn, $query);
   <!-- Actual Note Results -->
   <div id="note-results" style="display:none;">
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-      <?php if ($result && mysqli_num_rows($result) > 0): ?>
-        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+      <?php if (!empty($notes)): ?>
+        <?php foreach ($notes as $row): ?>
           <?php $alreadyBookmarked = $row['bookmarked'] ? true : false; ?>
           <div class="col">
             <div class="card h-100 shadow-sm note-card position-relative">
@@ -216,7 +244,7 @@ $result = mysqli_query($conn, $query);
 
             </div>
           </div>
-        <?php endwhile; ?>
+        <?php endforeach; ?>
       <?php else: ?>
         <div class="col-12 d-flex flex-column justify-content-center align-items-center text-center no-content">
           <div class="mb-4"><i class="fa fa-bookmark fa-5x text-primary animate__animated animate__bounce"></i></div>
