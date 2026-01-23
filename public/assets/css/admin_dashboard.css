@@ -1,0 +1,406 @@
+/* ========== BASE ========== */
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f8fafc;
+  margin: 0;
+  display: flex;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: all 0.3s ease;
+
+}
+
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* ========== SIDEBAR ========== */
+.sidebar {
+  background: #31488c;
+  /* Matches the deep blue in the image */
+  color: #fff;
+  width: 260px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  z-index: 1050;
+  padding: 10px 0;
+  overflow-y: auto;
+  /* Enable scrolling */
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+/* Custom Scrollbar for Chrome/Safari */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.sidebar .logo {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  padding: 20px 0 30px;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.sidebar li {
+  list-style: none;
+  margin: 2px 12px;
+}
+
+.sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 10px 15px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: 0.92rem;
+  gap: 10px;
+}
+
+.sidebar .nav-link i {
+  width: 24px;
+  text-align: center;
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.sidebar .nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.sidebar li.active .nav-link {
+  background: #4a68c0;
+  /* Matches the active highlight in the image */
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.logout {
+  margin-top: auto;
+}
+
+/* Responsive Sidebar */
+@media (max-width: 992px) {
+  .sidebar {
+    left: -260px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebar.open {
+    left: 0;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Overlay when sidebar is open on mobile */
+  .sidebar.open::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 260px;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+}
+
+/* ========== MAIN CONTENT ========== */
+.main-content {
+  flex-grow: 1;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+  padding: 20px;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+@media (max-width: 992px) {
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 15px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .main-content {
+    padding: 10px;
+  }
+}
+
+/* ========== TOPBAR ========== */
+.topbar {
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.menu-toggle {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.menu-toggle i {
+  font-size: 1.5rem;
+}
+
+/* Responsive Topbar */
+@media (max-width: 768px) {
+  .topbar {
+    padding: 12px 15px;
+    margin-top: 10px;
+    border-radius: 12px;
+  }
+
+  .topbar h5 {
+    font-size: 1rem !important;
+  }
+
+  .topbar .badge {
+    font-size: 0.75rem;
+  }
+
+  .topbar .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .topbar {
+    padding: 10px 12px;
+    flex-wrap: wrap;
+  }
+
+  .topbar h5 {
+    font-size: 0.9rem !important;
+  }
+}
+
+/* ========== DASHBOARD CARDS ========== */
+.dashboard-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card h4 {
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.dashboard-card p {
+  font-size: 0.95rem;
+}
+
+/* Small Devices */
+@media (max-width: 576px) {
+  .dashboard-card {
+    padding: 1rem !important;
+  }
+}
+
+/* ========== DASHBOARD CARDS NEXT-LEVEL COOL - MODERN COLORS ========== */
+.dash-card {
+  background: linear-gradient(145deg, #ffffff, #fefefe);
+  border-radius: 25px;
+  padding: 25px 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  will-change: transform, box-shadow;
+}
+
+.dash-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+}
+
+.dash-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(120deg, #cbc9f4, #9798e7, #97b2de, #60a5fa);
+  background-size: 200% 200%;
+  /* Reduced from 400% for performance */
+  transform: rotate(45deg);
+  transition: opacity 0.3s ease;
+  z-index: 0;
+  opacity: 0.1;
+  /* Slightly lower default opacity */
+  pointer-events: none;
+}
+
+/* Optimized background move - better to use subtle opacity pulse or nothing for performance if laggy */
+@keyframes gradientMove {
+  0% {
+    transform: rotate(45deg) translate(0, 0);
+  }
+
+  50% {
+    transform: rotate(45deg) translate(-5%, -5%);
+  }
+
+  100% {
+    transform: rotate(45deg) translate(0, 0);
+  }
+}
+
+.dash-card:hover::before {
+  opacity: 0.2;
+}
+
+.dash-card h6 {
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  position: relative;
+  z-index: 1;
+  color: #111827;
+  /* modern dark text */
+}
+
+.dash-card .metric {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #2563eb;
+  margin-bottom: 15px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.8) translateZ(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1) translateZ(0);
+    opacity: 1;
+  }
+}
+
+.dash-card a.stretched-link {
+  position: relative;
+  z-index: 1;
+  font-weight: 500;
+  text-decoration: none;
+  color: #4f46e5;
+  /* modern purple accent */
+  transition: color 0.3s ease;
+}
+
+.dash-card a.stretched-link:hover {
+  color: #312e81;
+  /* darker purple on hover */
+  text-decoration: underline;
+}
+
+.dash-card i {
+  font-size: 1.8rem;
+  color: #3b82f6;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+  will-change: transform;
+}
+
+.dash-card:hover i {
+  transform: rotate(15deg) scale(1.15);
+  color: #6366f1;
+}
+
+.dash-card:hover {
+  transform: translateY(-10px) scale(1.04);
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15);
+}
+
+.active {
+  background: linear-gradient(135deg, #4b6cb7, #4970c0);
+  /* modern gradient */
+  color: #fff !important;
+  /* white text for contrast */
+  border-radius: 0.5rem;
+  /* rounded edges */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  /* soft shadow */
+  transition: all 0.3s ease;
+  /* smooth transition */
+}
+/* ========== RESPONSIVE TABLES ========== */
+@media (max-width: 768px) {
+  .table-responsive { font-size: 0.85rem; }
+  .table thead th { font-size: 0.7rem; padding: 12px 8px; }
+  .table tbody td { padding: 12px 8px; }
+}
+
+@media (max-width: 576px) {
+  .table { font-size: 0.8rem; }
+  .table thead th { font-size: 0.65rem; padding: 10px 6px; }
+  .table tbody td { padding: 10px 6px; }
+  .btn-group .btn { padding: 0.25rem 0.5rem; font-size: 0.75rem; }
+}
+
+/* ========== RESPONSIVE CARDS & MODALS ========== */
+@media (max-width: 768px) {
+  .analytics-card, .resource-card, .stat-card { padding: 15px !important; }
+  .modal-dialog { margin: 0.5rem; }
+}
+
+@media (max-width: 576px) {
+  .row.g-4 { gap: 1rem !important; }
+  .row.g-3 { gap: 0.75rem !important; }
+  h1 { font-size: 1.75rem !important; }
+  h2 { font-size: 1.5rem !important; }
+  h3 { font-size: 1.25rem !important; }
+  h4 { font-size: 1.1rem !important; }
+  h5 { font-size: 1rem !important; }
+  h6 { font-size: 0.9rem !important; }
+}

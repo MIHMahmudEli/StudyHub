@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Settings - StudyHub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap & Fonts -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<!-- Custom Styles -->
+<link rel="stylesheet" href="<?php echo asset('css/admin_dashboard.css?v=3.1'); ?>">
+<link rel="icon" type="image/svg+xml" href="<?php echo asset('images/favicon.svg'); ?>">
+<style>
+    .settings-card {
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+    .settings-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .settings-header {
+        background: linear-gradient(to right, #f8fafc, #fff);
+        padding: 20px 25px;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .settings-header h5 {
+        margin: 0;
+        color: #1e293b;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+    .form-control {
+        border-radius: 8px;
+        padding: 12px 15px;
+        border: 1px solid #e2e8f0;
+        background-color: #f8fafc;
+        font-size: 0.95rem;
+    }
+    .form-control:focus {
+        background-color: #fff;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        border-color: #3b82f6;
+    }
+    .btn-modern {
+        padding: 12px;
+        font-weight: 500;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    .btn-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+</style>
+</head>
+<body>
+<?php $activePage = 'settings'; ?>
+<!-- Sidebar -->
+<aside class="sidebar admin-sidebar">
+    <div class="logo">
+        <i class="fa fa-graduation-cap"></i> <span>StudyHub</span>
+    </div>
+    <ul class="nav flex-column">
+        <li class="<?php echo ($activePage === 'dashboard') ? 'active' : ''; ?>">
+            <a href="<?php echo url('admin/dashboard'); ?>" class="nav-link"><i class="fa fa-house"></i>Dashboard</a>
+        </li>
+        <li class="<?php echo ($activePage === 'pending_notes') ? 'active' : ''; ?>">
+            <a href="<?php echo url('admin/pending_notes'); ?>" class="nav-link"><i class="fa fa-file-lines"></i>Pending Notes</a>
+        </li>
+        <li class="<?php echo ($activePage === 'manage_resources') ? 'active' : ''; ?>">
+            <a href="<?php echo url('admin/manage_resources'); ?>" class="nav-link"><i class="fa fa-folder"></i>Manage Resources</a>
+        </li>
+        
+            <?php if (isset($role) && $role === 'admin') { ?>
+                <li class="<?php echo ($activePage === 'users') ? 'active' : ''; ?>">
+                    <a href="<?php echo url('admin/users'); ?>" class="nav-link"><i class="fa fa-users"></i>Users</a>
+                </li>
+
+                <li class="<?php echo ($activePage === 'active_users') ? 'active' : ''; ?>">
+                    <a href="<?php echo url('admin/active_users'); ?>" class="nav-link"><i class="fa fa-fire"></i>Active Users</a>
+                </li>
+
+                <li class="<?php echo ($activePage === 'analytics') ? 'active' : ''; ?>">
+                    <a href="<?php echo url('admin/analytics'); ?>" class="nav-link"><i class="fa fa-chart-column"></i>Analytics</a>
+                </li>
+
+                <li class="<?php echo ($activePage === 'reports') ? 'active' : ''; ?>">
+                    <a href="<?php echo url('admin/reports'); ?>" class="nav-link"><i class="fa fa-file-invoice"></i>Platform Reports</a>
+                </li>
+
+            <?php } ?>
+
+        <li class="<?php echo ($activePage === 'browse_notes') ? 'active' : ''; ?>">
+            <a href="<?php echo url('home/dashboard'); ?>" class="nav-link"><i class="fa fa-book-open"></i>Browse Notes</a>
+        </li>
+        <li class="<?php echo ($activePage === 'browse_resources') ? 'active' : ''; ?>">
+            <a href="<?php echo url('resources'); ?>" class="nav-link"><i class="fa fa-download"></i>Browse Resources</a>
+        </li>
+        <li class="<?php echo ($activePage === 'my_notes') ? 'active' : ''; ?>">
+            <a href="<?php echo url('note/my_notes'); ?>" class="nav-link"><i class="fa fa-upload"></i>Uploaded Notes</a>
+        </li>
+        <li class="<?php echo ($activePage === 'settings') ? 'active' : ''; ?>">
+            <a href="<?php echo url('settings'); ?>" class="nav-link"><i class="fa fa-gear"></i>Settings</a>
+        </li>
+    </ul>
+</aside>
+
+<!-- Main -->
+<main class="main-content flex-grow-1">
+    <!-- Topbar -->
+    <header class="topbar d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <button class="menu-toggle btn text-white p-0 border-0"><i class="fa fa-bars"></i></button>
+            <h5 class="mb-0 fw-semibold">Settings</h5>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <span class="badge bg-light text-dark text-uppercase"><?php echo $role; ?></span>
+            <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm">Logout</a>
+        </div>
+    </header>
+
+    <!-- Settings Sections -->
+    <section class="container-fluid py-4 px-lg-5">
+        <div class="row g-4">
+             <?php if (!empty($message)): ?>
+                <div class="col-12">
+                     <div class="alert alert-success shadow-sm border-0 rounded-3"><?php echo $message; ?></div>
+                </div>
+                <?php endif; ?>
+                
+                <?php if (!empty($error)): ?>
+                <div class="col-12">
+                     <div class="alert alert-danger shadow-sm border-0 rounded-3"><?php echo $error; ?></div>
+                </div>
+                <?php endif; ?>
+                
+            <!-- Update Name -->
+            <div class="col-lg-6 col-md-12">
+                <div class="settings-card h-100 d-flex flex-column">
+                    <div class="settings-header">
+                        <h5><i class="fa fa-user-pen text-primary me-2"></i>Update Name</h5>
+                    </div>
+                    <div class="card-body p-4 d-flex flex-column flex-grow-1">
+                        <form method="post" action="<?php echo url('settings/update_name'); ?>" class="d-flex flex-column h-100">
+                            <div class="mb-4">
+                                <label class="form-label text-muted small fw-bold text-uppercase">New Name</label>
+                                <input type="text" class="form-control" name="name" value="<?php echo htmlspecialchars($_SESSION['user_name']); ?>" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 btn-modern mt-auto">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Password -->
+            <div class="col-lg-6 col-md-12">
+                <div class="settings-card h-100 d-flex flex-column">
+                     <div class="settings-header">
+                        <h5><i class="fa fa-shield-halved text-warning me-2"></i>Change Password</h5>
+                    </div>
+                    <div class="card-body p-4 d-flex flex-column flex-grow-1">
+                        <form method="post" action="<?php echo url('settings/update_password'); ?>" class="d-flex flex-column h-100">
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold text-uppercase">Current Password</label>
+                                <input type="password" name="current_password" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold text-uppercase">New Password</label>
+                                <input type="password" name="new_password" class="form-control" required>
+                                <div class="form-text text-muted small">
+                                    <i class="fa fa-info-circle me-1"></i> Min 8 chars, uppercase, lowercase, number.
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label text-muted small fw-bold text-uppercase">Confirm New Password</label>
+                                <input type="password" name="confirm_password" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-warning w-100 text-white btn-modern mt-auto">Update Password</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demote Moderators -->
+            <?php if ($role === 'admin') { ?>
+            <div class="col-12">
+                <div class="settings-card">
+                     <div class="settings-header">
+                        <h5><i class="fa fa-users-gear text-danger me-2"></i>Manage Moderators</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <?php if (empty($moderators)) { ?>
+                            <div class="text-center py-4 text-muted">
+                                <i class="fa fa-user-slash fa-2x mb-2"></i>
+                                <p>No moderators found.</p>
+                            </div>
+                        <?php } else { ?>
+                            <div class="table-responsive">
+                                <table class="table align-middle table-hover">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="border-0 text-secondary text-uppercase small fw-bold ps-4">Name</th>
+                                            <th class="border-0 text-secondary text-uppercase small fw-bold">Email</th>
+                                            <th class="border-0 text-secondary text-uppercase small fw-bold text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="border-top-0">
+                                        <?php foreach ($moderators as $mod) { ?>
+                                            <tr>
+                                                <td class="ps-4 fw-medium"><?php echo htmlspecialchars($mod['name']); ?></td>
+                                                <td class="text-muted"><?php echo htmlspecialchars($mod['email']); ?></td>
+                                                <td class="text-center">
+                                                    <form method="post" action="<?php echo url('settings/demote'); ?>" class="d-inline">
+                                                        <input type="hidden" name="mod_id" value="<?php echo $mod['id']; ?>">
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger btn-modern px-3">
+                                                            <i class="fa fa-user-minus me-1"></i> Demote
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+            <?php } ?>
+        </div>
+    </section>
+</main>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="<?php echo asset('js/admin_dashboard.js?v=3.1'); ?>"></script>
+</body>
+</html>

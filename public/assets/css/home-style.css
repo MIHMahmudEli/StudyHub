@@ -1,0 +1,461 @@
+/* ========== GLOBAL STYLES ========== */
+body {
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    background: #f5f7fa;
+    /* Light gray background */
+    color: #333;
+    /* Default text color */
+    font-size: 1.05rem;
+}
+
+/* ========== NAVBAR ========== */
+.navbar {
+    background: #34495e !important;
+    /* Dark bluish-gray navbar */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    /* Soft shadow under navbar */
+    padding: 0.75rem 0;
+    /* Consistent vertical padding */
+}
+
+/* Nav Right Grouping */
+.nav-right-group {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    /* Consistent spacing between items */
+    flex-shrink: 0;
+    /* Prevent grouping from shrinking too much */
+}
+
+/* Integrated Search Bar */
+.search-container {
+    position: relative;
+    max-width: 220px;
+    /* Slightly reduced to save space */
+    width: 100%;
+}
+
+.search-container .form-control {
+    padding-right: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    box-shadow: none;
+    transition: all 0.3s ease;
+}
+
+.search-container .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.search-container .form-control:focus {
+    background: #fff;
+    color: #333;
+    border-color: #fff;
+}
+
+.search-container .form-control:focus+.search-icon-btn {
+    color: #3498db;
+}
+
+.search-icon-btn {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 5px 10px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-icon-btn:hover {
+    color: #fff;
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* Navbar Brand (site name/logo) */
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.15rem;
+    /* Slightly smaller for density */
+    color: #fff !important;
+}
+
+/* Navbar links */
+.nav-link {
+    font-weight: 500;
+    font-size: 0.9rem;
+    /* Reduced to prevent breakage */
+    color: #fff;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    /* Prevent wrapping */
+}
+
+/* On hover or active link */
+.nav-link:hover,
+.nav-link.active {
+    color: #1cc88a;
+    /* Light green color */
+}
+
+/* Active link special color */
+.nav-link.active {
+    color: #2dbce3 !important;
+    /* Light blue color */
+    font-weight: 600;
+}
+
+/* Custom name link (optional, probably your username or author link) */
+.name {
+    text-decoration: none;
+    color: rgb(109, 229, 205) !important;
+    /* Soft teal color */
+}
+
+/* ========== NOTE CARDS ========== */
+.note-card {
+    background: #fff;
+    /* White card */
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+/* Hover effect: move up & add shadow */
+.note-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Big icon inside note card (like file icon) */
+.note-file {
+    font-size: 50px;
+    transition: transform 0.3s ease;
+}
+
+/* Scale up icon when hovering card */
+.note-card:hover .note-file {
+    transform: scale(1.15);
+}
+
+/* Card Title (usually note name) */
+.card-title {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #2c3e50;
+}
+
+/* Card Subtitle (maybe category or date) */
+.card-subtitle {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* Rating (stars or icons) */
+.note-rating {
+    font-size: 1rem;
+    color: #f1c40f;
+    /* Gold/yellow */
+}
+
+/* ========== CARD ACTION BUTTONS ========== */
+/* Hidden action area (like “View”, “Download”, “Delete”) */
+.note-actions {
+    position: absolute;
+    bottom: -75px;
+    /* Hidden below the card initially */
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 0;
+    background: rgba(255, 255, 255, 0.95);
+    /* Slightly transparent white */
+    transition: bottom 0.3s ease;
+    /* Slide up smoothly */
+}
+
+/* Show actions when hovering card */
+.note-card:hover .note-actions {
+    bottom: 0;
+    /* Slides up into view */
+}
+
+/* Buttons inside action area */
+.note-actions .btn {
+    border-radius: 10px;
+    font-size: 0.85rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Button hover effect */
+.note-actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+/* Medium devices (tablets, up to 768px wide) */
+@media (max-width: 768px) {
+    .note-file {
+        font-size: 40px;
+    }
+
+    .card-title {
+        font-size: 0.95rem;
+    }
+
+    .card-subtitle {
+        font-size: 0.8rem;
+    }
+}
+
+/* Small devices (phones, up to 480px wide) */
+@media (max-width: 480px) {
+    .note-file {
+        font-size: 36px;
+    }
+
+    .card-title {
+        font-size: 0.9rem;
+    }
+}
+
+.no-content {
+    min-height: 50vh;
+    padding: 3rem 0;
+}
+
+.no-content i {
+    font-size: 5rem;
+    color: #3498db;
+    margin-bottom: 1rem;
+    animation: bounce 1.5s infinite;
+}
+
+.no-content h3 {
+    font-size: 1.75rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.no-content p {
+    font-size: 1.05rem;
+    color: #6c757d;
+    max-width: 500px;
+}
+
+/* Animation keyframes */
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .no-content i {
+        font-size: 4rem;
+    }
+
+    .no-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .no-content p {
+        font-size: 0.95rem;
+        max-width: 90%;
+    }
+}
+
+/* ======= Username Styling ======= */
+.name {
+    max-width: 160px;
+    /* keeps name from overflowing navbar */
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* show "..." when name is too long */
+    vertical-align: middle;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: default;
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.name:hover {
+    color: #ffc107;
+    /* subtle golden highlight on hover */
+}
+
+/* ======= Tooltip on Hover ======= */
+.name {
+    max-width: 160px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    font-weight: 600;
+    font-size: 1rem;
+    position: relative;
+    cursor: pointer;
+}
+
+/* Simple tooltip */
+.name::after {
+    content: attr(data-fullname);
+    position: absolute;
+    bottom: -28px;
+    /* tooltip below name */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 10;
+}
+
+.name:hover::after {
+    opacity: 1;
+    /* show tooltip on hover */
+}
+
+
+/* ====== Skeleton Loader with Smooth Fade ====== */
+#skeleton-loader {
+    opacity: 1;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#skeleton-loader.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.placeholder-card {
+    border-radius: 15px;
+    background: #fff;
+    overflow: hidden;
+    animation: pulse 1.5s infinite;
+}
+
+.placeholder {
+    display: inline-block;
+    height: 1em;
+    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 37%, #e0e0e0 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -400px 0;
+    }
+
+    100% {
+        background-position: 400px 0;
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* Modern Gradient Badge */
+.modern-points-badge {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    /* Rich amber/gold */
+    color: #ffffff !important;
+    /* High contrast white */
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modern-points-badge:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 10px 20px rgba(217, 119, 6, 0.3);
+}
+
+/* Tooltip Container */
+.modern-tooltip {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    min-width: 230px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: all 0.25s ease-in-out;
+    z-index: 999;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Tooltip visible on hover */
+#pointsBadge:hover+#pointsTooltip,
+#pointsTooltip:hover {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+#pointsBadge {
+    color: white !important;
+
+}
+
+/* Fancy glow animation */
+@keyframes glowPulse {
+    0% {
+        box-shadow: 0 0 5px rgba(245, 158, 11, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 15px rgba(245, 158, 11, 0.7);
+    }
+
+    100% {
+        box-shadow: 0 0 5px rgba(245, 158, 11, 0.4);
+    }
+}
+
+.modern-points-badge:hover {
+    animation: glowPulse 1.5s infinite ease-in-out;
+}

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>StudyHub — Learn, Share & Grow Together</title>
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css?v3.0"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css?v3.0"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?php echo asset('css/index_html_style.css?v3.0'); ?>" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="<?php echo asset('images/favicon.svg'); ?>" />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="#">🎓 StudyHub</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="#features">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#how">How it Works</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contact">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a href="<?php echo url('auth'); ?>" class="btn btn-primary ms-lg-3">Login</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section
+      class="hero container d-flex flex-column flex-md-row align-items-center justify-content-between py-5 mt-5"
+    >
+      <div class="hero-text text-center text-md-start">
+        <h1>
+          Learn, Share & Grow <br />
+          with <span class="highlight">StudyHub</span>
+        </h1>
+        <p class="mt-3">
+          A collaborative space where students exchange notes, slides, and ideas
+          — empowering peer learning with ease.
+        </p>
+        <div class="mt-4">
+          <a href="<?php echo url('auth'); ?>#register" class="btn btn-primary me-2"
+            >Join Now</a
+          >
+          <a href="#features" class="btn btn-outline-light">Explore</a>
+        </div>
+      </div>
+
+      <div class="hero-illustration mt-5 mt-md-0 position-relative">
+        <div
+          class="bubble"
+          style="width: 120px; height: 120px; top: 20%; left: 10%"
+        ></div>
+        <div
+          class="bubble"
+          style="
+            width: 200px;
+            height: 200px;
+            bottom: 15%;
+            right: 15%;
+            animation-delay: 2s;
+          "
+        ></div>
+        <div
+          class="bubble"
+          style="
+            width: 80px;
+            height: 80px;
+            bottom: 30%;
+            left: 45%;
+            animation-delay: 4s;
+          "
+        ></div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="features container text-center py-5">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card feature-card">
+            <h3>👩‍🎓 Student</h3>
+            <p>
+              Upload and browse study materials, download resources, and earn
+              badges for your contributions.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card feature-card">
+            <h3>🛡️ Moderator</h3>
+            <p>
+              Ensure content quality by reviewing uploads, flagging duplicates,
+              and maintaining standards.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card feature-card">
+            <h3>👑 Admin</h3>
+            <p>
+              Oversee users, analyze trends, and generate insightful reports to
+              keep StudyHub growing.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how" class="how text-center py-5">
+      <h2 class="mb-4">How It Works</h2>
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-md-4">
+            <div class="step">
+              <h3>1️⃣ Sign Up</h3>
+              <p>Register as a student, moderator, or admin.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="step">
+              <h3>2️⃣ Share</h3>
+              <p>Upload notes and slides with easy tagging.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="step">
+              <h3>3️⃣ Grow</h3>
+              <p>Engage with the community and earn recognition.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+ 
+    <!-- Contact -->
+    <section id="contact" class="contact text-center py-5">
+      <div class="container">
+        <h2>Contact Us</h2>
+        <p class="contact-subtext mb-5">
+          We’d love to hear from you! Reach us through any of these platforms 👇
+        </p>
+
+        <div class="row g-4 justify-content-center">
+          <div class="col-10 col-sm-6 col-md-3">
+            <a
+              href="mailto:mihmahmud1002@gmail.com"
+              class="contact-item d-block"
+            >
+              <div class="contact-icon">
+                <i class="fa fa-envelope"></i>
+              </div>
+              <span>Email</span>
+              <p>studyhubteam.official@gmail.com</p>
+            </a>
+          </div>
+
+          <div class="col-10 col-sm-6 col-md-3">
+            <a href="tel:+8801716099707" class="contact-item d-block">
+              <div class="contact-icon">
+                <i class="fa fa-phone"></i>
+              </div>
+              <span>Call</span>
+              <p>+880 1831772250</p>
+            </a>
+          </div>
+
+          <div class="col-10 col-sm-6 col-md-3">
+            <a
+              href="https://www.facebook.com/mihmahmudali"
+              target="_blank"
+              class="contact-item d-block"
+            >
+              <div class="contact-icon">
+                <i class="fab fa-facebook-f"></i>
+              </div>
+              <span>Facebook</span>
+              <p>/mihmahmudali</p>
+            </a>
+          </div>
+
+          <div class="col-10 col-sm-6 col-md-3">
+            <a
+              href="https://www.instagram.com/mihmahmud1002"
+              target="_blank"
+              class="contact-item d-block"
+            >
+              <div class="contact-icon">
+                <i class="fab fa-instagram"></i>
+              </div>
+              <span>Instagram</span>
+              <p>@mihmahmud1002</p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center py-4">
+      <p>
+        © <span id="year"></span> StudyHub. Built for collaborative learning.
+      </p>
+    </footer>
+
+    <button id="topBtn">↑</button>
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?php echo asset('js/index_html_script.js?v3.0'); ?>"></script>
+  </body>
+</html>
