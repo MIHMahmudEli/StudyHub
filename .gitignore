@@ -1,0 +1,7 @@
+# Project-specific ignored files
+scripts/
+.gemini/
+.agent/
+brain/
+*.log
+config.php
