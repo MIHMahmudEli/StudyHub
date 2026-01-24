@@ -65,6 +65,34 @@ class User {
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
+    public function getMonthlyLeaderboard($limit = 30, $monthOffset = 0) {
+        // monthOffset: 0 = current month, 1 = last month
+        $start = date('Y-m-01 00:00:00', strtotime("-$monthOffset months"));
+        $end = date('Y-m-t 23:59:59', strtotime("-$monthOffset months"));
+
+        $query = "
+            SELECT u.id, u.name, 
+                   SUM(CASE 
+                        WHEN e.type = 'upload' THEN 5 
+                        WHEN e.type = 'download' THEN 1 
+                        WHEN e.type = 'someone_download_your_note' THEN 2 
+                        ELSE 0 
+                   END) as points
+            FROM users u
+            JOIN events e ON u.id = e.user_id
+            WHERE e.at >= ? AND e.at <= ?
+            GROUP BY u.id
+            HAVING points > 0
+            ORDER BY points DESC
+            LIMIT ?
+        ";
+        
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("ssi", $start, $end, $limit);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
     public function getTopActive($limit = 10, $period = 'all') {
         $query = "SELECT u.name, COUNT(e.id) as activity, MAX(e.at) as last_active 
                   FROM events e
@@ -156,7 +184,7 @@ class User {
     }
 
     public function getTopContributors($limit = 5) {
-        $query = "SELECT u.name, COUNT(n.id) as note_count 
+        $query = "SELECT u.id, u.name, COUNT(n.id) as note_count 
                   FROM users u 
                   INNER JOIN notes n ON u.id = n.uploader_id 
                   WHERE n.status = 'approved'
@@ -164,5 +192,10 @@ class User {
                   ORDER BY note_count DESC 
                   LIMIT $limit";
         return $this->db->query($query)->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getRoleDistribution() {
+        return $this->db->query("SELECT role, COUNT(*) as count FROM users GROUP BY role")
+                        ->fetch_all(MYSQLI_ASSOC);
     }
 }

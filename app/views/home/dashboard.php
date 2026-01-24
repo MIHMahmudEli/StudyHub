@@ -80,9 +80,10 @@
     <div class="mb-4 p-3 rounded-4 shadow-sm bg-white d-flex justify-content-between align-items-center flex-wrap">
         <div class="d-flex align-items-center gap-3">
             <i class="fa fa-bookmark fa-2x text-primary"></i>
-            <h4 class="mb-0 fw-bold text-dark">Your Bookmarked Notes</h4>
+            <h4 class="mb-0 fw-bold text-dark d-none d-md-block">Your Bookmarked Notes</h4>
+            <h4 class="mb-0 fw-bold text-dark d-block d-md-none">Bookmarks</h4>
         </div>
-        <span class="badge bg-primary fs-6 py-2 px-3 shadow-sm number-of-bookmarks">
+        <span class="badge bg-primary fs-6 py-2 px-3 shadow-sm number-of-bookmarks d-none d-md-inline-block">
             <?php echo count($notes); ?> <?php echo count($notes) === 1 ? 'bookmark' : 'bookmarks'; ?>
         </span>
     </div>

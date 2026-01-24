@@ -87,6 +87,10 @@
             <li class="<?php echo ($activePage === 'reports') ? 'active' : ''; ?>">
                 <a href="<?php echo url('admin/reports'); ?>" class="nav-link"><i class="fa fa-file-invoice"></i>Platform Reports</a>
             </li>
+
+            <li class="<?php echo ($activePage === 'awards') ? 'active' : ''; ?>">
+                <a href="<?php echo url('admin/awards'); ?>" class="nav-link"><i class="fa fa-award"></i>Awards & Certificates</a>
+            </li>
         <?php } ?>
 
         <li class="<?php echo ($activePage === 'browse_notes') ? 'active' : ''; ?>">
@@ -107,34 +111,36 @@
 <!-- Main -->
 <main class="main-content flex-grow-1">
     <!-- Topbar -->
-    <header class="topbar d-flex justify-content-between align-items-center mb-4">
+    <header class="topbar d-flex justify-content-between align-items-center mb-2">
         <div class="d-flex align-items-center gap-3">
             <button class="menu-toggle btn text-white p-0 border-0"><i class="fa fa-bars"></i></button>
             <h5 class="mb-0 fw-semibold">Active Users</h5>
         </div>
         <div class="d-flex align-items-center gap-3">
             <span class="badge bg-light text-dark text-uppercase"><?php echo $role; ?></span>
-            <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm">Logout</a>
+            <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm">
+                <i class="fa fa-sign-out-alt"></i><span class="d-none d-md-inline ms-1">Logout</span>
+            </a>
         </div>
     </header>
 
     <!-- Content -->
-    <section class="container-fluid py-4 px-lg-5">
+    <section class="container-fluid py-2 px-3 px-lg-5">
         
         <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-2 gap-3">
+            <!-- <div class="d-none d-md-block">
                 <h4 class="fw-bold text-dark mb-1">Most Active Users</h4>
                 <p class="text-muted small mb-0">Top users by activity.</p>
-            </div>
+            </div> -->
             
              <!-- Tabs -->
-            <ul class="nav nav-pills" id="activeUserTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active rounded-pill fw-medium px-4" id="data-today-tab" data-bs-toggle="pill" data-bs-target="#data-today" type="button" role="tab">Today</button>
+            <ul class="nav nav-pills w-100 w-md-auto d-flex gap-2 justify-content-between bg-white p-1 rounded-pill shadow-sm border" id="activeUserTabs" role="tablist">
+                <li class="nav-item flex-fill text-center" role="presentation">
+                    <button class="nav-link w-100 active rounded-pill fw-medium py-2 small-mobile" id="data-today-tab" data-bs-toggle="pill" data-bs-target="#data-today" type="button" role="tab">Today</button>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link rounded-pill fw-medium px-4" id="data-all-tab" data-bs-toggle="pill" data-bs-target="#data-all" type="button" role="tab">All Time</button>
+                <li class="nav-item flex-fill text-center" role="presentation">
+                    <button class="nav-link w-100 rounded-pill fw-medium py-2 small-mobile" id="data-all-tab" data-bs-toggle="pill" data-bs-target="#data-all" type="button" role="tab">All Time</button>
                 </li>
             </ul>
         </div>
@@ -148,10 +154,10 @@
                         <table class="table table-hover mb-0">
                             <thead>
                                 <tr>
-                                    <th style="width: 80px;">Rank</th>
+                                    <th style="width: 50px;">#</th>
                                     <th>User Name</th>
-                                    <th>Activity Today</th>
-                                    <th>Last Active</th>
+                                    <th>Activity</th>
+                                    <th class="d-none d-md-table-cell">Last Active</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -174,15 +180,19 @@
                                                 <?php echo $rank; ?>
                                             </div>
                                         </td>
-                                        <td>
-                                            <div class="fw-semibold text-dark"><?php echo htmlspecialchars($u['name']); ?></div>
+                                        <td onclick="document.getElementById('m-time-today-<?php echo $index; ?>').classList.toggle('d-none')" style="cursor: pointer;">
+                                            <div class="fw-semibold text-dark text-truncate" style="max-width: 150px;"><?php echo htmlspecialchars($u['name']); ?> <i class="fa fa-caret-down text-muted ms-1 d-md-none" style="font-size: 0.7rem;"></i></div>
+                                            <!-- Mobile Toggle Time -->
+                                            <div id="m-time-today-<?php echo $index; ?>" class="small text-muted d-none d-md-none mt-1 bg-light p-1 rounded">
+                                                <i class="fa fa-clock me-1"></i> <?php echo date('h:i A', strtotime($u['last_active'])); ?> (Today)
+                                            </div>
                                         </td>
                                         <td>
-                                            <span class="badge bg-success-subtle text-success rounded-pill px-3">
-                                                <?php echo number_format($u['activity']); ?> Events
+                                            <span class="badge bg-success-subtle text-success rounded-pill px-2 small-badge">
+                                                <?php echo number_format($u['activity']); ?>
                                             </span>
                                         </td>
-                                        <td class="small text-muted">
+                                        <td class="small text-muted d-none d-md-table-cell">
                                             <div class="text-dark fw-medium"><?php echo date('h:i A', strtotime($u['last_active'])); ?></div>
                                             <div class="text-muted" style="font-size: 0.75rem;">Today</div>
                                         </td>
@@ -202,10 +212,10 @@
                         <table class="table table-hover mb-0">
                             <thead>
                                 <tr>
-                                    <th style="width: 80px;">Rank</th>
+                                    <th style="width: 50px;">#</th>
                                     <th>User Name</th>
-                                    <th>Total Activity</th>
-                                    <th>Last Active</th>
+                                    <th>Activity</th>
+                                    <th class="d-none d-md-table-cell">Last Active</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -228,15 +238,19 @@
                                                 <?php echo $rank; ?>
                                             </div>
                                         </td>
-                                        <td>
-                                            <div class="fw-semibold text-dark"><?php echo htmlspecialchars($u['name']); ?></div>
+                                        <td onclick="document.getElementById('m-time-all-<?php echo $index; ?>').classList.toggle('d-none')" style="cursor: pointer;">
+                                            <div class="fw-semibold text-dark text-truncate" style="max-width: 150px;"><?php echo htmlspecialchars($u['name']); ?> <i class="fa fa-caret-down text-muted ms-1 d-md-none" style="font-size: 0.7rem;"></i></div>
+                                            <!-- Mobile Toggle Time -->
+                                            <div id="m-time-all-<?php echo $index; ?>" class="small text-muted d-none d-md-none mt-1 bg-light p-1 rounded">
+                                                <i class="fa fa-clock me-1"></i> <?php echo date('M d, Y', strtotime($u['last_active'])); ?>
+                                            </div>
                                         </td>
                                         <td>
-                                            <span class="badge bg-primary-subtle text-primary rounded-pill px-3">
-                                                <?php echo number_format($u['activity']); ?> Events
+                                            <span class="badge bg-primary-subtle text-primary rounded-pill px-2 small-badge">
+                                                <?php echo number_format($u['activity']); ?>
                                             </span>
                                         </td>
-                                        <td class="small text-muted">
+                                        <td class="small text-muted d-none d-md-table-cell">
                                             <div class="text-dark fw-medium"><?php echo date('M d, Y', strtotime($u['last_active'])); ?></div>
                                             <div class="text-muted" style="font-size: 0.75rem;"><?php echo date('h:i A', strtotime($u['last_active'])); ?></div>
                                         </td>

@@ -21,6 +21,7 @@ require_once '../app/controllers/HomeController.php';
 // Define Routes
 $router->add('GET', '', 'HomeController', 'index');
 $router->add('GET', 'home', 'HomeController', 'index');
+$router->add('GET', 'home/certificate', 'HomeController', 'certificate');
 $router->add('GET', 'auth', 'HomeController', 'auth');
 $router->add('GET', 'login', 'AuthController', 'login');
 $router->add('POST', 'login', 'AuthController', 'login');
@@ -46,6 +47,8 @@ $router->add('GET', 'admin/analytics', 'AdminController', 'analytics');
 $router->add('GET', 'admin/resource_analytics', 'AdminController', 'resourceAnalytics');
 $router->add('GET', 'admin/active_users', 'AdminController', 'activeUsers');
 $router->add('GET', 'admin/reports', 'AdminController', 'reports');
+$router->add('GET', 'admin/awards', 'AdminController', 'awards');
+$router->add('POST', 'admin/sendCertificate', 'AdminController', 'sendCertificate');
 
 $router->add('GET', 'upload', 'NoteController', 'create');
 $router->add('POST', 'note/store', 'NoteController', 'store');

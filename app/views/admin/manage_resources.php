@@ -61,6 +61,13 @@
             text-decoration: none;
             display: block;
             height: 100%;
+            padding: 1.5rem 1rem !important;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
         .admin-subject-folder:hover {
             transform: translateY(-8px);
@@ -69,12 +76,12 @@
             color: #6366f1;
         }
         .folder-icon {
-            width: 60px; height: 60px;
+            width: 45px; height: 45px;
             background: #f8fafc;
-            border-radius: 18px;
+            border-radius: 15px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 15px;
+            font-size: 1.15rem;
+            margin-bottom: 8px;
             color: #6366f1;
             transition: all 0.3s ease;
         }
@@ -85,7 +92,7 @@
         }
 
         .admin-term-card {
-            border-radius: 30px;
+            border-radius: 25px;
             border: none;
             transition: all 0.4s ease;
             position: relative;
@@ -93,6 +100,12 @@
             color: #fff;
             text-decoration: none;
             display: block;
+            padding: 2.5rem !important;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         .admin-term-card:hover {
             transform: scale(1.03);
@@ -101,9 +114,28 @@
         .mid-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
         .final-gradient { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
 
+        @media (max-width: 768px) {
+            .admin-subject-folder {
+                padding: 0.85rem !important;
+            }
+            .folder-icon {
+                width: 38px !important; height: 38px !important;
+                margin-bottom: 6px !important;
+                font-size: 1rem !important;
+            }
+            .admin-term-card {
+                padding: 1.25rem 0.75rem !important;
+            }
+            .admin-term-card .fa-3x {
+                font-size: 1.75rem !important;
+            }
+            .admin-term-card h2 {
+                font-size: 1.25rem !important;
+            }
+        }
         .breadcrumb-admin {
-            padding: 10px 0;
-            margin-bottom: 25px;
+            padding: 5px 0;
+            margin-bottom: 8px;
             display: flex;
         }
         .breadcrumb-admin a { color: #6366f1; text-decoration: none; font-weight: 600; }
@@ -146,6 +178,35 @@
             display: flex; align-items: center; justify-content: center;
             font-size: 1.2rem;
         }
+
+
+
+        /* Suggestions Dropdown (Note Upload Style) */
+        .suggestions {
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            position: absolute;
+            width: 100%;
+            top: 100%;
+            left: 0;
+            z-index: 1060; /* Higher than modal */
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+        }
+
+        .suggestion-item:last-child { border-bottom: none; }
+        .suggestion-item:hover { background: #f8fafc; color: #4f46e5; }
     </style>
 </head>
 <body>
@@ -177,6 +238,10 @@
                 <li class="<?php echo ($activePage === 'reports') ? 'active' : ''; ?>">
                     <a href="<?php echo url('admin/reports'); ?>" class="nav-link"><i class="fa fa-file-invoice"></i>Platform Reports</a>
                 </li>
+
+                <li class="<?php echo ($activePage === 'awards') ? 'active' : ''; ?>">
+                    <a href="<?php echo url('admin/awards'); ?>" class="nav-link"><i class="fa fa-award"></i>Awards & Certificates</a>
+                </li>
             <?php } ?>
             <li class="<?php echo ($activePage === 'browse_notes') ? 'active' : ''; ?>">
                 <a href="<?php echo url('home/dashboard'); ?>" class="nav-link"><i class="fa fa-book-open"></i>Browse Notes</a>
@@ -195,48 +260,67 @@
 
     <main class="main-content flex-grow-1">
         <header class="topbar d-flex justify-content-between align-items-center mb-4">
-            <div class="d-flex align-items-center gap-3">
-                <button class="menu-toggle btn text-white p-0 border-0"><i class="fa fa-bars"></i></button>
-                <h5 class="mb-0 fw-bold">Resource Management</h5>
-            </div>
+            <!-- Top Left: Menu & Title -->
             <div class="d-flex align-items-center gap-2">
-                <button type="button" class="btn btn-upload shadow-sm" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                <button class="menu-toggle btn text-white p-0 border-0"><i class="fa fa-bars fa-lg"></i></button>
+                <h5 class="mb-0 fw-bold d-none d-sm-block">Resource Management</h5>
+                <h5 class="mb-0 fw-bold d-block d-sm-none fs-6">Resources</h5>
+            </div>
+
+            <!-- Top Right: Badge, Mobile Upload, Desktop Logout/Upload -->
+            <div class="d-flex align-items-center gap-2">
+                <!-- Desktop Upload Button -->
+                <button type="button" class="btn btn-upload shadow-sm d-none d-md-block" data-bs-toggle="modal" data-bs-target="#uploadModal">
                     <i class="fa fa-plus me-1"></i> Upload Resource
                 </button>
-                <span class="badge bg-light text-dark text-uppercase"><?php echo $role; ?></span>
-                <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm px-3 ms-2">Logout</a>
+                
+                <!-- Mobile Upload Button (Icon Only) - Replaces Logout on Mobile -->
+                <button type="button" class="btn btn-light text-primary btn-sm rounded-circle shadow-sm d-flex align-items-center justify-content-center d-md-none" style="width: 32px; height: 32px;" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                    <i class="fa fa-plus"></i>
+                </button>
+
+                <span class="badge bg-light text-dark text-uppercase shadow-sm" style="font-size: 0.75rem;"><?php echo $role; ?></span>
+                
+                <!-- Logout (Desktop Only) -->
+                <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm">
+                    <i class="fa fa-sign-out-alt"></i><span class="d-none d-md-inline ms-1">Logout</span>
+                </a>
             </div>
         </header>
 
         <div class="container-fluid px-lg-4">
             <!-- Integrated Search -->
-            <div class="resource-card search-area p-4 mb-4">
-                <form action="<?php echo url('admin/manage_resources'); ?>" method="GET" class="row g-3 align-items-center">
-                    <div class="col-md-9">
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0 py-2 ms-2"><i class="fa fa-search text-primary" style="opacity: 0.7;"></i></span>
-                            <input type="text" name="search" class="form-control border-start-0 ps-1 py-2 shadow-none" placeholder="Search by subject name only..." value="<?php echo htmlspecialchars($search ?? ''); ?>">
+            <div class="resource-card search-area p-3 p-md-4 mb-2" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);">
+                <form action="<?php echo url('admin/manage_resources'); ?>" method="GET" class="row g-2 align-items-center">
+                    <div class="col-12 col-md-9">
+                        <div class="input-group bg-white rounded-pill border shadow-sm overflow-hidden p-1">
+                            <span class="input-group-text bg-transparent border-0 pe-1 ps-3"><i class="fa fa-search text-muted"></i></span>
+                            <input type="text" name="search" class="form-control border-0 shadow-none ps-2" placeholder="Search by subject name..." value="<?php echo htmlspecialchars($search ?? ''); ?>" style="font-size: 0.95rem;">
+                             <!-- Mobile Search Button (Icon inside input group) -->
+                            <button type="submit" class="btn btn-primary rounded-circle d-md-none m-1 shadow-sm" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;"><i class="fa fa-arrow-right"></i></button>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <button type="submit" class="btn btn-primary w-100 py-2 fw-600 shadow-sm" style="border-radius: 10px;">Filter Subjects</button>
+                    <div class="col-md-3 d-none d-md-block">
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold shadow-sm rounded-pill">Filter Subjects</button>
                     </div>
                 </form>
             </div>
 
             <!-- Breadcrumbs -->
-            <div class="breadcrumb-admin">
+            <div class="breadcrumb-admin overflow-hidden">
                 <nav aria-label="breadcrumb">
-                  <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="<?php echo url('admin/manage_resources'); ?>">All Subjects</a></li>
+                  <ol class="breadcrumb mb-0 flex-nowrap align-items-center">
+                    <li class="breadcrumb-item flex-shrink-0"><a href="<?php echo url('admin/manage_resources'); ?>">All Subjects</a></li>
                     <?php if ($subject): ?>
-                        <li class="breadcrumb-item"><a href="<?php echo url('admin/manage_resources'); ?>?subject=<?php echo urlencode($subject); ?>"><?php echo htmlspecialchars($subject); ?></a></li>
+                        <li class="breadcrumb-item text-truncate" style="max-width: 150px; min-width: 50px;">
+                            <a href="<?php echo url('admin/manage_resources'); ?>?subject=<?php echo urlencode($subject); ?>" title="<?php echo htmlspecialchars($subject); ?>"><?php echo htmlspecialchars($subject); ?></a>
+                        </li>
                     <?php endif; ?>
                     <?php if ($term): ?>
-                        <li class="breadcrumb-item active"><?php echo ucfirst($term); ?></li>
+                        <li class="breadcrumb-item active flex-shrink-0"><?php echo ucfirst($term); ?></li>
                     <?php endif; ?>
                     <?php if ($search): ?>
-                        <li class="breadcrumb-item active">Search: "<?php echo htmlspecialchars($search); ?>"</li>
+                        <li class="breadcrumb-item active text-truncate" style="max-width: 120px;">"<?php echo htmlspecialchars($search); ?>"</li>
                     <?php endif; ?>
                   </ol>
                 </nav>
@@ -244,12 +328,12 @@
 
             <?php if ($view_state === 'subject'): ?>
                 <!-- SUBJECT VIEW -->
-                <div class="row g-4">
+                <div class="row g-2">
                     <?php foreach ($subjects as $sub): ?>
                         <div class="col-md-6 col-lg-4 col-xl-3">
                             <a href="<?php echo url('admin/manage_resources'); ?>?subject=<?php echo urlencode($sub['subject']); ?>" class="admin-subject-folder p-4">
                                 <div class="folder-icon"><i class="fa fa-folder-tree"></i></div>
-                                <h5 class="fw-bold mb-1"><?php echo htmlspecialchars($sub['subject']); ?></h5>
+                                <h5 class="fw-bold mb-0"><?php echo htmlspecialchars($sub['subject']); ?></h5>
                                 <div class="text-muted small"><?php echo $sub['resource_count']; ?> Resources</div>
                             </a>
                         </div>
@@ -258,7 +342,7 @@
 
             <?php elseif ($view_state === 'term'): ?>
                 <!-- TERM VIEW -->
-                <div class="row g-4 justify-content-center py-4">
+                <div class="row g-2 justify-content-center py-3">
                     <div class="col-md-5">
                         <a href="<?php echo url('admin/manage_resources'); ?>?subject=<?php echo urlencode($subject); ?>&term=mid" class="admin-term-card mid-gradient p-5 shadow-lg">
                             <i class="fa fa-calendar-alt fa-3x mb-3 opacity-50"></i>
@@ -283,10 +367,10 @@
                             <thead>
                                 <tr>
                                     <th>Resource Details</th>
-                                    <th>Term</th>
-                                    <th>Subject</th>
-                                    <th>Uploader</th>
-                                    <th>Format</th>
+                                    <th class="d-none d-md-table-cell">Term</th>
+                                    <th class="d-none d-md-table-cell">Subject</th>
+                                    <th class="d-none d-md-table-cell">Uploader</th>
+                                    <th class="d-none d-md-table-cell">Format</th>
                                     <th class="text-end">Actions</th>
                                 </tr>
                             </thead>
@@ -312,27 +396,33 @@
                                                             else echo 'fa-file';
                                                          ?>"></i>
                                                     </div>
-                                                    <div>
-                                                        <div class="fw-bold text-dark" style="font-size: 0.95rem;"><?php echo htmlspecialchars($res['title']); ?></div>
+                                                    <div style="min-width: 0;"> <!-- min-width:0 required for flex child truncation -->
+                                                        <div class="fw-bold text-dark text-truncate" style="font-size: 0.95rem; max-width: 150px;"><?php echo htmlspecialchars($res['title']); ?></div>
                                                         <div class="text-muted" style="font-size: 0.8rem;"><?php echo htmlspecialchars($res['course_code']); ?></div>
+                                                        <!-- Mobile Term Badge -->
+                                                        <div class="d-md-none mt-1">
+                                                            <span class="badge <?php echo ($res['term'] === 'final') ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'; ?>" style="font-size: 0.65rem;">
+                                                                <?php echo strtoupper($res['term'] ?? 'MID'); ?>
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td class="d-none d-md-table-cell">
                                                 <span class="badge-term <?php echo ($res['term'] === 'final') ? 'term-final' : 'term-mid'; ?>">
                                                     <i class="fa <?php echo ($res['term'] === 'final') ? 'fa-check-double' : 'fa-circle-half-stroke'; ?>"></i>
                                                     <?php echo strtoupper($res['term'] ?? 'MID'); ?> 
                                                 </span>
                                             </td>
-                                            <td><span class="badge bg-primary-subtle text-primary border-primary-subtle border px-3 py-2 rounded-3" style="font-size: 0.75rem;"><?php echo htmlspecialchars($res['subject']); ?></span></td>
-                                            <td>
+                                            <td class="d-none d-md-table-cell"><span class="badge bg-primary-subtle text-primary border-primary-subtle border px-3 py-2 rounded-3" style="font-size: 0.75rem;"><?php echo htmlspecialchars($res['subject']); ?></span></td>
+                                            <td class="d-none d-md-table-cell">
                                                 <div class="small fw-bold text-dark"><?php echo htmlspecialchars($res['uploader_name'] ?? 'N/A'); ?></div>
                                                 <div class="text-muted small"><?php echo date('M d, Y', strtotime($res['created_at'])); ?></div>
                                             </td>
-                                            <td><span class="text-muted fw-semibold small text-uppercase"><?php echo htmlspecialchars($ext); ?></span></td>
+                                            <td class="d-none d-md-table-cell"><span class="text-muted fw-semibold small text-uppercase"><?php echo htmlspecialchars($ext); ?></span></td>
                                             <td class="text-end">
                                                 <div class="btn-group">
-                                                    <a href="<?php echo url('preview/note'); ?>?id=<?php echo $res['id']; ?>&type=resource&track=resource" target="_blank" class="btn btn-sm btn-outline-primary border-2 px-3"><i class="fa fa-eye"></i></a>
+                                                    <a href="<?php echo url('preview/note'); ?>?id=<?php echo $res['id']; ?>&type=resource&track=resource_manage&subject=<?php echo urlencode($subject ?? ''); ?>&term=<?php echo urlencode($term ?? ''); ?>&search=<?php echo urlencode($search ?? ''); ?>" class="btn btn-sm btn-outline-primary border-2 px-3"><i class="fa fa-eye"></i></a>
                                                     <button type="button" class="btn btn-sm btn-outline-danger border-2 px-3" onclick="deleteResource(<?php echo $res['id']; ?>)"><i class="fa fa-trash"></i></button>
                                                 </div>
                                             </td>
@@ -348,43 +438,60 @@
     </main>
 
     <!-- Upload Modal stays globally accessible -->
-    <div class="modal fade" id="uploadModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 600px;">
-            <div class="modal-content border-0">
-                <div class="modal-header border-0 pt-4 px-4 pb-2">
-                    <h5 class="modal-title fw-bold">Upload Course Resource</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <!-- Upload Modal -->
+    <div class="modal" id="uploadModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 550px;">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header border-0 p-4 bg-primary text-white position-relative">
+                    
+                    <div>
+                        <h5 class="modal-title fw-bold fs-4"><i class="fa fa-cloud-upload-alt me-2"></i>Upload Resource</h5>
+                        <p class="mb-0 small text-white-50">Share knowledge with the community</p>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                
                 <form action="<?php echo url('admin/resources/upload'); ?>" method="POST" enctype="multipart/form-data" id="uploadForm">
-                    <div class="modal-body px-4 pb-2">
+                    <div class="modal-body p-4 bg-light">
+                        <div class="card border-0 shadow-sm rounded-3 mb-3">
+                            <div class="card-body p-3">
+                                <label class="form-label fw-bold text-secondary small text-uppercase mb-2"><i class="fa fa-file me-2"></i>Select File</label>
+                                <input type="file" name="file" id="fileInput" class="form-control form-control-lg fs-6" accept=".pdf,.doc,.docx,.ppt,.pptx" required>
+                                <div class="form-text small"><i class="fa fa-info-circle me-1"></i>Supported: PDF, DOC, PPT</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-secondary small text-uppercase"><i class="fa fa-heading me-1"></i>Resource Title</label>
+                            <input type="text" name="title" id="titleInput" class="form-control py-2 fw-semibold" placeholder="e.g. Chapter 1 Summary" required>
+                        </div>
+                        
                         <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label fw-semibold">Select File</label>
-                                <input type="file" name="file" id="fileInput" class="form-control" accept=".pdf,.doc,.docx,.ppt,.pptx" required>
+                            <div class="col-md-7 position-relative">
+                                <label class="form-label fw-bold text-secondary small text-uppercase"><i class="fa fa-book me-1"></i>Subject Name</label>
+                                <input type="text" name="subject" id="subjectInput" class="form-control py-2" placeholder="Start typing course name..." value="<?php echo htmlspecialchars($subject ?? ''); ?>" required autocomplete="off">
+                                <div id="resourceCourseSuggestions" class="suggestions"></div>
                             </div>
-                            <div class="col-12">
-                                <label class="form-label fw-semibold">Title</label>
-                                <input type="text" name="title" id="titleInput" class="form-control" placeholder="Resource Title" required>
+                            <div class="col-md-5">
+                                <label class="form-label fw-bold text-secondary small text-uppercase"><i class="fa fa-code me-1"></i>Course Code</label>
+                                <input type="text" name="course_code" id="codeInput" class="form-control py-2 bg-white" placeholder="e.g. CSE-101" required>
                             </div>
-                            <div class="col-7">
-                                <label class="form-label fw-semibold">Subject</label>
-                                <input type="text" name="subject" class="form-control" value="<?php echo htmlspecialchars($subject ?? ''); ?>" required>
-                            </div>
-                            <div class="col-5">
-                                <label class="form-label fw-semibold">Code</label>
-                                <input type="text" name="course_code" class="form-control" placeholder="CSE-101" required>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-semibold">Term</label>
-                                <select name="term" class="form-select">
-                                    <option value="mid" <?php echo $term === 'mid' ? 'selected' : ''; ?>>Mid Term</option>
-                                    <option value="final" <?php echo $term === 'final' ? 'selected' : ''; ?>>Final Term</option>
-                                </select>
+                        </div>
+
+                        <div class="mt-3">
+                            <label class="form-label fw-bold text-secondary small text-uppercase"><i class="fa fa-calendar-alt me-1"></i>Academic Term</label>
+                            <div class="d-flex gap-2">
+                                <input type="radio" class="btn-check" name="term" id="termMid" value="mid" <?php echo ($term !== 'final') ? 'checked' : ''; ?>>
+                                <label class="btn btn-outline-primary flex-fill rounded-3 border-2 fw-semibold py-2" for="termMid">Mid Term</label>
+
+                                <input type="radio" class="btn-check" name="term" id="termFinal" value="final" <?php echo ($term === 'final') ? 'checked' : ''; ?>>
+                                <label class="btn btn-outline-success flex-fill rounded-3 border-2 fw-semibold py-2" for="termFinal">Final Term</label>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer border-0 px-4 pb-4 pt-3">
-                        <button type="submit" class="btn btn-primary w-100 py-3" style="border-radius:12px; font-weight:700;">Publish Resource</button>
+                    <div class="modal-footer border-0 p-4 bg-white rounded-bottom-4">
+                        <button type="button" class="btn btn-light text-muted fw-bold px-4" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary px-5 py-2 fw-bold shadow-sm rounded-pill"><i class="fa fa-paper-plane me-2"></i>Publish</button>
                     </div>
                 </form>
             </div>
@@ -392,6 +499,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?php echo asset('js/admin_dashboard.js?v=3.5'); ?>"></script>
     <script>
         function deleteResource(id) {
             if (confirm('Delete this resource?')) {
@@ -404,6 +512,92 @@
                 });
             }
         }
+
+        // --- Auto-fill Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileInput = document.getElementById('fileInput');
+            const titleInput = document.getElementById('titleInput');
+            const subjectInput = document.getElementById('subjectInput');
+            const codeInput = document.getElementById('codeInput');
+            const datalist = document.getElementById('courseSuggestions');
+
+            // 1. Auto-fill title from filename
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    let name = this.files[0].name;
+                    // Remove extension
+                    name = name.replace(/\.[^/.]+$/, "");
+                    // Replace underscores/hyphens with spaces if desired, or keep as is.
+                    // Let's clean it up a bit:
+                    name = name.replace(/[-_]/g, ' ');
+                    
+                    // Only fill if title is empty or wasn't manually edited (simplified: just fill)
+                    titleInput.value = name;
+                }
+            });
+
+            // 2. Fetch courses and enable suggestion + auto-fill code
+            let coursesData = [];
+            const suggestionsBox = document.getElementById('resourceCourseSuggestions');
+            
+            fetch('<?php echo asset("data/courses.json"); ?>')
+                .then(response => response.json())
+                .then(data => {
+                    coursesData = data;
+                })
+                .catch(err => console.error('Error loading courses:', err));
+
+            // 3. Custom Suggestion Logic
+            subjectInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                suggestionsBox.innerHTML = '';
+
+                if (query.length < 2) {
+                    suggestionsBox.style.display = 'none';
+                    return;
+                }
+
+                const matches = coursesData.filter(c => 
+                    c.name.toLowerCase().includes(query) || c.code.toLowerCase().includes(query)
+                );
+
+                if (matches.length > 0) {
+                    suggestionsBox.style.display = 'block';
+                    // Limit to 8 suggestions
+                    matches.slice(0, 8).forEach(match => {
+                        const div = document.createElement('div');
+                        div.classList.add('suggestion-item');
+                        // Highlight match logic could go here, but keeping simple
+                        div.textContent = `${match.code} - ${match.name}`;
+                        
+                        div.addEventListener('click', () => {
+                            subjectInput.value = match.name;
+                            codeInput.value = match.code;
+                            suggestionsBox.style.display = 'none';
+                        });
+                        suggestionsBox.appendChild(div);
+                    });
+                } else {
+                    suggestionsBox.style.display = 'none';
+                }
+            });
+
+            // Close suggestions when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!suggestionsBox.contains(e.target) && e.target !== subjectInput) {
+                    suggestionsBox.style.display = 'none';
+                }
+            });
+            
+            // Also try reverse: if code is typed, fill subject? (Optional, user didn't ask but helpful)
+            codeInput.addEventListener('input', function() {
+                const val = this.value;
+                const match = coursesData.find(c => c.code.toLowerCase() === val.toLowerCase());
+                if (match) {
+                    subjectInput.value = match.name;
+                }
+            });
+        });
     </script>
 </body>
 </html>

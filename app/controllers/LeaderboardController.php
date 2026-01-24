@@ -10,14 +10,29 @@ class LeaderboardController extends Controller {
 
         $userModel = new User();
         $search = $_GET['q'] ?? null;
-        $players = $userModel->getLeaderboard(30, $search);
+        $period = $_GET['period'] ?? 'current';
+
+        if ($search) {
+            $players = $userModel->getLeaderboard(30, $search);
+            $period = 'search';
+        } else {
+            if ($period === 'last') {
+                $players = $userModel->getMonthlyLeaderboard(30, 1);
+            } elseif ($period === 'all') {
+                $players = $userModel->getLeaderboard(30);
+            } else {
+                $players = $userModel->getMonthlyLeaderboard(30, 0);
+                $period = 'current';
+            }
+        }
 
         $role = $_SESSION['role'];
         
         $this->view('leaderboard/index', [
             'players' => $players,
             'search' => $search,
-            'role' => $role
+            'role' => $role,
+            'period' => $period
         ]);
     }
 }

@@ -18,4 +18,9 @@ class Controller {
         header("Location: " . $url);
         exit();
     }
+    public function jsonResponse($data) {
+        header('Content-Type: application/json');
+        echo json_encode($data);
+        exit();
+    }
 }

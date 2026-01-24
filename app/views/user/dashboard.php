@@ -45,8 +45,10 @@
                 <h5 class="mb-0 fw-semibold">Welcome back, <?php echo htmlspecialchars($user['name']); ?>!</h5>
             </div>
             <div class="d-flex align-items-center gap-3">
-                <span class="badge bg-light text-dark">Student</span>
-                <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm">Logout</a>
+                <span class="badge bg-light text-dark text-uppercase"><?php echo isset($user['role']) ? $user['role'] : 'Student'; ?></span>
+                <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm">
+                    <i class="fa fa-sign-out-alt"></i><span class="d-none d-md-inline ms-1">Logout</span>
+                </a>
             </div>
         </header>
 

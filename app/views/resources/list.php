@@ -30,6 +30,35 @@
         justify-content: center;
         font-size: 1.5rem;
     }
+
+    @media (max-width: 768px) {
+        .resource-list-card {
+            padding: 0.75rem !important;
+            border-radius: 12px !important;
+        }
+        .file-type-icon {
+            width: 40px !important;
+            height: 40px !important;
+            font-size: 1.25rem !important;
+            border-radius: 10px !important;
+        }
+        .resource-list-card h6 {
+            font-size: 0.95rem !important;
+            margin-bottom: 0.25rem !important;
+        }
+        .resource-list-card p.text-muted {
+            font-size: 0.8rem !important;
+        }
+        .btn-download-responsive {
+            width: 42px !important;
+            height: 42px !important;
+            padding: 0 !important;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50% !important;
+        }
+    }
 </style>
 </head>
 <body class="bg-light">
@@ -88,18 +117,18 @@
 </nav>
 
 <main class="container my-5">
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div>
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-nowrap gap-3">
+        <div style="min-width: 0;">
             <nav aria-label="breadcrumb">
-              <ol class="breadcrumb mb-1">
-                <li class="breadcrumb-item"><a href="<?php echo url('resources'); ?>" class="text-decoration-none">Resources</a></li>
-                <li class="breadcrumb-item"><a href="<?php echo url('resources/subject'); ?>?subject=<?php echo urlencode($subject); ?>" class="text-decoration-none"><?php echo htmlspecialchars($subject); ?></a></li>
-                <li class="breadcrumb-item active" aria-current="page"><?php echo ucfirst($term); ?></li>
+              <ol class="breadcrumb mb-1 flex-nowrap overflow-hidden">
+                <li class="breadcrumb-item text-truncate" style="max-width: 80px; flex-shrink: 1;"><a href="<?php echo url('resources'); ?>" class="text-decoration-none">Resources</a></li>
+                <li class="breadcrumb-item text-truncate" style="max-width: 100px; flex-shrink: 1;"><a href="<?php echo url('resources/subject'); ?>?subject=<?php echo urlencode($subject); ?>" class="text-decoration-none"><?php echo htmlspecialchars($subject); ?></a></li>
+                <li class="breadcrumb-item active flex-shrink-0" aria-current="page"><?php echo ucfirst($term); ?></li>
               </ol>
             </nav>
-            <h3 class="fw-bold text-dark mb-0"><?php echo ucfirst($term); ?> Term Resources</h3>
+            <h3 class="fw-bold text-dark mb-0 text-truncate" style="min-width: 0;"><?php echo ucfirst($term); ?> Term Resources</h3>
         </div>
-        <div class="text-end">
+        <div class="text-end flex-shrink-0 d-none d-md-block">
             <span class="badge bg-primary px-3 py-2 rounded-pill"><?php echo count($resources); ?> Resources</span>
         </div>
     </div>
@@ -119,16 +148,16 @@
                                 else echo '<i class="fa fa-file"></i>';
                                 ?>
                             </div>
-                            <div class="flex-grow-1">
-                                <h6 class="fw-bold mb-1 text-dark"><?php echo htmlspecialchars($res['title']); ?></h6>
-                                <p class="text-muted small mb-0">
-                                    <span class="me-3"><i class="fa fa-tag me-1"></i> <?php echo htmlspecialchars($res['course_code']); ?></span>
-                                    <span><i class="fa fa-user me-1"></i> <?php echo htmlspecialchars($res['uploader_name'] ?? 'System'); ?></span>
+                            <div class="flex-grow-1" style="min-width: 0;">
+                                <h6 class="fw-bold mb-1 text-dark text-truncate"><?php echo htmlspecialchars($res['title']); ?></h6>
+                                <p class="text-muted small mb-0 d-flex gap-3">
+                                    <span class="text-truncate"><i class="fa fa-tag me-1"></i> <?php echo htmlspecialchars($res['course_code']); ?></span>
+                                    <span class="d-none d-md-inline-block text-truncate"><i class="fa fa-user me-1"></i> <?php echo htmlspecialchars($res['uploader_name'] ?? 'System'); ?></span>
                                 </p>
                             </div>
                             <div class="text-end">
-                                <a href="<?php echo url('note/download'); ?>?id=<?php echo $res['id']; ?>&type=resource" class="btn btn-success rounded-pill px-4">
-                                    <i class="fa fa-download me-1"></i> Download
+                                <a href="<?php echo url('note/download'); ?>?id=<?php echo $res['id']; ?>&type=resource" class="btn btn-success btn-download-responsive rounded-pill px-4" title="Download Resource">
+                                    <i class="fa fa-download"></i> <span class="d-none d-md-inline ms-1">Download</span>
                                 </a>
                             </div>
                         </div>

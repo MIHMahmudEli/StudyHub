@@ -143,6 +143,10 @@
             <a href="<?php echo url('admin/reports'); ?>" class="nav-link"><i class="fa fa-file-invoice"></i>Platform Reports</a>
         </li>
 
+        <li class="<?php echo ($activePage === 'awards') ? 'active' : ''; ?>">
+            <a href="<?php echo url('admin/awards'); ?>" class="nav-link"><i class="fa fa-award"></i>Awards & Certificates</a>
+        </li>
+
         <li class="<?php echo ($activePage === 'browse_notes') ? 'active' : ''; ?>">
             <a href="<?php echo url('home/dashboard'); ?>" class="nav-link"><i class="fa fa-book-open"></i>Browse Notes</a>
         </li>
@@ -161,30 +165,39 @@
 <!-- Main -->
 <main class="main-content flex-grow-1">
     <!-- Topbar -->
-    <header class="topbar d-flex justify-content-between align-items-center mb-4">
+    <header class="topbar d-flex justify-content-between align-items-center mb-2">
         <div class="d-flex align-items-center gap-3">
             <button class="menu-toggle btn text-white p-0 border-0"><i class="fa fa-bars"></i></button>
-            <h5 class="mb-0 fw-semibold">User Management</h5>
+            <h5 class="mb-0 fw-semibold d-none d-sm-block">User Management</h5>
+            <h5 class="mb-0 fw-semibold d-block d-sm-none">Users</h5>
         </div>
         <div class="d-flex align-items-center gap-3">
             <span class="badge bg-light text-dark text-uppercase"><?php echo $role; ?></span>
-            <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm">Logout</a>
+            <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm">
+                 <i class="fa fa-sign-out-alt"></i><span class="d-none d-md-inline ms-1">Logout</span>
+            </a>
         </div>
     </header>
 
     <!-- Content -->
-    <section class="container-fluid py-4 px-lg-5">
+    <section class="container-fluid py-2 px-lg-5">
         
         <!-- Stats / Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="d-none d-md-block">
                 <h4 class="fw-bold text-dark mb-1">Users</h4>
                 <p class="text-muted small mb-0">Manage system users, moderators, and admins.</p>
             </div>
             
-            <form method="get" class="d-flex gap-2">
-                <input type="text" name="q" class="form-control" placeholder="Search users..." value="<?php echo htmlspecialchars($search ?? ''); ?>">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+            <form method="get" class="row g-2 align-items-center w-100 w-md-auto">
+                <div class="col-12">
+                    <div class="input-group bg-white rounded-pill border shadow-sm overflow-hidden p-1">
+                        <span class="input-group-text bg-transparent border-0 pe-1 ps-3"><i class="fa fa-search text-muted"></i></span>
+                        <input type="text" name="q" class="form-control border-0 shadow-none ps-2" placeholder="Search users..." value="<?php echo htmlspecialchars($search ?? ''); ?>" style="font-size: 0.95rem;">
+                        <button type="submit" class="btn btn-primary rounded-circle d-md-none m-1 shadow-sm" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;"><i class="fa fa-arrow-right"></i></button>
+                        <button type="submit" class="btn btn-primary px-3 d-none d-md-block rounded-pill py-1 my-1 me-1 shadow-sm">Search</button>
+                    </div>
+                </div>
             </form>
         </div>
 
@@ -195,9 +208,9 @@
                         <tr>
                             <th>User Info</th>
                             <th>Role</th>
-                            <th>Points</th>
-                            <th>Status</th>
-                            <th>Joined</th>
+                            <th class="d-none d-md-table-cell">Points</th>
+                            <th class="d-none d-md-table-cell">Status</th>
+                            <th class="d-none d-md-table-cell">Joined</th>
                             <th class="text-end">Actions</th>
                         </tr>
                     </thead>
@@ -214,12 +227,12 @@
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center gap-3">
-                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center text-primary fw-bold" style="width: 40px; height: 40px;">
+                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center text-primary fw-bold flex-shrink-0" style="width: 40px; height: 40px;">
                                             <?php echo strtoupper(substr($u['name'], 0, 1)); ?>
                                         </div>
-                                        <div>
-                                            <div class="fw-semibold text-dark"><?php echo htmlspecialchars($u['name']); ?></div>
-                                            <div class="small text-muted"><?php echo htmlspecialchars($u['email']); ?></div>
+                                        <div style="min-width: 0;">
+                                            <div class="fw-semibold text-dark text-truncate" style="max-width: 150px;"><?php echo htmlspecialchars($u['name']); ?></div>
+                                            <div class="small text-muted text-truncate" style="max-width: 150px;"><?php echo htmlspecialchars($u['email']); ?></div>
                                         </div>
                                     </div>
                                 </td>
@@ -233,17 +246,17 @@
                                     ?>
                                     <span class="role-badge <?php echo $roleClass; ?>"><?php echo ucfirst($u['role']); ?></span>
                                 </td>
-                                <td>
+                                <td class="d-none d-md-table-cell">
                                     <span class="text-dark fw-medium"><i class="fa fa-star text-warning small me-1"></i><?php echo number_format($u['points']); ?></span>
                                 </td>
-                                <td>
+                                <td class="d-none d-md-table-cell">
                                     <?php if ($u['verified']): ?>
                                         <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Verified</span>
                                     <?php else: ?>
                                         <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill">Pending</span>
                                     <?php endif; ?>
                                 </td>
-                                <td class="small text-muted">
+                                <td class="small text-muted d-none d-md-table-cell">
                                     <?php echo date('M d, Y', strtotime($u['created_at'])); ?>
                                 </td>
                                 <td class="text-end">

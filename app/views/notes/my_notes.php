@@ -95,6 +95,10 @@
                         <a href="<?php echo url('admin/reports'); ?>" class="nav-link"><i class="fa fa-file-invoice"></i>Platform Reports</a>
                     </li>
 
+                    <li class="<?php echo ($activePage === 'awards') ? 'active' : ''; ?>">
+                        <a href="<?php echo url('admin/awards'); ?>" class="nav-link"><i class="fa fa-award"></i>Awards & Certificates</a>
+                    </li>
+
                 <?php } ?>
 
                 <li class="<?php echo ($activePage === 'browse_notes') ? 'active' : ''; ?>">
@@ -121,11 +125,14 @@
                 <button class="menu-toggle btn text-white p-0 border-0">
                     <i class="fa fa-bars"></i>
                 </button>
-                <h5 class="mb-0 fw-semibold">📘 My Uploaded Notes</h5>
+                <h5 class="mb-0 fw-semibold d-none d-sm-block">📘 My Uploaded Notes</h5>
+                <h5 class="mb-0 fw-semibold d-block d-sm-none">📘 My Notes</h5>
             </div>
             <div class="d-flex align-items-center gap-3">
                 <span class="badge bg-light text-dark"><?php echo ucfirst($role); ?></span>
-                <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm">Logout</a>
+                <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm">
+                    <i class="fa fa-sign-out-alt"></i><span class="d-none d-md-inline ms-1">Logout</span>
+                </a>
             </div>
         </header>
 
@@ -163,7 +170,7 @@
                                     <div class="d-flex justify-content-between mt-3 pt-3 border-top">
                                         <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3 fw-medium">Save Changes</button>
                                         <div class="d-flex gap-2">
-                                            <a href="<?php echo url('preview/note'); ?>?id=<?php echo $note['id']; ?>&track=my_notes" target="_blank" class="btn btn-light btn-sm rounded-circle shadow-sm" title="Preview"><i class="fa fa-eye text-info"></i></a>
+                                            <a href="<?php echo url('preview/note'); ?>?id=<?php echo $note['id']; ?>&track=my_notes" class="btn btn-light btn-sm rounded-circle shadow-sm" title="Preview"><i class="fa fa-eye text-info"></i></a>
                                             <a href="<?php echo url('note/my_notes'); ?>?delete=<?php echo $note['id']; ?>" onclick="return confirm('Are you sure you want to delete this note?');" class="btn btn-light btn-sm rounded-circle shadow-sm" title="Delete"><i class="fa fa-trash text-danger"></i></a>
                                         </div>
                                     </div>

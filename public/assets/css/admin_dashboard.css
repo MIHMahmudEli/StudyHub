@@ -129,6 +129,8 @@ body.no-scroll {
   padding: 20px;
   background-color: #f8fafc;
   min-height: 100vh;
+  min-width: 0;
+  /* Prevents flex items from growing out of bounds */
 }
 
 @media (max-width: 992px) {
@@ -200,7 +202,7 @@ body.no-scroll {
 @media (max-width: 576px) {
   .topbar {
     padding: 10px 12px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
 
   .topbar h5 {
@@ -374,33 +376,89 @@ body.no-scroll {
   transition: all 0.3s ease;
   /* smooth transition */
 }
+
 /* ========== RESPONSIVE TABLES ========== */
 @media (max-width: 768px) {
-  .table-responsive { font-size: 0.85rem; }
-  .table thead th { font-size: 0.7rem; padding: 12px 8px; }
-  .table tbody td { padding: 12px 8px; }
+  .table-responsive {
+    font-size: 0.85rem;
+  }
+
+  .table thead th {
+    font-size: 0.7rem;
+    padding: 12px 8px;
+  }
+
+  .table tbody td {
+    padding: 12px 8px;
+  }
 }
 
 @media (max-width: 576px) {
-  .table { font-size: 0.8rem; }
-  .table thead th { font-size: 0.65rem; padding: 10px 6px; }
-  .table tbody td { padding: 10px 6px; }
-  .btn-group .btn { padding: 0.25rem 0.5rem; font-size: 0.75rem; }
+  .table {
+    font-size: 0.8rem;
+  }
+
+  .table thead th {
+    font-size: 0.65rem;
+    padding: 10px 6px;
+  }
+
+  .table tbody td {
+    padding: 10px 6px;
+  }
+
+  .btn-group .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
 }
 
 /* ========== RESPONSIVE CARDS & MODALS ========== */
 @media (max-width: 768px) {
-  .analytics-card, .resource-card, .stat-card { padding: 15px !important; }
-  .modal-dialog { margin: 0.5rem; }
+
+  .analytics-card,
+  .resource-card,
+  .stat-card {
+    padding: 15px !important;
+    min-width: 0;
+    /* Crucial for Chart.js responsiveness */
+  }
+
+  .modal-dialog {
+    margin: 0.5rem;
+  }
 }
 
 @media (max-width: 576px) {
-  .row.g-4 { gap: 1rem !important; }
-  .row.g-3 { gap: 0.75rem !important; }
-  h1 { font-size: 1.75rem !important; }
-  h2 { font-size: 1.5rem !important; }
-  h3 { font-size: 1.25rem !important; }
-  h4 { font-size: 1.1rem !important; }
-  h5 { font-size: 1rem !important; }
-  h6 { font-size: 0.9rem !important; }
+  .row.g-4 {
+    gap: 1rem !important;
+  }
+
+  .row.g-3 {
+    gap: 0.75rem !important;
+  }
+
+  h1 {
+    font-size: 1.75rem !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  h3 {
+    font-size: 1.25rem !important;
+  }
+
+  h4 {
+    font-size: 1.1rem !important;
+  }
+
+  h5 {
+    font-size: 1rem !important;
+  }
+
+  h6 {
+    font-size: 0.9rem !important;
+  }
 }

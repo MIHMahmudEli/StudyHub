@@ -153,6 +153,10 @@
                     <a href="<?php echo url('admin/reports'); ?>" class="nav-link"><i class="fa fa-file-invoice"></i>Platform Reports</a>
                 </li>
 
+                <li class="<?php echo ($activePage === 'awards') ? 'active' : ''; ?>">
+                    <a href="<?php echo url('admin/awards'); ?>" class="nav-link"><i class="fa fa-award"></i>Awards & Certificates</a>
+                </li>                
+
             <?php } ?>
             
         <li class="<?php echo ($activePage === 'browse_notes') ? 'active' : ''; ?>">
@@ -173,22 +177,22 @@
 <!-- Main -->
 <main class="main-content flex-grow-1">
     <!-- Topbar -->
-    <header class="topbar d-flex justify-content-between align-items-center mb-4">
+    <header class="topbar d-flex justify-content-between align-items-center mb-2">
         <div class="d-flex align-items-center gap-3">
             <button class="menu-toggle btn text-white p-0 border-0"><i class="fa fa-bars"></i></button>
             <h5 class="mb-0 fw-semibold">Resource Breakdown Analytics</h5>
         </div>
         <div class="d-flex align-items-center gap-2">
             <button onclick="window.print()" class="btn btn-outline-light btn-sm px-3 btn-print-hide">
-                <i class="fa fa-print me-1"></i> Print PDF
+                <i class="fa fa-print"></i><span class="d-none d-md-inline ms-2">Print PDF</span>
             </button>
             <span class="badge bg-light text-dark text-uppercase"><?php echo $role; ?></span>
-            <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm px-3 ms-2 btn-print-hide">Logout</a>
+            <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm px-3 ms-2 btn-print-hide d-none d-md-inline-block">Logout</a>
         </div>
     </header>
 
     <!-- Content -->
-    <section class="container-fluid py-4 px-lg-4">
+    <section class="container-fluid py-2 px-lg-4">
 
         <!-- Print Only Header -->
         <div class="print-only-header">
@@ -205,7 +209,37 @@
         <!-- Subject Popularity Chart -->
         <div class="analytics-card">
             <h6 class="fw-bold mb-4">Top 5 Resource Subjects by Popularity (Downloads)</h6>
-            <div class="chart-container"><canvas id="resourcePerformanceChart"></canvas></div>
+            
+            <!-- Desktop Chart View -->
+            <div class="chart-container d-none d-md-block">
+                <canvas id="resourcePerformanceChart"></canvas>
+            </div>
+
+            <!-- Mobile List-Bar View (Optimized for small screens) -->
+            <div class="d-block d-md-none">
+                <?php 
+                $top5 = array_slice($trendingResources, 0, 5);
+                $maxDLs = !empty($top5) ? $top5[0]['total_downloads'] : 1;
+                foreach($top5 as $index => $sub): 
+                    $pct = ($sub['total_downloads'] / ($maxDLs ?: 1)) * 100;
+                ?>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge rounded-circle bg-light text-primary border" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;"><?php echo $index + 1; ?></span>
+                                <span class="small fw-semibold text-dark text-truncate" style="max-width: 180px;"><?php echo htmlspecialchars($sub['subject']); ?></span>
+                            </div>
+                            <span class="small fw-800 text-primary"><?php echo number_format($sub['total_downloads']); ?> <span class="fw-normal text-muted" style="font-size: 0.65rem;">DLs</span></span>
+                        </div>
+                        <div class="progress" style="height: 6px; border-radius: 10px; background: #f1f5f9; overflow: hidden;">
+                            <div class="progress-bar" role="progressbar" style="width: <?php echo $pct; ?>%; background: linear-gradient(90deg, #a855f7 0%, #6366f1 100%);" aria-valuenow="<?php echo $pct; ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+                <?php if(empty($top5)): ?>
+                    <p class="text-muted small text-center py-3">No activity data available.</p>
+                <?php endif; ?>
+            </div>
         </div>
 
         <!-- Subject Breakdown Details -->
@@ -270,59 +304,39 @@
 </main>
 
 <script>
+    // Initialize global chart tracking
+    window.adminCharts = window.adminCharts || [];
+
     // Resource Popularity (Horizontal Bar)
     const trendData = <?php echo json_encode(array_slice($trendingResources, 0, 5)); ?>;
-    new Chart(document.getElementById('resourcePerformanceChart'), {
-        type: 'bar',
-        data: {
-            labels: trendData.map(s => s.subject.length > 30 ? s.subject.substring(0, 27) + '...' : s.subject),
-            datasets: [{
-                data: trendData.map(s => s.total_downloads),
-                backgroundColor: 'rgba(168, 85, 247, 0.8)', // Slightly different color (purple) for resources
-                borderRadius: 8
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            responsive: true, maintainAspectRatio: false,
-            animation: { duration: 1500, easing: 'easeOutBack' },
-            plugins: { legend: { display: false } },
-            scales: { x: { grid: { display: false } }, y: { grid: { display: false } } }
-        }
-    });
-
-    // Sidebar toggle logic
-    const sidebar = document.querySelector('.sidebar');
-    const toggleBtn = document.querySelector('.menu-toggle');
-    const toggleIcon = toggleBtn?.querySelector('i');
-
-    toggleBtn?.addEventListener('click', () => {
-        sidebar.classList.toggle('open');
-        document.body.classList.toggle('no-scroll');
-        
-        // Toggle icon
-        if (sidebar.classList.contains('open')) {
-            toggleIcon?.classList.replace('fa-bars', 'fa-times');
-        } else {
-            toggleIcon?.classList.replace('fa-times', 'fa-bars');
-        }
-    });
-
-    // Close sidebar if clicking outside on mobile
-    document.addEventListener('click', (e) => {
-        if (
-            window.innerWidth <= 992 &&
-            sidebar.classList.contains('open') &&
-            !sidebar.contains(e.target) &&
-            !toggleBtn.contains(e.target)
-        ) {
-            sidebar.classList.remove('open');
-            document.body.classList.remove('no-scroll');
-            toggleIcon?.classList.replace('fa-times', 'fa-bars');
-        }
-    });
+    const ctx = document.getElementById('resourcePerformanceChart');
+    if (ctx) {
+        const resourceChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: trendData.map(s => {
+                    const words = s.subject.trim().split(/\s+/);
+                    return words.length > 1 ? words.map(w => w[0]).join('').toUpperCase() : s.subject;
+                }),
+                datasets: [{
+                    data: trendData.map(s => s.total_downloads),
+                    backgroundColor: 'rgba(168, 85, 247, 0.8)', // Slightly different color (purple) for resources
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true, maintainAspectRatio: false,
+                animation: { duration: 1500, easing: 'easeOutBack' },
+                plugins: { legend: { display: false } },
+                scales: { x: { grid: { display: false } }, y: { grid: { display: false } } }
+            }
+        });
+        window.adminCharts.push(resourceChart);
+    }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="<?php echo asset('js/admin_dashboard.js?v=3.5'); ?>"></script>
 </body>
 </html>

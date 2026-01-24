@@ -72,6 +72,13 @@
                 $backLink = url('note/my_notes');
             } elseif (isset($track) && $track === 'resource') {
                 $backLink = url('resources');
+            } elseif (isset($track) && $track === 'resource_manage') {
+                $params = [];
+                if (!empty($_GET['subject'])) $params['subject'] = $_GET['subject'];
+                if (!empty($_GET['term'])) $params['term'] = $_GET['term'];
+                if (!empty($_GET['search'])) $params['search'] = $_GET['search'];
+                $query = http_build_query($params);
+                $backLink = url('admin/manage_resources') . ($query ? '?' . $query : '');
             } else {
                 $backLink = url('home/dashboard');
             }

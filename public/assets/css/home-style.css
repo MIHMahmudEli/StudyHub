@@ -459,3 +459,41 @@ body {
 .modern-points-badge:hover {
     animation: glowPulse 1.5s infinite ease-in-out;
 }
+
+/* Three-Line Navbar Layout for Mobile */
+@media (max-width: 991px) {
+    .nav-right-group {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+        width: 100% !important;
+        margin-top: 1.5rem !important;
+        padding-bottom: 1rem !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 1.5rem !important;
+    }
+
+    .search-container {
+        max-width: 100% !important;
+        margin-right: 0 !important;
+    }
+
+    .name {
+        max-width: 100% !important;
+        font-size: 1.1rem !important;
+        padding-left: 0.25rem !important;
+    }
+
+    .modern-points-badge {
+        font-size: 1rem !important;
+        width: fit-content;
+    }
+
+    .modern-tooltip {
+        left: 0 !important;
+        right: auto !important;
+        min-width: 260px !important;
+        max-width: calc(100vw - 50px) !important;
+        transform: translateY(5px) !important;
+    }
+}

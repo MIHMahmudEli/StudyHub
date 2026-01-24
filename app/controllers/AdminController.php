@@ -192,6 +192,12 @@ class AdminController extends Controller {
         // Resource Statistics
         $resourceStats = $resourceModel->getResourceStats();
         $totalResources = $resourceModel->countTotal();
+        $resourceDistribution = $resourceModel->getSubjectsWithCounts();
+        $resourcePerformance = $resourceModel->getTrendingResources(5);
+        $resourceFileDistribution = $resourceModel->getFileTypeDistribution();
+        $resourceMonthlyActivity = $resourceModel->getMonthlyActivity();
+        
+        $userRoleDistribution = $userModel->getRoleDistribution();
         
         $data = [
             'stats' => [
@@ -206,6 +212,11 @@ class AdminController extends Controller {
             'topContributors' => $topContributors,
             'trendingSubjects' => $trendingSubjects,
             'resourceStats' => $resourceStats,
+            'resourceDistribution' => $resourceDistribution,
+            'resourcePerformance' => $resourcePerformance,
+            'resourceFileDistribution' => $resourceFileDistribution,
+            'resourceMonthlyActivity' => $resourceMonthlyActivity,
+            'userRoleDistribution' => $userRoleDistribution,
             'totalResources' => $totalResources,
             'role' => $_SESSION['role']
         ];
@@ -331,5 +342,84 @@ class AdminController extends Controller {
             }
         }
         $this->jsonResponse(['success' => false]);
+    }
+
+    public function awards() {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+            $this->redirect('admin/dashboard');
+        }
+
+        $userModel = new User();
+        // Top 3 Students (Leaderboard)
+        $topStudents = $userModel->getLeaderboard(3);
+        // Top 3 Contributors (Approved Notes)
+        $topContributors = $userModel->getTopContributors(3);
+
+        $data = [
+            'topStudents' => $topStudents,
+            'topContributors' => $topContributors,
+            'role' => $_SESSION['role']
+        ];
+
+        $this->view('admin/awards', $data);
+    }
+
+    public function sendCertificate() {
+        try {
+            if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+                $this->jsonResponse(['success' => false, 'message' => 'Unauthorized']);
+            }
+
+            $userId = intval($_POST['user_id']);
+            $type = $_POST['type'];
+            $rank = intval($_POST['rank']);
+            $attachmentPath = null;
+
+            // Check for attached PDF file from client-side generation
+            if (isset($_FILES['certificate']) && $_FILES['certificate']['error'] === UPLOAD_ERR_OK) {
+                // SERVER-SIDE BLANK PDF CHECK: Skip if too small (usually <2KB means blank/error)
+                if ($_FILES['certificate']['size'] < 2000) {
+                     $this->jsonResponse(['success' => false, 'message' => 'The generated PDF was blank or corrupted (too small). Please try again.']);
+                }
+
+                $tempDir = ROOT_PATH . "/public/assets/temp/";
+                if (!is_dir($tempDir)) mkdir($tempDir, 0777, true);
+                
+                $attachmentPath = $tempDir . "cert_" . $userId . "_" . time() . ".pdf";
+                if (!move_uploaded_file($_FILES['certificate']['tmp_name'], $attachmentPath)) {
+                    $attachmentPath = null;
+                }
+            }
+
+            $userModel = new User();
+            $user = $userModel->findById($userId);
+
+            if (!$user) {
+                if ($attachmentPath && file_exists($attachmentPath)) unlink($attachmentPath);
+                $this->jsonResponse(['success' => false, 'message' => 'Target user not found in database.']);
+            }
+
+            if ($attachmentPath && !file_exists($attachmentPath)) {
+                $this->jsonResponse(['success' => false, 'message' => 'The system failed to save the generated PDF for attachment. Please check folder permissions.']);
+            }
+
+            require_once '../app/core/Mailer.php';
+            $mailer = new Mailer();
+            
+            $success = $mailer->sendCertificate($user, $type, $rank, $attachmentPath);
+
+            // Cleanup temp file
+            if ($attachmentPath && file_exists($attachmentPath)) {
+                unlink($attachmentPath);
+            }
+
+            if ($success) {
+                $this->jsonResponse(['success' => true]);
+            } else {
+                $this->jsonResponse(['success' => false, 'message' => 'Email failed to send. Check SMTP configuration.']);
+            }
+        } catch (Exception $e) {
+            $this->jsonResponse(['success' => false, 'message' => 'Internal Server Error: ' . $e->getMessage()]);
+        }
     }
 }

@@ -224,6 +224,45 @@
         font-size: 2.2rem;
         letter-spacing: -1px;
     }
+
+    /* Mobile Enhancements for Compactness */
+    @media (max-width: 768px) {
+        .main-content {
+            margin-top: 2rem !important;
+        }
+        .container.my-5 {
+            margin-top: 1.5rem !important;
+        }
+        .term-card {
+            padding: 1.5rem !important;
+            border-radius: 25px !important;
+        }
+        .term-card .card-body {
+            padding-top: 1.5rem !important;
+            padding-bottom: 1.5rem !important;
+        }
+        .term-card h2 {
+            font-size: 1.5rem !important;
+            margin-bottom: 0.75rem !important;
+        }
+        .term-card p {
+            font-size: 0.85rem !important;
+            line-height: 1.4;
+        }
+        .icon-blob {
+            width: 70px !important;
+            height: 70px !important;
+            margin-bottom: 1.25rem !important;
+        }
+        .icon-blob i {
+            font-size: 2rem !important;
+        }
+        /* Tighten row spacing */
+        .row.justify-content-center.g-5 {
+            --bs-gutter-x: 1rem !important;
+            --bs-gutter-y: 1.25rem !important;
+        }
+    }
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

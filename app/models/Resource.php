@@ -183,4 +183,21 @@ class Resource {
         $stmt->bind_param("i", $id);
         return $stmt->execute();
     }
+
+    public function getFileTypeDistribution() {
+        return $this->db->query("SELECT file_type, COUNT(*) as c FROM resources GROUP BY file_type")
+                        ->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getMonthlyActivity($months = 12) {
+        $query = "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count 
+                  FROM resources 
+                  WHERE created_at >= DATE_SUB(NOW(), INTERVAL ? MONTH)
+                  GROUP BY month 
+                  ORDER BY month ASC";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("i", $months);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
 }

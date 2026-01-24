@@ -76,28 +76,93 @@ function getTitleIcon($rank, $points) {
 </nav>
 
 <!-- Main Content -->
-<main class="container my-5">
-    <h2 class="text-center mb-4">Leaderboard</h2>
+<main class="container my-4">
+    <!-- Header & Toggle -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-dark mb-2">Leaderboard</h2>
+        
+        <!-- Dropdown for Mobile -->
+        <div class="d-block d-md-none mb-2">
+            <div class="dropdown">
+                <button class="btn btn-white border rounded-pill shadow-sm dropdown-toggle px-4 fw-bold text-primary" type="button" data-bs-toggle="dropdown">
+                    <i class="fa fa-calendar-alt me-2"></i>
+                    <?php 
+                        if ($period === 'last') echo "Last Month";
+                        elseif ($period === 'all' || $period === 'search') echo "All Time";
+                        else echo "This Month";
+                    ?>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-center shadow-lg border-0 rounded-4 mt-2">
+                    <li><a class="dropdown-item <?php echo ($period === 'current') ? 'active' : ''; ?>" href="<?php echo url('leaderboard'); ?>?period=current">This Month</a></li>
+                    <li><a class="dropdown-item <?php echo ($period === 'last') ? 'active' : ''; ?>" href="<?php echo url('leaderboard'); ?>?period=last">Last Month</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item <?php echo ($period === 'all' || $period === 'search') ? 'active' : ''; ?>" href="<?php echo url('leaderboard'); ?>?period=all">All Time</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Pills for Desktop -->
+        <div class="d-none d-md-flex justify-content-center">
+            <div class="nav-pills-container bg-white p-1 rounded-pill shadow-sm border">
+                <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link rounded-pill px-4 <?php echo ($period === 'current') ? 'active' : ''; ?>" href="<?php echo url('leaderboard'); ?>?period=current">This Month</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link rounded-pill px-4 <?php echo ($period === 'last') ? 'active' : ''; ?>" href="<?php echo url('leaderboard'); ?>?period=last">Last Month</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link rounded-pill px-4 <?php echo ($period === 'all' || $period === 'search') ? 'active' : ''; ?>" href="<?php echo url('leaderboard'); ?>?period=all">All Time</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <?php if ($period === 'search'): ?>
+            <p class="mt-2 text-muted small">Showing results for: "<?php echo htmlspecialchars($search); ?>"</p>
+        <?php endif; ?>
+    </div>
     
-    <div class="d-flex flex-column">
+    <div class="leaderboard-list">
         <?php
         $rank = 1;
         if (empty($players)) {
-            echo "<div class='text-center p-4'>No players found.</div>";
+            echo "<div class='text-center p-5 bg-white rounded-4 shadow-sm'>
+                    <i class='fa fa-users fa-3x text-muted opacity-25 mb-3 d-block'></i>
+                    <h5 class='text-secondary'>No players found for this period.</h5>
+                    <p class='text-muted small'>Be the first to earn points this month!</p>
+                  </div>";
         } else {
             foreach ($players as $player):
                 $points = intval($player['points']);
                 list($title, $icon) = getTitleIcon($rank, $points);
+                
+                // Medal logic
+                $medal = "";
+                $cardClass = "player-card-modern";
+                if ($rank === 1) { $medal = "🥇"; $cardClass .= " top-1"; }
+                elseif ($rank === 2) { $medal = "🥈"; $cardClass .= " top-2"; }
+                elseif ($rank === 3) { $medal = "🥉"; $cardClass .= " top-3"; }
             ?>
-            <div class="player-card">
-                <div class="d-flex align-items-center">
-                    <div class="rank-badge"><?php echo $rank; ?>.</div>
-                    <div class="player-info">
-                        <div class="player-name"><?php echo htmlspecialchars($player['name']); ?></div>
-                        <div class="player-title"><?php echo $icon . ' ' . $title; ?></div>
+            <div class="<?php echo $cardClass; ?> d-flex align-items-center justify-content-between p-3 mb-2 animate__animated animate__fadeInUp">
+                <div class="d-flex align-items-center gap-3 overflow-hidden">
+                    <div class="rank-circle d-flex align-items-center justify-content-center flex-shrink-0">
+                        <?php echo $medal ?: $rank; ?>
+                    </div>
+                    <div class="avatar-circle flex-shrink-0">
+                        <?php echo strtoupper(substr($player['name'], 0, 1)); ?>
+                    </div>
+                    <div class="player-details text-truncate">
+                        <div class="fw-bold text-dark text-truncate"><?php echo htmlspecialchars($player['name']); ?></div>
+                        <div class="small text-muted text-uppercase ls-1" style="font-size: 0.7rem;">
+                            <?php echo $icon . ' ' . $title; ?>
+                        </div>
                     </div>
                 </div>
-                <div class="trophy-count"><?php echo $points; ?> 🏆</div>
+                <div class="points-section text-end flex-shrink-0 ms-2">
+                    <div class="fw-800 text-primary h5 mb-0"><?php echo number_format($points); ?></div>
+                    <div class="small text-muted" style="font-size: 0.65rem;">POINTS</div>
+                </div>
             </div>
             <?php $rank++; endforeach; 
         }

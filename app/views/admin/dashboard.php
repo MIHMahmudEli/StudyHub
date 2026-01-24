@@ -47,6 +47,10 @@
                     <a href="<?php echo url('admin/reports'); ?>" class="nav-link"><i class="fa fa-file-invoice"></i>Platform Reports</a>
                 </li>
 
+                <li class="<?php echo ($activePage === 'awards') ? 'active' : ''; ?>">
+                    <a href="<?php echo url('admin/awards'); ?>" class="nav-link"><i class="fa fa-award"></i>Awards & Certificates</a>
+                </li>
+
             <?php } ?>
 
             <li class="<?php echo ($activePage === 'browse_notes') ? 'active' : ''; ?>">
@@ -75,8 +79,10 @@
                 <h5 class="mb-0 fw-semibold">Welcome back, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h5>
             </div>
             <div class="d-flex align-items-center gap-3">
-                <span class="badge bg-light text-dark"><?php echo ucfirst($role); ?></span>
-                <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm">Logout</a>
+                <span class="badge bg-light text-dark text-uppercase"><?php echo $role; ?></span>
+                <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm">
+                    <i class="fa fa-sign-out-alt"></i><span class="d-none d-md-inline ms-1">Logout</span>
+                </a>
             </div>
         </header>
 
@@ -147,6 +153,15 @@
                         <h6>📑 Reports</h6>
                         <p class="metric">Generate</p>
                         <a href="<?php echo url('admin/reports'); ?>" class="stretched-link">View Details</a>
+                    </div>
+                </div>
+
+                <!-- Awards -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card dash-card p-3">
+                        <h6>🏆 Awards</h6>
+                        <p class="metric">A & C</p>
+                        <a href="<?php echo url('admin/awards'); ?>" class="stretched-link">View Details</a>
                     </div>
                 </div>
                 <?php } ?>
