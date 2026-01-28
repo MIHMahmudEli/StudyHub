@@ -1,11 +1,13 @@
 /* ========== GLOBAL STYLES ========== */
 body {
-    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    font-family: 'Poppins', 'Inter', 'Segoe UI', Arial, sans-serif;
     background: #f5f7fa;
     /* Light gray background */
     color: #333;
     /* Default text color */
     font-size: 1.05rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* ========== NAVBAR ========== */

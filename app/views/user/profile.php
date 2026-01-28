@@ -7,11 +7,11 @@
 
     <!-- Bootstrap & Fonts -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="<?php echo asset('css/admin_dashboard.css?v=3.1'); ?>">
+    <link rel="stylesheet" href="<?php echo asset('css/admin_dashboard.css?v=4.0.2'); ?>">
     <link rel="icon" type="image/svg+xml" href="<?php echo asset('images/favicon.svg'); ?>">
     
     <style>
@@ -64,19 +64,72 @@
     <!-- Sidebar -->
     <aside class="sidebar admin-sidebar">
         <div class="logo">
-            <i class="fa fa-graduation-cap"></i> <span>StudyHub</span>
+            <i class="fa fa-graduation-cap me-2"></i> <span>StudyHub</span>
         </div>
-        <ul class="nav flex-column">
-            <li><a href="<?php echo url('user/dashboard'); ?>" class="nav-link"><i class="fa fa-home me-2"></i>Dashboard</a></li>
-            <li><a href="<?php echo url('home/dashboard'); ?>" class="nav-link"><i class="fa fa-book me-2"></i>Browse Notes</a></li>
-            <li><a href="<?php echo url('upload'); ?>" class="nav-link"><i class="fa fa-upload me-2"></i>Upload Notes</a></li>
-            <li><a href="<?php echo url('leaderboard'); ?>" class="nav-link"><i class="fa fa-trophy me-2"></i>Leaderboard</a></li>
-            <li><a href="<?php echo url('note/my_notes'); ?>" class="nav-link"><i class="fa fa-file me-2"></i>Uploaded Notes</a></li>
-            <li class="active" ><a href="<?php echo url('profile'); ?>" class="nav-link"><i class="fa fa-user me-2"></i>Profile</a></li>
-        </ul>
-        <div class="logout mt-auto px-3 pb-3">
-            <a href="<?php echo url('logout'); ?>" class="btn btn-light w-100"><i class="fa fa-sign-out-alt me-2"></i>Logout</a>
-        </div>
+    <ul class="nav flex-column" id="sidebarAccordion">
+        <!-- Core -->
+
+        <li>
+            <a href="<?php echo url('user/dashboard'); ?>" class="nav-link">
+                <div class="nav-link-content">
+                    <i class="fa fa-home main-icon"></i><span>Dashboard</span>
+                </div>
+            </a>
+        </li>
+
+        <!-- Discovery -->
+
+        <li>
+            <a href="#discoveryMenu" class="nav-link collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                <div class="nav-link-content">
+                    <i class="fa fa-compass main-icon"></i><span>Explore</span>
+                </div>
+                <i class="fa fa-chevron-right arrow-icon"></i>
+            </a>
+            <div class="collapse" id="discoveryMenu" data-bs-parent="#sidebarAccordion">
+                <ul class="sub-menu">
+                    <li><a href="<?php echo url('home/dashboard'); ?>" class="nav-link">Notes</a></li>
+                    <li><a href="<?php echo url('resources'); ?>" class="nav-link">Resources</a></li>
+                    <li><a href="<?php echo url('home/dashboard'); ?>?bookmarks=1" class="nav-link">Bookmarks</a></li>
+                    <li><a href="<?php echo url('leaderboard'); ?>" class="nav-link">Leaderboard</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <!-- Uploads -->
+
+        <li>
+            <a href="#uploadMenu" class="nav-link collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                <div class="nav-link-content">
+                    <i class="fa fa-cloud-upload-alt main-icon"></i><span>Manage</span>
+                </div>
+                <i class="fa fa-chevron-right arrow-icon"></i>
+            </a>
+            <div class="collapse" id="uploadMenu" data-bs-parent="#sidebarAccordion">
+                <ul class="sub-menu">
+                    <li><a href="<?php echo url('upload'); ?>" class="nav-link">Upload Notes</a></li>
+                    <li><a href="<?php echo url('note/my_notes'); ?>" class="nav-link">My Notes</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <!-- Account -->
+
+        <li class="active">
+            <a href="<?php echo url('profile'); ?>" class="nav-link">
+                <div class="nav-link-content">
+                    <i class="fa fa-user main-icon"></i><span>Profile</span>
+                </div>
+            </a>
+        </li>
+        <li class="logout">
+            <a href="<?php echo url('logout'); ?>" class="nav-link">
+                <div class="nav-link-content">
+                    <i class="fa fa-sign-out-alt main-icon"></i><span>Logout</span>
+                </div>
+            </a>
+        </li>
+    </ul>
     </aside>
 
     <!-- Main Content -->
@@ -177,6 +230,6 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="<?php echo asset('js/admin_dashboard.js?v=3.1'); ?>"></script>
+    <script src="<?php echo asset('js/admin_dashboard.js?v=4.0.1'); ?>"></script>
 </body>
 </html>

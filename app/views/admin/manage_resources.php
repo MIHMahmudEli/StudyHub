@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo asset('css/admin_dashboard.css?v=3.5'); ?>">
+    <link rel="stylesheet" href="<?php echo asset('css/admin_dashboard.css?v=4.0.2'); ?>">
     <link rel="icon" type="image/svg+xml" href="<?php echo asset('images/favicon.svg'); ?>">
     <style>
         :root {
@@ -214,46 +214,122 @@
     
     <!-- Sidebar -->
     <aside class="sidebar admin-sidebar">
-        <div class="logo"><i class="fa fa-graduation-cap"></i> <span>StudyHub</span></div>
-        <ul class="nav flex-column">
+        <div class="logo"><i class="fa fa-graduation-cap me-2"></i> <span>StudyHub</span></div>
+        <ul class="nav flex-column" id="sidebarAccordion">
+            <!-- Core -->
+
             <li class="<?php echo ($activePage === 'dashboard') ? 'active' : ''; ?>">
-                <a href="<?php echo url('admin/dashboard'); ?>" class="nav-link"><i class="fa fa-house"></i>Dashboard</a>
+                <a href="<?php echo url('admin/dashboard'); ?>" class="nav-link">
+                    <div class="nav-link-content">
+                        <i class="fa fa-home main-icon"></i><span>Dashboard</span>
+                    </div>
+                </a>
             </li>
-            <li class="<?php echo ($activePage === 'pending_notes') ? 'active' : ''; ?>">
-                <a href="<?php echo url('admin/pending_notes'); ?>" class="nav-link"><i class="fa fa-file-lines"></i>Pending Notes</a>
+
+            <!-- Content -->
+
+            <li>
+                <a href="#contentMenu" class="nav-link collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                    <div class="nav-link-content">
+                        <i class="fa fa-folder-open main-icon"></i><span>Management</span>
+                    </div>
+                    <i class="fa fa-chevron-right arrow-icon"></i>
+                </a>
+                <div class="collapse <?php echo in_array($activePage, ['pending_notes', 'manage_resources']) ? 'show' : ''; ?>" id="contentMenu" data-bs-parent="#sidebarAccordion">
+                    <ul class="sub-menu">
+                        <li class="<?php echo ($activePage === 'pending_notes') ? 'active' : ''; ?>">
+                            <a href="<?php echo url('admin/pending_notes'); ?>" class="nav-link">Pending Notes</a>
+                        </li>
+                        <li class="<?php echo ($activePage === 'manage_resources') ? 'active' : ''; ?>">
+                            <a href="<?php echo url('admin/manage_resources'); ?>" class="nav-link">Resources</a>
+                        </li>
+                    </ul>
+                </div>
             </li>
-            <li class="<?php echo ($activePage === 'manage_resources') ? 'active' : ''; ?>">
-                <a href="<?php echo url('admin/manage_resources'); ?>" class="nav-link"><i class="fa fa-folder"></i>Manage Resources</a>
-            </li>
-            <?php if (isset($role) && $role === 'admin') { ?>
-                <li class="<?php echo ($activePage === 'users') ? 'active' : ''; ?>">
-                    <a href="<?php echo url('admin/users'); ?>" class="nav-link"><i class="fa fa-users"></i>Users</a>
-                </li>
-                <li class="<?php echo ($activePage === 'active_users') ? 'active' : ''; ?>">
-                    <a href="<?php echo url('admin/active_users'); ?>" class="nav-link"><i class="fa fa-fire"></i>Active Users</a>
-                </li>
-                <li class="<?php echo ($activePage === 'analytics') ? 'active' : ''; ?>">
-                    <a href="<?php echo url('admin/analytics'); ?>" class="nav-link"><i class="fa fa-chart-column"></i>Analytics</a>
-                </li>
-                <li class="<?php echo ($activePage === 'reports') ? 'active' : ''; ?>">
-                    <a href="<?php echo url('admin/reports'); ?>" class="nav-link"><i class="fa fa-file-invoice"></i>Platform Reports</a>
+
+            <?php if ($role === 'admin') { ?>
+                <!-- Governance -->
+
+                <li>
+                    <a href="#governanceMenu" class="nav-link collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                        <div class="nav-link-content">
+                            <i class="fa fa-shield-halved main-icon"></i><span>Control</span>
+                        </div>
+                        <i class="fa fa-chevron-right arrow-icon"></i>
+                    </a>
+                    <div class="collapse <?php echo in_array($activePage, ['users', 'active_users']) ? 'show' : ''; ?>" id="governanceMenu" data-bs-parent="#sidebarAccordion">
+                        <ul class="sub-menu">
+                            <li class="<?php echo ($activePage === 'users') ? 'active' : ''; ?>">
+                                <a href="<?php echo url('admin/users'); ?>" class="nav-link">User List</a>
+                            </li>
+                            <li class="<?php echo ($activePage === 'active_users') ? 'active' : ''; ?>">
+                                <a href="<?php echo url('admin/active_users'); ?>" class="nav-link">Active Sessions</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
 
-                <li class="<?php echo ($activePage === 'awards') ? 'active' : ''; ?>">
-                    <a href="<?php echo url('admin/awards'); ?>" class="nav-link"><i class="fa fa-award"></i>Awards & Certificates</a>
+                <!-- Insights -->
+
+                <li>
+                    <a href="#insightsMenu" class="nav-link collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                        <div class="nav-link-content">
+                            <i class="fa fa-chart-line main-icon"></i><span>Analytics</span>
+                        </div>
+                        <i class="fa fa-chevron-right arrow-icon"></i>
+                    </a>
+                    <div class="collapse <?php echo in_array($activePage, ['analytics', 'resource_analytics', 'reports', 'awards']) ? 'show' : ''; ?>" id="insightsMenu" data-bs-parent="#sidebarAccordion">
+                        <ul class="sub-menu">
+                            <li class="<?php echo ($activePage === 'analytics') ? 'active' : ''; ?>">
+                                <a href="<?php echo url('admin/analytics'); ?>" class="nav-link">Statistics</a>
+                            </li>
+                            <li class="<?php echo ($activePage === 'resource_analytics') ? 'active' : ''; ?>">
+                                <a href="<?php echo url('admin/resource_analytics'); ?>" class="nav-link">Resources</a>
+                            </li>
+                            <li class="<?php echo ($activePage === 'reports') ? 'active' : ''; ?>">
+                                <a href="<?php echo url('admin/reports'); ?>" class="nav-link">Reports</a>
+                            </li>
+                            <li class="<?php echo ($activePage === 'awards') ? 'active' : ''; ?>">
+                                <a href="<?php echo url('admin/awards'); ?>" class="nav-link">Awards</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
             <?php } ?>
-            <li class="<?php echo ($activePage === 'browse_notes') ? 'active' : ''; ?>">
-                <a href="<?php echo url('home/dashboard'); ?>" class="nav-link"><i class="fa fa-book-open"></i>Browse Notes</a>
+
+            <!-- Navigation -->
+
+            <li>
+                <a href="#navigationMenu" class="nav-link collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                    <div class="nav-link-content">
+                        <i class="fa fa-compass main-icon"></i><span>Quick Links</span>
+                    </div>
+                    <i class="fa fa-chevron-right arrow-icon"></i>
+                </a>
+                <div class="collapse <?php echo in_array($activePage, ['browse_notes', 'browse_resources', 'my_notes']) ? 'show' : ''; ?>" id="navigationMenu" data-bs-parent="#sidebarAccordion">
+                    <ul class="sub-menu">
+                        <li><a href="<?php echo url('home/dashboard'); ?>" class="nav-link">Browse Notes</a></li>
+                        <li><a href="<?php echo url('resources'); ?>" class="nav-link">Browse Resources</a></li>
+                        <li><a href="<?php echo url('note/my_notes'); ?>" class="nav-link">My Notes</a></li>
+                    </ul>
+                </div>
             </li>
-            <li class="<?php echo ($activePage === 'browse_resources') ? 'active' : ''; ?>">
-                <a href="<?php echo url('resources'); ?>" class="nav-link"><i class="fa fa-download"></i>Browse Resources</a>
-            </li>
-            <li class="<?php echo ($activePage === 'my_notes') ? 'active' : ''; ?>">
-                <a href="<?php echo url('note/my_notes'); ?>" class="nav-link"><i class="fa fa-upload"></i>Uploaded Notes</a>
-            </li>
+
+            <!-- Account -->
+
             <li class="<?php echo ($activePage === 'settings') ? 'active' : ''; ?>">
-                <a href="<?php echo url('settings'); ?>" class="nav-link"><i class="fa fa-gear"></i>Settings</a>
+                <a href="<?php echo url('settings'); ?>" class="nav-link">
+                    <div class="nav-link-content">
+                        <i class="fa fa-cog main-icon"></i><span>Settings</span>
+                    </div>
+                </a>
+            </li>
+            <li class="logout">
+                <a href="<?php echo url('logout'); ?>" class="nav-link">
+                    <div class="nav-link-content">
+                        <i class="fa fa-sign-out-alt main-icon"></i><span>Logout</span>
+                    </div>
+                </a>
             </li>
         </ul>
 </aside>
@@ -499,7 +575,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="<?php echo asset('js/admin_dashboard.js?v=3.5'); ?>"></script>
+    <script src="<?php echo asset('js/admin_dashboard.js?v=4.0.1'); ?>"></script>
     <script>
         function deleteResource(id) {
             if (confirm('Delete this resource?')) {

@@ -1,257 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>StudyHub — Learn, Share & Grow Together</title>
 
-    <!-- Google Font -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Bootstrap CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css?v3.0"
-      rel="stylesheet"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css?v3.0" rel="stylesheet" />
 
     <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css?v3.0"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css?v3.0" />
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo asset('css/index_html_style.css?v3.0'); ?>" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="<?php echo asset('images/favicon.svg'); ?>" />
-  </head>
+</head>
 
-  <body>
+<body>
+    <!-- Abstract Visuals -->
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+    <div class="decor-circle dc-1"></div>
+    <div class="decor-circle dc-2"></div>
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
-      <div class="container">
-        <a class="navbar-brand fw-bold" href="#">🎓 StudyHub</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div
-          class="collapse navbar-collapse justify-content-end"
-          id="navbarNav"
-        >
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="#features">Features</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#how">How it Works</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#contact">Contact</a>
-            </li>
-            <li class="nav-item">
-              <a href="<?php echo url('auth'); ?>" class="btn btn-primary ms-lg-3">Login</a>
-            </li>
-          </ul>
+        <div class="container">
+            <a class="navbar-brand" href="#">🎓 StudyHub</a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#how">How it Works</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    <li class="nav-item ms-lg-3">
+                        <a href="<?php echo url('auth'); ?>" class="btn btn-primary px-4 py-2">Login</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-      </div>
     </nav>
 
     <!-- Hero Section -->
-    <section
-      class="hero container d-flex flex-column flex-md-row align-items-center justify-content-between py-5 mt-5"
-    >
-      <div class="hero-text text-center text-md-start">
-        <h1>
-          Learn, Share & Grow <br />
-          with <span class="highlight">StudyHub</span>
-        </h1>
-        <p class="mt-3">
-          A collaborative space where students exchange notes, slides, and ideas
-          — empowering peer learning with ease.
-        </p>
-        <div class="mt-4">
-          <a href="<?php echo url('auth'); ?>#register" class="btn btn-primary me-2"
-            >Join Now</a
-          >
-          <a href="#features" class="btn btn-outline-light">Explore</a>
+    <section class="hero container">
+        <div class="fade-up active">
+            <!-- <div class="badge-new">NEW VERSION 3.0 NOW LIVE</div> -->
+            <h1>Learn, Share & <span class="highlight">Grow</span><br>Together</h1>
+            <p class="text-muted mx-auto">
+                Join thousands of students sharing high-quality academic notes and resources. 
+                The ultimate platform for collaborative learning.
+            </p>
+            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                <a href="<?php echo url('auth'); ?>#register" class="btn btn-primary">Start Collaborating</a>
+                <a href="#features" class="btn btn-outline-light border-secondary px-4 py-3 rounded-4">Explore Community</a>
+            </div>
         </div>
-      </div>
-
-      <div class="hero-illustration mt-5 mt-md-0 position-relative">
-        <div
-          class="bubble"
-          style="width: 120px; height: 120px; top: 20%; left: 10%"
-        ></div>
-        <div
-          class="bubble"
-          style="
-            width: 200px;
-            height: 200px;
-            bottom: 15%;
-            right: 15%;
-            animation-delay: 2s;
-          "
-        ></div>
-        <div
-          class="bubble"
-          style="
-            width: 80px;
-            height: 80px;
-            bottom: 30%;
-            left: 45%;
-            animation-delay: 4s;
-          "
-        ></div>
-      </div>
     </section>
 
     <!-- Features -->
-    <section id="features" class="features container text-center py-5">
-      <div class="row g-4">
-        <div class="col-md-4">
-          <div class="card feature-card">
-            <h3>👩‍🎓 Student</h3>
-            <p>
-              Upload and browse study materials, download resources, and earn
-              badges for your contributions.
-            </p>
-          </div>
+    <section id="features" class="container py-5">
+        <div class="text-center mb-5 fade-up">
+            <h2 class="display-5 fw-bold mb-3">Designed for <span class="text-primary">Everyone</span></h2>
+            <p class="text-muted mx-auto" style="max-width: 600px;">Experience a seamless academic collaboration environment designed for every role.</p>
         </div>
-        <div class="col-md-4">
-          <div class="card feature-card">
-            <h3>🛡️ Moderator</h3>
-            <p>
-              Ensure content quality by reviewing uploads, flagging duplicates,
-              and maintaining standards.
-            </p>
-          </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-4 col-md-6 fade-up">
+                <div class="feature-card">
+                    <div class="card-icon"><i class="fa fa-user-graduate"></i></div>
+                    <h3 class="fw-bold h4 mb-3">Student</h3>
+                    <p class="text-muted">Access thousands of lecture notes, slides, and exam resources. Share yours and earn badges.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 fade-up">
+                <div class="feature-card">
+                    <div class="card-icon" style="color: var(--secondary); background: rgba(139, 92, 246, 0.1);"><i class="fa fa-search-plus"></i></div>
+                    <h3 class="fw-bold h4 mb-3">Moderator</h3>
+                    <p class="text-muted">Maintain the highest quality of content. Review uploads and guide the community growth.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 fade-up">
+                <div class="feature-card">
+                    <div class="card-icon" style="color: var(--accent); background: rgba(6, 182, 212, 0.1);"><i class="fa fa-user-shield"></i></div>
+                    <h3 class="fw-bold h4 mb-3">Administrator</h3>
+                    <p class="text-muted">Analyze trends, manage users, and generate comprehensive platform activity reports.</p>
+                </div>
+            </div>
         </div>
-        <div class="col-md-4">
-          <div class="card feature-card">
-            <h3>👑 Admin</h3>
-            <p>
-              Oversee users, analyze trends, and generate insightful reports to
-              keep StudyHub growing.
-            </p>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- How It Works -->
-    <section id="how" class="how text-center py-5">
-      <h2 class="mb-4">How It Works</h2>
-      <div class="container">
-        <div class="row gy-4">
-          <div class="col-md-4">
-            <div class="step">
-              <h3>1️⃣ Sign Up</h3>
-              <p>Register as a student, moderator, or admin.</p>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="step">
-              <h3>2️⃣ Share</h3>
-              <p>Upload notes and slides with easy tagging.</p>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="step">
-              <h3>3️⃣ Grow</h3>
-              <p>Engage with the community and earn recognition.</p>
-            </div>
-          </div>
+    <section id="how" class="container py-5">
+        <div class="text-center mb-5 fade-up">
+            <h2 class="display-5 fw-bold">Simple <span class="highlight">Workflow</span></h2>
         </div>
-      </div>
+        <div class="row g-0">
+            <div class="col-md-4 step-item fade-up">
+                <div class="step-box">
+                    <div class="step-number">01</div>
+                    <h4 class="fw-bold mb-3">Quick Register</h4>
+                    <p class="text-muted">Create your account in seconds and verify your student status via OTP.</p>
+                </div>
+            </div>
+            <div class="col-md-4 step-item fade-up">
+                <div class="step-box">
+                    <div class="step-number">02</div>
+                    <h4 class="fw-bold mb-3">Share Knowledge</h4>
+                    <p class="text-muted">Upload your best notes or slides and let them help others across the globe.</p>
+                </div>
+            </div>
+            <div class="col-md-4 step-item fade-up">
+                <div class="step-box">
+                    <div class="step-number">03</div>
+                    <h4 class="fw-bold mb-3">Level Up</h4>
+                    <p class="text-muted">Gain reputation points, earn certifications, and climb the leaderboard.</p>
+                </div>
+            </div>
+        </div>
     </section>
 
- 
-    <!-- Contact -->
-    <section id="contact" class="contact text-center py-5">
-      <div class="container">
-        <h2>Contact Us</h2>
-        <p class="contact-subtext mb-5">
-          We’d love to hear from you! Reach us through any of these platforms 👇
-        </p>
-
-        <div class="row g-4 justify-content-center">
-          <div class="col-10 col-sm-6 col-md-3">
-            <a
-              href="mailto:mihmahmud1002@gmail.com"
-              class="contact-item d-block"
-            >
-              <div class="contact-icon">
-                <i class="fa fa-envelope"></i>
-              </div>
-              <span>Email</span>
-              <p>studyhubteam.official@gmail.com</p>
-            </a>
-          </div>
-
-          <div class="col-10 col-sm-6 col-md-3">
-            <a href="tel:+8801716099707" class="contact-item d-block">
-              <div class="contact-icon">
-                <i class="fa fa-phone"></i>
-              </div>
-              <span>Call</span>
-              <p>+880 1831772250</p>
-            </a>
-          </div>
-
-          <div class="col-10 col-sm-6 col-md-3">
-            <a
-              href="https://www.facebook.com/mihmahmudali"
-              target="_blank"
-              class="contact-item d-block"
-            >
-              <div class="contact-icon">
-                <i class="fab fa-facebook-f"></i>
-              </div>
-              <span>Facebook</span>
-              <p>/mihmahmudali</p>
-            </a>
-          </div>
-
-          <div class="col-10 col-sm-6 col-md-3">
-            <a
-              href="https://www.instagram.com/mihmahmud1002"
-              target="_blank"
-              class="contact-item d-block"
-            >
-              <div class="contact-icon">
-                <i class="fab fa-instagram"></i>
-              </div>
-              <span>Instagram</span>
-              <p>@mihmahmud1002</p>
-            </a>
-          </div>
+    <!-- Social & Contact -->
+    <section id="contact" class="container py-5">
+        <div class="text-center mb-5 fade-up">
+            <h2 class="display-5 fw-bold mb-3">Join the <span class="text-primary">Circle</span></h2>
+            <p class="text-muted">Stay updated with our latest resources and community announcements.</p>
         </div>
-      </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-3 col-6 fade-up">
+                <a href="https://www.youtube.com/@studyhub991" target="_blank" class="social-card youtube h-100">
+                    <i class="fab fa-youtube text-danger h2 mb-3"></i>
+                    <h5 class="fw-bold mb-1">YouTube</h5>
+                    <p class="small text-muted mb-0">Tutorials & More</p>
+                </a>
+            </div>
+            <div class="col-lg-3 col-6 fade-up">
+                <a href="https://t.me/studyhub991" target="_blank" class="social-card telegram h-100">
+                    <i class="fab fa-telegram-plane text-info h2 mb-3"></i>
+                    <h5 class="fw-bold mb-1">Telegram</h5>
+                    <p class="small text-muted mb-0">Download Resources</p>
+                </a>
+            </div>
+            <div class="col-lg-3 col-6 fade-up">
+                <a href="mailto:studyhubteam.official@gmail.com" class="social-card h-100">
+                    <i class="fa fa-envelope text-primary h2 mb-3"></i>
+                    <h5 class="fw-bold mb-1">Email Us</h5>
+                    <p class="small text-muted mb-0">Direct Support</p>
+                </a>
+            </div>
+            <div class="col-lg-3 col-6 fade-up">
+                <a href="https://fb.com/mihmahmudali" target="_blank" class="social-card h-100">
+                    <i class="fab fa-facebook h2 mb-3" style="color: #1877F2;"></i>
+                    <h5 class="fw-bold mb-1">Facebook</h5>
+                    <p class="small text-muted mb-0">Developer Profile</p>
+                </a>
+            </div>
+        </div>
     </section>
 
     <!-- Footer -->
-    <footer class="text-center py-4">
-      <p>
-        © <span id="year"></span> StudyHub. Built for collaborative learning.
-      </p>
+    <footer>
+        <div class="container text-center">
+            <div class="h3 fw-bold mb-4">🎓 StudyHub</div>
+            <div class="text-muted small mb-4">
+                Empowering peer-to-peer learning through collaboration and shared knowledge.
+            </div>
+            <hr class="border-secondary opacity-25">
+            <p class="text-muted small mt-4">
+                © <span id="year"></span> StudyHub. All rights reserved. <br>
+                Crafted for academic excellence.
+            </p>
+        </div>
     </footer>
 
-    <button id="topBtn">↑</button>
+    <button id="topBtn"><i class="fa fa-arrow-up"></i></button>
 
-    <!-- JS -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo asset('js/index_html_script.js?v3.0'); ?>"></script>
-  </body>
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
 </html>

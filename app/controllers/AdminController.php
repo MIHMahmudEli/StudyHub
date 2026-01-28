@@ -225,7 +225,7 @@ class AdminController extends Controller {
     }
 
     public function resourceAnalytics() {
-        if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'], ['admin', 'moderator'])) {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
             $this->redirect('admin/dashboard');
         }
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?php echo htmlspecialchars($note['title']); ?> - Note Preview</title>
+<title><?php echo htmlspecialchars($note['title']); ?> - Note Preview - StudyHub</title>
 <link rel="icon" type="image/svg+xml" href="<?php echo asset('images/favicon.svg'); ?>">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="<?php echo asset('css/note_preview.css?v=3.2'); ?>">

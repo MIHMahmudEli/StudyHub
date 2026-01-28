@@ -8,7 +8,9 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   transition: all 0.3s ease;
-
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 1rem;
 }
 
 body.no-scroll {
@@ -18,7 +20,7 @@ body.no-scroll {
 /* ========== SIDEBAR ========== */
 .sidebar {
   background: #31488c;
-  /* Matches the deep blue in the image */
+  /* Vibrant Blue from Image */
   color: #fff;
   width: 260px;
   position: fixed;
@@ -27,97 +29,153 @@ body.no-scroll {
   left: 0;
   display: flex;
   flex-direction: column;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1050;
   padding: 10px 0;
   overflow-y: auto;
-  /* Enable scrolling */
   scrollbar-width: thin;
-  /* Firefox */
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
 }
 
-/* Custom Scrollbar for Chrome/Safari */
-.sidebar::-webkit-scrollbar {
-  width: 6px;
+/* Mobile Overlay - Completely transparent */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 1040;
+  visibility: hidden;
+  pointer-events: none;
 }
 
-.sidebar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
+.sidebar-overlay.active {
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .sidebar .logo {
   text-align: center;
   font-size: 1.5rem;
   font-weight: 700;
-  padding: 20px 0 30px;
+  padding: 25px 0 35px;
   color: #fff;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
 }
 
 .sidebar li {
   list-style: none;
-  margin: 2px 12px;
+  margin: 4px 15px;
 }
 
 .sidebar .nav-link {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   color: rgba(255, 255, 255, 0.9);
-  padding: 10px 15px;
-  border-radius: 10px;
-  transition: all 0.2s ease;
+  padding: 12px 18px;
+  border-radius: 12px;
+  transition: all 0.25s ease;
   font-weight: 500;
-  font-size: 0.92rem;
-  gap: 10px;
+  font-size: 0.95rem;
+  text-decoration: none;
 }
 
-.sidebar .nav-link i {
+.sidebar .nav-link-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar .nav-link i.main-icon {
   width: 24px;
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   opacity: 0.9;
 }
 
-.sidebar .nav-link:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+.sidebar .nav-link .arrow-icon {
+  font-size: 0.75rem;
+  transition: transform 0.3s ease;
+  opacity: 0.6;
 }
 
-.sidebar li.active .nav-link {
-  background: #4a68c0;
-  /* Matches the active highlight in the image */
+.sidebar .nav-link:not(.collapsed) .arrow-icon {
+  transform: rotate(90deg);
+  opacity: 1;
+}
+
+.sidebar .nav-link:hover {
+  background: rgba(255, 255, 255, 0.08);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateX(3px);
+}
+
+.sidebar li.active>.nav-link {
+  background: #4a68c0;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Sub-menu styling */
+.sidebar .sub-menu {
+  padding-left: 15px;
+  margin: 5px 12px 10px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar .sub-menu li {
+  margin: 0;
+}
+
+.sidebar .sub-menu .nav-link {
+  padding: 8px 15px;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.sidebar .sub-menu .nav-link:hover {
+  color: #fff;
+  background: transparent;
+  padding-left: 20px;
+}
+
+.sidebar .sub-menu .active .nav-link {
+  color: #fff;
+  font-weight: 600;
 }
 
 .logout {
   margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 10px;
 }
 
 /* Responsive Sidebar */
 @media (max-width: 992px) {
   .sidebar {
-    left: -260px;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    width: 240px;
+    left: -240px;
+    background: #31488c !important;
+    /* Semi-transparent Vibrant Blue */
+    backdrop-filter: blur(15px);
+    /* Premium see-through effect */
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
   }
 
   .sidebar.open {
     left: 0;
-    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
   }
 
-  /* Overlay when sidebar is open on mobile */
-  .sidebar.open::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 260px;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: -1;
+  /* Overlay - Transparent to keep content visible as requested */
+  .sidebar-overlay {
+    background: transparent !important;
+    opacity: 1 !important;
   }
 }
 
@@ -156,21 +214,28 @@ body.no-scroll {
 
 /* ========== TOPBAR ========== */
 .topbar {
-  background: linear-gradient(90deg, #3b82f6, #2563eb);
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  /* Deeper Professional Gradient */
   color: white;
-  padding: 15px 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 18px 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   margin-top: 20px;
 }
 
 .menu-toggle {
   cursor: pointer;
-  display: inline-flex;
+  display: none;
   align-items: center;
   justify-content: center;
   min-width: 40px;
   min-height: 40px;
+}
+
+@media (max-width: 992px) {
+  .menu-toggle {
+    display: inline-flex;
+  }
 }
 
 .menu-toggle i {
@@ -239,7 +304,7 @@ body.no-scroll {
   }
 }
 
-/* ========== DASHBOARD CARDS NEXT-LEVEL COOL - MODERN COLORS ========== */
+/* ========== DASHBOARD CARDS MODERN COLORS ========== */
 .dash-card {
   background: linear-gradient(145deg, #ffffff, #fefefe);
   border-radius: 25px;

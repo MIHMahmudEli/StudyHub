@@ -3,43 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Course Resources - Notes Hub</title>
+<title>Course Resources - StudyHub</title>
 
 <!-- All assets using asset() helper -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <link rel="stylesheet" href="<?php echo asset('css/home-style.css?v=4.0.4'); ?>">
 <link rel="icon" type="image/svg+xml" href="<?php echo asset('images/favicon.svg'); ?>">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
     .subject-card {
-        border-radius: 20px;
-        border: none;
-        transition: all 0.3s ease;
+        border-radius: 24px;
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         background: #fff;
-        overflow: hidden;
     }
     .subject-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
+        border-color: #6366f1;
     }
     .subject-icon {
-        width: 60px;
-        height: 60px;
-        background: #f8fafc;
-        border-radius: 15px;
+        width: 70px;
+        height: 70px;
+        background: rgba(99, 102, 241, 0.1);
+        border-radius: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
+        font-size: 1.8rem;
         color: #6366f1;
         margin-bottom: 20px;
+        transition: transform 0.3s ease;
     }
-    .card-footer {
-        background: transparent;
-        border-top: 1px solid #f1f5f9;
-        padding: 1.25rem;
+    .subject-card:hover .subject-icon {
+        transform: rotate(-10deg);
     }
+    .resource-badge {
+        background: rgba(99, 102, 241, 0.1);
+        color: #6366f1;
+        font-weight: 600;
+        padding: 8px 16px;
+        border-radius: 100px;
+        font-size: 0.85rem;
+    }
+
 </style>
 </head>
 <body class="bg-light">
@@ -47,17 +55,17 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg shadow-sm sticky-top bg-dark">
   <div class="container">
-    <a class="navbar-brand fw-bold text-white" href="<?php echo url('home/dashboard'); ?>">Notes Hub</a>
+    <a class="navbar-brand fw-bold text-white" href="<?php echo url('home/dashboard'); ?>">StudyHub</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link text-white" href="<?php echo url('home/dashboard'); ?>">Home</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="<?php echo url('home/dashboard'); ?>">Notes</a></li>
+        <li class="nav-item"><a class="nav-link active text-white fw-bold" href="<?php echo url('resources'); ?>">Resources</a></li>
         <li class="nav-item"><a class="nav-link text-white" href="<?php echo url('home/dashboard'); ?>?bookmarks=1">Bookmarks</a></li>
         <li class="nav-item"><a class="nav-link text-white" href="<?php echo url('leaderboard'); ?>">Leaderboard</a></li>
-        <li class="nav-item"><a class="nav-link active text-white fw-bold" href="<?php echo url('resources'); ?>">Resources</a></li>
         <li class="nav-item"><a class="nav-link text-white" href="<?php echo url('upload'); ?>">Upload Notes</a></li>
       </ul>
 
@@ -98,31 +106,31 @@
 </nav>
 
 <main class="container my-5">
-
-
-    <div class="row g-4">
+    <div class="row g-4 d-flex justify-content-center">
         <?php if (!empty($subjects)): ?>
             <?php foreach ($subjects as $sub): ?>
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card h-100 shadow-sm subject-card">
-                        <div class="card-body p-4 text-center">
-                            <div class="subject-icon mx-auto">
-                                <i class="fa fa-folder-open"></i>
+                <div class="col-sm-6 col-lg-4 col-xl-3">
+                    <a href="<?php echo url('resources/subject'); ?>?subject=<?php echo urlencode($sub['subject']); ?>" class="text-decoration-none h-100 d-block">
+                        <div class="card h-100 shadow-sm subject-card">
+                            <div class="card-body p-4 text-center d-flex flex-column align-items-center justify-content-center">
+                                <div class="subject-icon shadow-sm mb-4">
+                                    <i class="fa fa-book-open"></i>
+                                </div>
+                                <h5 class="fw-bold text-dark mb-3"><?php echo htmlspecialchars($sub['subject']); ?></h5>
+                                <div class="resource-badge">
+                                     <i class="fa fa-file-alt me-2"></i><?php echo $sub['resource_count']; ?> Resources
+                                </div>
                             </div>
-                            <h5 class="fw-bold text-dark mb-2"><?php echo htmlspecialchars($sub['subject']); ?></h5>
-                            <p class="text-muted small mb-0"><?php echo $sub['resource_count']; ?> resources available</p>
                         </div>
-                        <div class="card-footer text-center">
-                            <a href="<?php echo url('resources/subject'); ?>?subject=<?php echo urlencode($sub['subject']); ?>" class="btn btn-primary rounded-pill px-4">Browse Resources</a>
-                        </div>
-                    </div>
+                    </a>
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
             <div class="col-12 text-center py-5">
-                <i class="fa fa-folder-open fa-4x text-muted mb-3 opacity-25"></i>
-                <h4 class="text-secondary">No subjects found with approved resources.</h4>
-                <a href="<?php echo url('home/dashboard'); ?>" class="btn btn-primary mt-3">Back to Notes</a>
+                <i class="fa fa-search fa-4x text-muted mb-3 opacity-25"></i>
+                <h4 class="text-secondary fw-bold">No results found for your search</h4>
+                <p class="text-muted">Try different keywords or browse all subjects.</p>
+                <a href="<?php echo url('resources'); ?>" class="btn btn-primary rounded-pill px-5 py-2 mt-3">View All Subjects</a>
             </div>
         <?php endif; ?>
     </div>

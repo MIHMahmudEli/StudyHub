@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Notes Hub</title>
+<title>StudyHub</title>
 
 <!-- All assets using asset() helper -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 <link rel="stylesheet" href="<?php echo asset('css/home-style.css?v=4.0.4'); ?>">
 <link rel="icon" type="image/svg+xml" href="<?php echo asset('images/favicon.svg'); ?>">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
 <!-- Logic needs to be careful with script paths -->
 <script src="<?php echo asset('js/home-script.js?v=4.0.3'); ?>" defer></script>
@@ -21,17 +21,17 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg shadow-sm sticky-top bg-dark">
   <div class="container">
-    <a class="navbar-brand fw-bold text-white" href="<?php echo url('home/dashboard'); ?>">Notes Hub</a>
+    <a class="navbar-brand fw-bold text-white" href="<?php echo url('home/dashboard'); ?>">StudyHub</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link <?php echo !$isBookmarksView ? 'active' : ''; ?> text-white" href="<?php echo url('home/dashboard'); ?>">Home</a></li>
+        <li class="nav-item"><a class="nav-link <?php echo !$isBookmarksView ? 'active' : ''; ?> text-white" href="<?php echo url('home/dashboard'); ?>">Notes</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="<?php echo url('resources'); ?>">Resources</a></li>
         <li class="nav-item"><a class="nav-link <?php echo $isBookmarksView ? 'active' : ''; ?> text-white" href="<?php echo url('home/dashboard'); ?>?bookmarks=1">Bookmarks</a></li>
         <li class="nav-item"><a class="nav-link text-white" href="<?php echo url('leaderboard'); ?>">Leaderboard</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="<?php echo url('resources'); ?>">Resources</a></li>
         <li class="nav-item"><a class="nav-link text-white" href="<?php echo url('upload'); ?>">Upload Notes</a></li>
       </ul>
 

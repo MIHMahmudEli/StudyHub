@@ -7,6 +7,8 @@
 
     <!-- Bootstrap + Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
     <!-- External CSS -->
@@ -61,7 +63,7 @@
 
         <div class="text-center mt-3">
             <a href="<?php echo url('home/dashboard'); ?>" class="text-decoration-none text-secondary fw-semibold">
-                <i class="fa-solid fa-arrow-left me-1"></i> Back to Home
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Notes
             </a>
         </div>
     </div>
