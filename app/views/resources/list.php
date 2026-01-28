@@ -156,6 +156,19 @@
                                 </p>
                             </div>
                             <div class="text-end">
+                                <?php 
+                                $isBookmarked = $res['bookmarked'] ?? false; 
+                                $btnClass = $isBookmarked ? 'btn-danger' : 'btn-outline-primary';
+                                ?>
+                                <button class="btn <?php echo $btnClass; ?> bookmark-btn rounded-pill me-2 px-3 resource-bookmark-btn" 
+                                        data-id="<?php echo $res['id']; ?>" 
+                                        data-type="resource" 
+                                        data-url="<?php echo url('resources/bookmark'); ?>"
+                                        title="Bookmark"
+                                        style="opacity: 0; transition: opacity 0.3s ease;">
+                                    <i class="fa fa-bookmark"></i>
+                                </button>
+
                                 <a href="<?php echo url('note/download'); ?>?id=<?php echo $res['id']; ?>&type=resource" class="btn btn-success btn-download-responsive rounded-pill px-4" title="Download Resource">
                                     <i class="fa fa-download"></i> <span class="d-none d-md-inline ms-1">Download</span>
                                 </a>

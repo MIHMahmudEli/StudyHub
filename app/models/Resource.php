@@ -200,4 +200,87 @@ class Resource {
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
+
+    // Bookmark Methods
+    public function isBookmarked($resourceId, $userId) {
+        $stmt = $this->db->prepare("SELECT 1 FROM bookmarks WHERE user_id = ? AND resource_id = ?");
+        $stmt->bind_param("ii", $userId, $resourceId);
+        $stmt->execute();
+        return $stmt->get_result()->num_rows > 0;
+    }
+
+    public function addBookmark($resourceId, $userId) {
+        if ($this->isBookmarked($resourceId, $userId)) return false;
+        $stmt = $this->db->prepare("INSERT INTO bookmarks (user_id, resource_id, created_at) VALUES (?, ?, NOW())");
+        $stmt->bind_param("ii", $userId, $resourceId);
+        return $stmt->execute();
+    }
+
+    public function removeBookmark($resourceId, $userId) {
+        $stmt = $this->db->prepare("DELETE FROM bookmarks WHERE user_id = ? AND resource_id = ?");
+        $stmt->bind_param("ii", $userId, $resourceId);
+        return $stmt->execute();
+    }
+
+    public function getBookmarkedResources($userId, $search = null) {
+        $query = "SELECT r.*, u.name as uploader_name, 1 as bookmarked, 'file' as item_type
+                  FROM resources r
+                  INNER JOIN bookmarks b ON r.id = b.resource_id AND b.user_id = ?
+                  LEFT JOIN users u ON r.uploader_id = u.id";
+        
+        if ($search) {
+            $query .= " WHERE r.title LIKE ? OR r.subject LIKE ? OR r.course_code LIKE ?";
+            $query .= " ORDER BY b.created_at DESC";
+            $stmt = $this->db->prepare($query);
+            $likeSearch = "%$search%";
+            $stmt->bind_param("isss", $userId, $likeSearch, $likeSearch, $likeSearch);
+            $stmt->execute();
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        }
+
+        $query .= " ORDER BY b.created_at DESC";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    // Subject Bookmarks
+    public function isSubjectBookmarked($subject, $userId) {
+        $stmt = $this->db->prepare("SELECT 1 FROM bookmarks WHERE user_id = ? AND subject_name = ?");
+        $stmt->bind_param("is", $userId, $subject);
+        $stmt->execute();
+        return $stmt->get_result()->num_rows > 0;
+    }
+
+    public function addSubjectBookmark($subject, $userId) {
+        if ($this->isSubjectBookmarked($subject, $userId)) return false;
+        $stmt = $this->db->prepare("INSERT INTO bookmarks (user_id, subject_name, created_at) VALUES (?, ?, NOW())");
+        $stmt->bind_param("is", $userId, $subject);
+        return $stmt->execute();
+    }
+
+    public function removeSubjectBookmark($subject, $userId) {
+        $stmt = $this->db->prepare("DELETE FROM bookmarks WHERE user_id = ? AND subject_name = ?");
+        $stmt->bind_param("is", $userId, $subject);
+        return $stmt->execute();
+    }
+
+    public function getBookmarkedSubjects($userId) {
+        // We might want to join with resources to get count, but for now just the name
+        // Or get counts?
+        // Let's get the subject names and we can fetch counts or details if needed.
+        // Actually, let's reuse getSubjectsWithCounts logic but filter by bookmark.
+        
+        $query = "SELECT b.subject_name as subject, COUNT(r.id) as resource_count, 'subject' as item_type
+                  FROM bookmarks b
+                  LEFT JOIN resources r ON r.subject = b.subject_name AND r.status = 'approved'
+                  WHERE b.user_id = ? AND b.subject_name IS NOT NULL
+                  GROUP BY b.subject_name
+                  ORDER BY b.created_at DESC";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
 }

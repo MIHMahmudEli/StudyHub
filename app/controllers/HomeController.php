@@ -29,8 +29,24 @@ class HomeController extends Controller {
         $noteModel = new Note();
         $notes = $noteModel->getNotes($userId, $isBookmarks, $search);
 
+        $bookmarkedResources = [];
+        $bookmarkedSubjects = [];
+        if ($isBookmarks) {
+            require_once '../app/models/Resource.php';
+            $resourceModel = new Resource();
+            $bookmarkedResources = $resourceModel->getBookmarkedResources($userId, $search);
+            // We ideally merge these or pass separately
+            $bookmarkedSubjects = $resourceModel->getBookmarkedSubjects($userId);
+            
+            // For now, let's keep them separate to render differently or merge if layout allows
+            // The view uses $bookmarkedResources for the "Resources" tab.
+            // Let's pass both and update view.
+        }
+
         $data = [
             'notes' => $notes,
+            'bookmarkedResources' => $bookmarkedResources,
+            'bookmarkedSubjects' => $bookmarkedSubjects,
             'searchTerm' => $search,
             'isBookmarksView' => $isBookmarks,
             'role' => $role

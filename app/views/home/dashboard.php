@@ -76,18 +76,6 @@
 
 <!-- Main Content -->
 <main class="container my-5">
-  <?php if ($isBookmarksView): ?>
-    <div class="mb-4 p-3 rounded-4 shadow-sm bg-white d-flex justify-content-between align-items-center flex-wrap">
-        <div class="d-flex align-items-center gap-3">
-            <i class="fa fa-bookmark fa-2x text-primary"></i>
-            <h4 class="mb-0 fw-bold text-dark d-none d-md-block">Your Bookmarked Notes</h4>
-            <h4 class="mb-0 fw-bold text-dark d-block d-md-none">Bookmarks</h4>
-        </div>
-        <span class="badge bg-primary fs-6 py-2 px-3 shadow-sm number-of-bookmarks d-none d-md-inline-block">
-            <?php echo count($notes); ?> <?php echo count($notes) === 1 ? 'bookmark' : 'bookmarks'; ?>
-        </span>
-    </div>
-  <?php endif; ?>
 
   <!-- 🦴 Skeleton Loader -->
   <div id="skeleton-loader" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
@@ -115,64 +103,206 @@
 
   <!-- Actual Note Results -->
   <div id="note-results" style="display:none;">
-    <?php if (!empty($notes)): ?>
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-        <?php foreach ($notes as $row): ?>
-          <?php $alreadyBookmarked = $row['bookmarked'] ? true : false; ?>
-          <div class="col">
-            <div class="card h-100 shadow-sm note-card position-relative">
-              <a href="<?php echo url('preview/note'); ?>?id=<?php echo $row['id']; ?>&track=true" class="text-decoration-none text-dark">
-                <div class="card-body text-center py-4">
-                  <div class="note-file mb-3">
-                    <?php 
-                    $type = strtolower($row['file_type']);
-                    if ($type === 'pdf') echo "📘";
-                    elseif (in_array($type, ['jpg','jpeg','png'])) echo "🖼️";
-                    else echo "📄";
-                    ?>
-                  </div>
-                  <h5 class="card-title"><?php echo htmlspecialchars($row['title']); ?></h5>
-                  <p class="card-subtitle mb-2 text-muted"><?php echo htmlspecialchars($row['subject']); ?></p>
-                  <div class="note-rating">
-                    <?php
-                    $rating = round($row['avg_rating']);
-                    for ($k=1; $k<=5; $k++) echo $k <= $rating ? "★" : "☆";
-                    ?>
-                  </div>
-                </div>
-              </a>
-
-              <!-- Hover Actions -->
-              <div class="card-footer note-actions">
-                <?php if ($isBookmarksView): ?>
-                  <button class="btn btn-sm btn-danger bookmark-btn" data-id="<?php echo $row['id']; ?>">Remove Bookmark</button>
-                <?php else: ?>
-                  <?php if (!$alreadyBookmarked): ?>
-                    <button class="btn btn-sm btn-primary bookmark-btn" data-id="<?php echo $row['id']; ?>">🔖 Bookmark</button>
-                  <?php endif; ?>
+    <?php if ($isBookmarksView): ?>
+        <?php if (!empty($notes) || !empty($bookmarkedResources) || !empty($bookmarkedSubjects)): ?>
+            <!-- Tabs -->
+            <ul class="nav nav-pills mb-4 gap-2 justify-content-center" id="bookmarkTabs" role="tablist">
+                <?php if (!empty($notes)): ?>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active rounded-pill px-4 border" id="notes-tab" data-bs-toggle="pill" data-bs-target="#pills-notes" type="button" role="tab" aria-controls="pills-notes" aria-selected="true"><i class="fa fa-file-alt me-2"></i>Notes (<?php echo count($notes); ?>)</button>
+                </li>
                 <?php endif; ?>
-                <a href="<?php echo url('note/download'); ?>?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-success">⬇️ Download</a>
-              </div>
+                <?php if (!empty($bookmarkedResources)): ?>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link <?php echo empty($notes) ? 'active' : ''; ?> rounded-pill px-4 border" id="resources-tab" data-bs-toggle="pill" data-bs-target="#pills-resources" type="button" role="tab" aria-controls="pills-resources" aria-selected="<?php echo empty($notes) ? 'true' : 'false'; ?>"><i class="fa fa-book me-2"></i>Files (<?php echo count($bookmarkedResources); ?>)</button>
+                </li>
+                <?php endif; ?>
+                <?php if (!empty($bookmarkedSubjects)): ?>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link <?php echo (empty($notes) && empty($bookmarkedResources)) ? 'active' : ''; ?> rounded-pill px-4 border" id="subjects-tab" data-bs-toggle="pill" data-bs-target="#pills-subjects" type="button" role="tab" aria-controls="pills-subjects" aria-selected="<?php echo (empty($notes) && empty($bookmarkedResources)) ? 'true' : 'false'; ?>"><i class="fa fa-folder-open me-2"></i>Subjects (<?php echo count($bookmarkedSubjects); ?>)</button>
+                </li>
+                <?php endif; ?>
+            </ul>
 
+            <div class="tab-content" id="bookmarkTabsContent">
+                <!-- Notes Pane -->
+                <?php if (!empty($notes)): ?>
+                <div class="tab-pane fade show active" id="pills-notes" role="tabpanel" aria-labelledby="notes-tab">
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                        <?php foreach ($notes as $row): ?>
+                        <div class="col">
+                            <div class="card h-100 shadow-sm note-card position-relative">
+                            <a href="<?php echo url('preview/note'); ?>?id=<?php echo $row['id']; ?>&track=true" class="text-decoration-none text-dark">
+                                <div class="card-body text-center py-4">
+                                <div class="note-file mb-3">
+                                    <?php 
+                                    $type = strtolower($row['file_type']);
+                                    if ($type === 'pdf') echo "📘";
+                                    elseif (in_array($type, ['jpg','jpeg','png'])) echo "🖼️";
+                                    else echo "📄";
+                                    ?>
+                                </div>
+                                <h5 class="card-title text-truncate"><?php echo htmlspecialchars($row['title']); ?></h5>
+                                <p class="card-subtitle mb-2 text-muted"><?php echo htmlspecialchars($row['subject']); ?></p>
+                                <div class="note-rating">
+                                    <?php
+                                    $rating = round($row['avg_rating']);
+                                    for ($k=1; $k<=5; $k++) echo $k <= $rating ? "★" : "☆";
+                                    ?>
+                                </div>
+                                </div>
+                            </a>
+
+                            <div class="card-footer note-actions">
+                                <button class="btn btn-sm btn-danger bookmark-btn rounded-3" style="width: 60px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem;" data-id="<?php echo $row['id']; ?>" data-type="note" data-url="<?php echo url('home/bookmark'); ?>" title="Remove Bookmark">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                <a href="<?php echo url('note/download'); ?>?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-success rounded-3" style="width: 60px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem;" title="Download">
+                                    <i class="fa fa-download"></i>
+                                </a>
+                            </div>
+
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <!-- Resources (Files) Pane -->
+                <?php if (!empty($bookmarkedResources)): ?>
+                <div class="tab-pane fade <?php echo empty($notes) ? 'show active' : ''; ?>" id="pills-resources" role="tabpanel" aria-labelledby="resources-tab">
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                         <?php foreach ($bookmarkedResources as $res): ?>
+                        <div class="col">
+                            <div class="card h-100 shadow-sm note-card position-relative">
+                                <a href="<?php echo url('note/download'); ?>?id=<?php echo $res['id']; ?>&type=resource" class="text-decoration-none text-dark">
+                                    <div class="card-body text-center py-4">
+                                        <div class="note-file mb-3">
+                                            <?php 
+                                            $ext = strtolower($res['file_type']);
+                                            if ($ext === 'pdf') echo '📕';
+                                            elseif (in_array($ext, ['doc','docx'])) echo '📝';
+                                            elseif (in_array($ext, ['ppt','pptx'])) echo '📊';
+                                            else echo '📁';
+                                            ?>
+                                        </div>
+                                        <h5 class="card-title text-truncate"><?php echo htmlspecialchars($res['title']); ?></h5>
+                                        <p class="card-subtitle mb-2 text-muted"><?php echo htmlspecialchars($res['subject']); ?></p>
+                                        <div class="text-muted small"><?php echo htmlspecialchars($res['course_code']); ?></div>
+                                    </div>
+                                </a>
+
+                                <div class="card-footer note-actions">
+                                    <button class="btn btn-sm btn-danger bookmark-btn rounded-3" style="width: 60px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem;" data-id="<?php echo $res['id']; ?>" data-type="resource" data-url="<?php echo url('resources/bookmark'); ?>" title="Remove Bookmark">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                    <a href="<?php echo url('note/download'); ?>?id=<?php echo $res['id']; ?>&type=resource" class="btn btn-sm btn-success rounded-3" style="width: 60px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem;" title="Download">
+                                        <i class="fa fa-download"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <!-- Subjects Pane -->
+                <?php if (!empty($bookmarkedSubjects)): ?>
+                <div class="tab-pane fade <?php echo (empty($notes) && empty($bookmarkedResources)) ? 'show active' : ''; ?>" id="pills-subjects" role="tabpanel" aria-labelledby="subjects-tab">
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                         <?php foreach ($bookmarkedSubjects as $sub): ?>
+                        <div class="col">
+                            <div class="card h-100 shadow-sm note-card position-relative">
+                                <a href="<?php echo url('resources/subject'); ?>?subject=<?php echo urlencode($sub['subject']); ?>" class="text-decoration-none text-dark">
+                                    <div class="card-body text-center py-4">
+                                        <div class="note-file mb-3" style="font-size: 2.5rem; color: #6366f1;">
+                                            <i class="fa fa-folder"></i>
+                                        </div>
+                                        <h5 class="card-title text-truncate"><?php echo htmlspecialchars($sub['subject']); ?></h5>
+                                        <p class="card-subtitle mb-2 text-muted"><?php echo $sub['resource_count']; ?> Resources</p>
+                                    </div>
+                                </a>
+
+                                <div class="card-footer note-actions">
+                                    <button class="btn btn-sm btn-danger bookmark-btn rounded-3" style="width: 60px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem;" data-id="<?php echo htmlspecialchars($sub['subject']); ?>" data-type="subject" data-url="<?php echo url('resources/bookmark'); ?>" title="Remove Bookmark">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                    <a href="<?php echo url('resources/subject'); ?>?subject=<?php echo urlencode($sub['subject']); ?>" class="btn btn-sm btn-primary rounded-3">Browse</a>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
-          </div>
-        <?php endforeach; ?>
-      </div>
+
+        <?php else: ?>
+             <div class="d-flex flex-column justify-content-center align-items-center text-center no-content w-100">
+                <div class="mb-4"><i class="fa fa-bookmark fa-5x text-primary animate__animated animate__bounce"></i></div>
+                <h3 class="mb-3 text-secondary fw-semibold">No bookmarks yet!</h3>
+                <p class="text-muted fs-5 mb-4" style="max-width: 500px;">
+                    You haven’t bookmarked any notes or resources yet. Start exploring!
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="<?php echo url('home/dashboard'); ?>" class="btn btn-lg btn-primary shadow-lg rounded-pill px-4">Browse Notes</a>
+                    <a href="<?php echo url('resources'); ?>" class="btn btn-lg btn-outline-primary shadow-sm rounded-pill px-4">Browse Resources</a>
+                </div>
+            </div>
+        <?php endif; ?>
+
     <?php else: ?>
-      <div class="d-flex flex-column justify-content-center align-items-center text-center no-content w-100">
-          <div class="mb-4"><i class="fa fa-bookmark fa-5x text-primary animate__animated animate__bounce"></i></div>
-          <h3 class="mb-3 text-secondary fw-semibold">
-            <?php echo $isBookmarksView ? 'No bookmarks yet!' : 'No notes found.'; ?>
-          </h3>
-          <p class="text-muted fs-5 mb-4" style="max-width: 500px;">
-            <?php echo $isBookmarksView 
-                ? 'You haven’t bookmarked any notes yet. Start exploring and bookmark your favorites!' 
-                : 'It looks like there are no notes matching your search. Try a different keyword or browse popular notes.'; ?>
-          </p>
-          <?php if ($isBookmarksView): ?>
-              <a href="<?php echo url('home/dashboard'); ?>" class="btn btn-lg btn-primary shadow-lg rounded-pill px-5">Browse Notes</a>
-          <?php endif; ?>
-      </div>
+        <!-- Normal Dashboard View (Non-Bookmarks) -->
+        <?php if (!empty($notes)): ?>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            <?php foreach ($notes as $row): ?>
+            <?php $alreadyBookmarked = $row['bookmarked'] ? true : false; ?>
+            <div class="col">
+                <div class="card h-100 shadow-sm note-card position-relative">
+                <a href="<?php echo url('preview/note'); ?>?id=<?php echo $row['id']; ?>&track=true" class="text-decoration-none text-dark">
+                    <div class="card-body text-center py-4">
+                    <div class="note-file mb-3">
+                        <?php 
+                        $type = strtolower($row['file_type']);
+                        if ($type === 'pdf') echo "📘";
+                        elseif (in_array($type, ['jpg','jpeg','png'])) echo "🖼️";
+                        else echo "📄";
+                        ?>
+                    </div>
+                    <h5 class="card-title"><?php echo htmlspecialchars($row['title']); ?></h5>
+                    <p class="card-subtitle mb-2 text-muted"><?php echo htmlspecialchars($row['subject']); ?></p>
+                    <div class="note-rating">
+                        <?php
+                        $rating = round($row['avg_rating']);
+                        for ($k=1; $k<=5; $k++) echo $k <= $rating ? "★" : "☆";
+                        ?>
+                    </div>
+                    </div>
+                </a>
+
+                <!-- Hover Actions -->
+                <div class="card-footer note-actions">
+                    <?php if (!$alreadyBookmarked): ?>
+                        <button class="btn btn-sm btn-primary bookmark-btn" data-id="<?php echo $row['id']; ?>" data-type="note" data-url="<?php echo url('home/bookmark'); ?>">🔖 Bookmark</button>
+                    <?php endif; ?>
+                    <a href="<?php echo url('note/download'); ?>?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-success">⬇️ Download</a>
+                </div>
+
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        <?php else: ?>
+        <div class="d-flex flex-column justify-content-center align-items-center text-center no-content w-100">
+            <div class="mb-4"><i class="fa fa-folder-open fa-5x text-muted opacity-25"></i></div>
+            <h3 class="mb-3 text-secondary fw-semibold">No notes found.</h3>
+            <p class="text-muted fs-5 mb-4">
+                It looks like there are no notes matching your search.
+            </p>
+        </div>
+        <?php endif; ?>
     <?php endif; ?>
   </div>
 </main>

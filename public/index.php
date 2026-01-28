@@ -59,6 +59,7 @@ $router->add('POST', 'note/rate', 'NoteController', 'rate');
 $router->add('GET', 'resources', 'ResourceController', 'index');
 $router->add('GET', 'resources/subject', 'ResourceController', 'subject');
 $router->add('GET', 'resources/list', 'ResourceController', 'list');
+$router->add('POST', 'resources/bookmark', 'ResourceController', 'toggleBookmark');
 $router->add('GET', 'admin/manage_resources', 'AdminController', 'manageResources');
 $router->add('POST', 'admin/resources/upload', 'AdminController', 'uploadResource');
 $router->add('POST', 'admin/resources/delete', 'AdminController', 'deleteResource');

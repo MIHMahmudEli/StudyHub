@@ -112,7 +112,22 @@
                 <div class="col-sm-6 col-lg-4 col-xl-3">
                     <a href="<?php echo url('resources/subject'); ?>?subject=<?php echo urlencode($sub['subject']); ?>" class="text-decoration-none h-100 d-block">
                         <div class="card h-100 shadow-sm subject-card">
-                            <div class="card-body p-4 text-center d-flex flex-column align-items-center justify-content-center">
+                            <div class="card-body p-4 text-center d-flex flex-column align-items-center justify-content-center position-relative">
+                                <?php 
+                                $isBookmarked = $sub['bookmarked'] ?? false;
+                                if (!$isBookmarked):
+                                ?>
+                                <button class="btn btn-sm bookmark-btn subject-bookmark-btn position-absolute top-0 end-0 m-2 text-muted" 
+                                        style="z-index: 10; font-size: 1.2rem; background: transparent; border: none;"
+                                        data-id="<?php echo htmlspecialchars($sub['subject']); ?>" 
+                                        data-type="subject" 
+                                        data-url="<?php echo url('resources/bookmark'); ?>"
+                                        title="Bookmark Subject"
+                                        onclick="event.preventDefault();">
+                                    <i class="fa fa-bookmark"></i>
+                                </button>
+                                <?php endif; ?>
+
                                 <div class="subject-icon shadow-sm mb-4">
                                     <i class="fa fa-book-open"></i>
                                 </div>

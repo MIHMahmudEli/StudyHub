@@ -1,59 +1,94 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // ====================== Bookmark Functionality ======================
     const bookmarkButtons = document.querySelectorAll('.bookmark-btn');
-    
+
     bookmarkButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
+        button.addEventListener('click', function (e) {
             e.preventDefault();
             const noteId = this.getAttribute('data-id');
             toggleBookmark(noteId, this);
         });
     });
 
-    function toggleBookmark(noteId, buttonElement) {
+    function toggleBookmark(id, buttonElement) {
         const formData = new FormData();
-        formData.append('note_id', noteId);
+        const type = buttonElement.getAttribute('data-type') || 'note';
+        const url = buttonElement.getAttribute('data-url') || 'home/bookmark';
 
-        fetch('bookmark', {
+        if (type === 'resource') {
+            formData.append('resource_id', id);
+        } else if (type === 'subject') {
+            formData.append('subject_name', id);
+        } else {
+            formData.append('note_id', id);
+        }
+
+        fetch(url, {
             method: 'POST',
             body: formData,
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
-        .then(response => response.text())
-        .then(data => {
-            if (data === 'added') {
-                if (!window.location.href.includes('bookmarks=1')) {
-                    buttonElement.style.display = 'none';
-                } else {
-                    buttonElement.textContent = 'Remove Bookmark';
-                    buttonElement.classList.remove('btn-primary');
-                    buttonElement.classList.add('btn-danger');
-                }
-                showNotification('Bookmark added!', 'success');
-            } else if (data === 'removed') {
-                if (window.location.href.includes('bookmarks=1')) {
-                    buttonElement.closest('.col').remove();
-                    showNotification('Bookmark removed!', 'info');
-                    const remainingCards = document.querySelectorAll('.col');
-                    if (remainingCards.length === 0) {
-                        document.querySelector('main .container').innerHTML = `
-                            <div class="col-12 text-center py-5">
-                                <i class="fa fa-bookmark fa-3x text-muted mb-3"></i>
-                                <p class="text-muted fs-5">No bookmarks found. Bookmark some notes to see them here!</p>
-                                <a href="home" class="btn btn-primary">Browse Notes</a>
-                            </div>
-                        `;
+            .then(response => response.text())
+            .then(data => {
+                if (data === 'added') {
+                    if (!window.location.href.includes('bookmarks=1')) {
+                        if (type === 'subject') {
+                            // If user requested to hide icon when bookmarked:
+                            buttonElement.remove();
+                        } else {
+                            // buttonElement.style.display = 'none'; // Don't hide, maybe just toggle style? User asked for icon.
+                            // Actually for dashboard non-bookmark view, notes disappear if we don't want to show "remove".
+                            // But in resource list, we want to toggle icon.
+                            // For now, let's just toggle class if available.
+                            buttonElement.innerHTML = type === 'resource' ? '<i class="fa fa-bookmark"></i>' : 'Remove Bookmark';
+                            buttonElement.classList.add('btn-danger');
+                            buttonElement.classList.remove('btn-primary', 'btn-outline-primary');
+                        }
+                    } else {
+                        // In dashboard
+                        // buttonElement.textContent = 'Remove Bookmark'; 
+                        // Dashboard keeps trash icon or whatever layout is there
+                        buttonElement.classList.remove('btn-primary');
+                        buttonElement.classList.add('btn-danger');
+                    }
+                    showNotification('Bookmark added!', 'success');
+                } else if (data === 'removed') {
+                    if (window.location.href.includes('bookmarks=1')) {
+                        // Remove the card from the view
+                        buttonElement.closest('.col').remove();
+                        showNotification('Bookmark removed!', 'info');
+
+                        // Check if current pane is empty
+                        // We need to know which pane we are in? The 'col' is inside a 'row'.
+                        // Let's check visible cards.
+                        const remainingCards = document.querySelectorAll('.tab-pane.active .col');
+                        if (remainingCards.length === 0) {
+                            // Ideally show "No bookmarks" message
+                            // But implementation details vary.
+                            location.reload(); // Simple fallback to refresh empty state
+                        }
+                    } else {
+                        if (type === 'subject') {
+                            // Subject index page
+                            buttonElement.classList.remove('text-danger', 'bookmarked');
+                            buttonElement.classList.add('text-muted');
+                        } else {
+                            // Standard toggle back
+                            buttonElement.classList.remove('btn-danger');
+                            buttonElement.classList.add('btn-primary'); // or outline
+                            buttonElement.innerHTML = type === 'resource' ? '<i class="fa fa-bookmark"></i>' : '🔖 Bookmark';
+                        }
+                        showNotification('Bookmark removed!', 'info');
                     }
                 } else {
-                    buttonElement.style.display = 'none';
-                    showNotification('Bookmark removed!', 'info');
+                    console.error('Unknown response:', data);
+                    showNotification('Error: ' + data, 'error');
                 }
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('Error updating bookmark', 'error');
-        });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Error updating bookmark', 'error');
+            });
     }
 
     function showNotification(message, type) {
@@ -77,11 +112,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // ====================== Card Hover Effect ======================
     const noteCards = document.querySelectorAll('.note-card');
     noteCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
+        card.addEventListener('mouseenter', function () {
             this.style.transform = 'translateY(-5px)';
             this.style.transition = 'transform 0.3s ease';
         });
-        card.addEventListener('mouseleave', function() {
+        card.addEventListener('mouseleave', function () {
             this.style.transform = 'translateY(0)';
         });
     });
@@ -107,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ====================== Search Skeleton (AJAX-like UX) ======================
     const searchForm = document.querySelector('form[action*="home.php"]');
     if (searchForm) {
-        searchForm.addEventListener('submit', function() {
+        searchForm.addEventListener('submit', function () {
             // Before submitting, show skeleton again
             if (skeleton && results) {
                 results.style.display = 'none';
@@ -120,8 +155,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-  tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
 });
 
 

@@ -499,3 +499,46 @@ body {
         transform: translateY(5px) !important;
     }
 }
+
+/* ========== TAB PILLS BOOTSTRAP OVERRIDE ========== */
+.nav-pills .nav-link {
+    color: #495057 !important;
+    /* Dark text for better visibility */
+    background-color: #ffffff;
+    border: 1px solid #dfe6e9;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: #f1f2f6;
+    color: #2d3436 !important;
+}
+
+.nav-pills .nav-link.active {
+    color: #ffffff !important;
+    /* White text for active */
+    background-color: #34495e !important;
+    /* Match navbar color */
+    border-color: #34495e;
+    box-shadow: 0 4px 10px rgba(44, 62, 80, 0.3);
+}
+
+/* Resource Card Hover Logic */
+.card:hover .resource-bookmark-btn {
+    opacity: 1 !important;
+}
+
+/* Subject Card Hover Logic */
+.subject-bookmark-btn {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.subject-bookmark-btn.bookmarked {
+    opacity: 1 !important;
+}
+
+.subject-card:hover .subject-bookmark-btn {
+    opacity: 1;
+}
