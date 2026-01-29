@@ -238,7 +238,7 @@
 <!-- Main -->
 <main class="main-content flex-grow-1">
     <!-- Topbar -->
-    <header class="topbar d-flex justify-content-between align-items-center mb-4">
+    <header class="topbar d-flex justify-content-between align-items-center mb-0">
         <div class="d-flex align-items-center gap-3">
             <button class="menu-toggle btn text-white p-0 border-0"><i class="fa fa-bars"></i></button>
             <h5 class="mb-0 fw-semibold">Subject Breakdown Analytics</h5>
@@ -255,7 +255,7 @@
     </header>
 
     <!-- Content -->
-    <section class="container-fluid py-4 px-3 px-lg-4">
+    <section class="container-fluid pt-4 pb-4 px-3 px-lg-4">
 
         <!-- Print Only Header -->
         <div class="print-only-header">

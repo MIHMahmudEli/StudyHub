@@ -95,7 +95,7 @@
   </div>
 </nav>
 
-<main class="container my-5">
+<main class="container my-3">
     <!-- Premium Header Section -->
     <!-- <div class="row mb-4 justify-content-center">
         <div class="col-lg-8 text-center">
@@ -112,7 +112,7 @@
         </div>
     </div> -->
 
-    <div class="row justify-content-center g-5 mt-2">
+    <div class="row justify-content-center g-4 mt-0">
         <!-- Mid Term Card -->
         <div class="col-md-5 col-lg-4">
             <a href="<?php echo url('resources/list'); ?>?subject=<?php echo urlencode($subject); ?>&term=mid" class="text-decoration-none group">

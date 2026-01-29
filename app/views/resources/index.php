@@ -24,16 +24,16 @@
         border-color: #6366f1;
     }
     .subject-icon {
-        width: 70px;
-        height: 70px;
+        width: 56px;
+        height: 56px;
         background: rgba(99, 102, 241, 0.1);
-        border-radius: 20px;
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.8rem;
+        font-size: 1.5rem;
         color: #6366f1;
-        margin-bottom: 20px;
+        margin-bottom: 16px;
         transition: transform 0.3s ease;
     }
     .subject-card:hover .subject-icon {
@@ -43,9 +43,9 @@
         background: rgba(99, 102, 241, 0.1);
         color: #6366f1;
         font-weight: 600;
-        padding: 8px 16px;
+        padding: 6px 14px;
         border-radius: 100px;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
 
 </style>
@@ -109,10 +109,10 @@
     <div class="row g-4 d-flex justify-content-center">
         <?php if (!empty($subjects)): ?>
             <?php foreach ($subjects as $sub): ?>
-                <div class="col-sm-6 col-lg-4 col-xl-3">
+                <div class="col-sm-6 col-md-4 col-lg-3">
                     <a href="<?php echo url('resources/subject'); ?>?subject=<?php echo urlencode($sub['subject']); ?>" class="text-decoration-none h-100 d-block">
                         <div class="card h-100 shadow-sm subject-card">
-                            <div class="card-body p-4 text-center d-flex flex-column align-items-center justify-content-center position-relative">
+                            <div class="card-body p-3 text-center d-flex flex-column align-items-center justify-content-center position-relative">
                                 <?php 
                                 $isBookmarked = $sub['bookmarked'] ?? false;
                                 if (!$isBookmarked):
@@ -128,10 +128,10 @@
                                 </button>
                                 <?php endif; ?>
 
-                                <div class="subject-icon shadow-sm mb-4">
+                                <div class="subject-icon shadow-sm mb-3">
                                     <i class="fa fa-book-open"></i>
                                 </div>
-                                <h5 class="fw-bold text-dark mb-3"><?php echo htmlspecialchars($sub['subject']); ?></h5>
+                                <h5 class="fw-bold text-dark mb-2" style="font-size: 1rem;"><?php echo htmlspecialchars($sub['subject']); ?></h5>
                                 <div class="resource-badge">
                                      <i class="fa fa-file-alt me-2"></i><?php echo $sub['resource_count']; ?> Resources
                                 </div>

@@ -350,12 +350,23 @@ class AdminController extends Controller {
         }
 
         $userModel = new User();
-        // Top 3 Students (Leaderboard)
+        
+        // Fetch data for 3 months
+        $monthsData = [];
+        for ($i = 0; $i < 3; $i++) {
+            $monthsData[$i] = [
+                'label' => date('F Y', strtotime("-$i months")),
+                'students' => $userModel->getMonthlyLeaderboard(3, $i),
+                'contributors' => $userModel->getTopContributorsByMonth($i, 3)
+            ];
+        }
+
+        // All-time leaders
         $topStudents = $userModel->getLeaderboard(3);
-        // Top 3 Contributors (Approved Notes)
         $topContributors = $userModel->getTopContributors(3);
 
         $data = [
+            'monthsData' => $monthsData,
             'topStudents' => $topStudents,
             'topContributors' => $topContributors,
             'role' => $_SESSION['role']

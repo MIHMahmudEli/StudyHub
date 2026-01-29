@@ -194,6 +194,24 @@ class User {
         return $this->db->query($query)->fetch_all(MYSQLI_ASSOC);
     }
 
+    public function getTopContributorsByMonth($monthOffset = 0, $limit = 1) {
+        $start = date('Y-m-01 00:00:00', strtotime("-$monthOffset months"));
+        $end = date('Y-m-t 23:59:59', strtotime("-$monthOffset months"));
+
+        $query = "SELECT u.id, u.name, COUNT(n.id) as note_count 
+                  FROM users u 
+                  INNER JOIN notes n ON u.id = n.uploader_id 
+                  WHERE n.status = 'approved' AND n.created_at >= ? AND n.created_at <= ?
+                  GROUP BY u.id 
+                  ORDER BY note_count DESC 
+                  LIMIT ?";
+        
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("ssi", $start, $end, $limit);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
     public function getRoleDistribution() {
         return $this->db->query("SELECT role, COUNT(*) as count FROM users GROUP BY role")
                         ->fetch_all(MYSQLI_ASSOC);

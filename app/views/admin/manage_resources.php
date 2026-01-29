@@ -511,7 +511,9 @@
                                                     <?php echo strtoupper($res['term'] ?? 'MID'); ?> 
                                                 </span>
                                             </td>
-                                            <td class="d-none d-md-table-cell"><span class="badge bg-primary-subtle text-primary border-primary-subtle border px-3 py-2 rounded-3" style="font-size: 0.75rem;"><?php echo htmlspecialchars($res['subject']); ?></span></td>
+                                            <td class="d-none d-md-table-cell">
+                                                <span class="badge bg-primary-subtle text-primary border-primary-subtle border px-3 py-2 rounded-3 text-truncate" style="font-size: 0.75rem; max-width: 150px; display: inline-block; vertical-align: bottom;" title="<?php echo htmlspecialchars($res['subject']); ?>"><?php echo htmlspecialchars($res['subject']); ?></span>
+                                            </td>
                                             <td class="d-none d-md-table-cell">
                                                 <div class="small fw-bold text-dark"><?php echo htmlspecialchars($res['uploader_name'] ?? 'N/A'); ?></div>
                                                 <div class="text-muted small"><?php echo date('M d, Y', strtotime($res['created_at'])); ?></div>
@@ -519,7 +521,6 @@
                                             <td class="d-none d-md-table-cell"><span class="text-muted fw-semibold small text-uppercase"><?php echo htmlspecialchars($ext); ?></span></td>
                                             <td class="text-end">
                                                 <div class="btn-group">
-                                                    <a href="<?php echo url('preview/note'); ?>?id=<?php echo $res['id']; ?>&type=resource&track=resource_manage&subject=<?php echo urlencode($subject ?? ''); ?>&term=<?php echo urlencode($term ?? ''); ?>&search=<?php echo urlencode($search ?? ''); ?>" class="btn btn-sm btn-outline-primary border-2 px-3"><i class="fa fa-eye"></i></a>
                                                     <button type="button" class="btn btn-sm btn-outline-danger border-2 px-3" onclick="deleteResource(<?php echo $res['id']; ?>)"><i class="fa fa-trash"></i></button>
                                                 </div>
                                             </td>

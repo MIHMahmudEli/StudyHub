@@ -10,293 +10,402 @@
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Dancing+Script:wght@400;500&family=Allura&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo asset('css/admin_dashboard.css?v=4.0.2'); ?>">
     <link rel="icon" type="image/svg+xml" href="<?php echo asset('images/favicon.svg'); ?>">
-    <style>
-        .award-card {
-            border: none;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #fff;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
-            border: 1px solid #f1f5f9;
-        }
-        .award-card:hover { transform: translateY(-5px); }
-        .award-header {
-            background: #1e293b;
-            color: white;
-            padding: 2rem 1.5rem;
-            text-align: center;
-            position: relative;
-            border-bottom: 4px solid #d4af37;
-        }
-        .award-header i { font-size: 2.5rem; margin-bottom: 0.5rem; color: #d4af37; }
-        .rank-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 35px;
-            height: 35px;
-            background: #d4af37;
-            color: #1e293b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-weight: 800;
-            font-size: 1rem;
-        }
-        .user-avatar {
-            width: 65px;
-            height: 65px;
-            background: #fdfbf7;
-            color: #1e293b;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            margin: -32px auto 10px;
-            border: 3px solid #d4af37;
-            position: relative;
-            z-index: 2;
-            font-family: Georgia, serif;
-        }
-        .btn-action {
-            border-radius: 4px;
-            font-weight: 700;
-            padding: 10px 15px;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .category-title {
-            font-weight: 800;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: #1e293b;
-        }
-        .category-title::after {
-            content: '';
-            flex-grow: 1;
-            height: 1px;
-            background: #d4af37;
-        }
-        /* Hidden Template for PDF */
-        #certTemplate { 
-            position: absolute; 
-            left: -9999px; 
-            top: 0;
-            width: 1122px; /* Fixed A4 Landscape Width */
-        }
-    </style>
-</head>
-<body>
-    <?php $activePage = 'awards'; ?>
-<!-- Sidebar -->
-<aside class="sidebar admin-sidebar">
-    <div class="logo">
-        <i class="fa fa-graduation-cap me-2"></i> <span>StudyHub</span>
-    </div>
-    <ul class="nav flex-column" id="sidebarAccordion">
-        <!-- Core -->
+        <style>
+            :root {
+                --primary-gold: #d4af37;
+                --dark-slate: #1e293b;
+                --soft-bg: #f8fafc;
+                --accent-blue: #3b82f6;
+            }
+            body { 
+                overflow-y: scroll !important; /* Force scrollbar */
+                background-color: var(--soft-bg);
+            }
+            .award-card {
+                border: none;
+                border-radius: 16px;
+                background: #fff;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                border: 1px solid rgba(226, 232, 240, 0.6);
+                max-width: 280px;
+                margin: 0 auto;
+            }
+            .award-card:hover { 
+                transform: translateY(-5px);
+                box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08);
+            }
+            .rank-badge {
+                position: absolute;
+                top: -10px;
+                right: -10px;
+                width: 32px;
+                height: 32px;
+                background: var(--primary-gold);
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                font-weight: 800;
+                font-size: 0.85rem;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                border: 2px solid #fff;
+                z-index: 5;
+            }
+            .user-avatar {
+                width: 64px;
+                height: 64px;
+                background: linear-gradient(135deg, #fdfbf7 0%, #f9f5eb 100%);
+                color: var(--dark-slate);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+                border: 2px solid var(--primary-gold);
+                margin: 0 auto 12px;
+            }
+            .category-title {
+                font-weight: 700;
+                color: var(--dark-slate);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 1.1rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                padding-left: 25px;
+            }
+            .category-title::after {
+                content: '';
+                flex-grow: 1;
+                height: 1px;
+                background: linear-gradient(to right, var(--primary-gold), transparent);
+            }
+            .month-btn {
+                background: #fff;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 10px 20px;
+                font-weight: 600;
+                color: #64748b;
+                transition: all 0.2s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .month-btn.active {
+                background: var(--dark-slate);
+                color: #fff;
+                border-color: var(--dark-slate);
+                box-shadow: 0 8px 16px rgba(30, 41, 59, 0.2);
+            }
+            .month-panel {
+                display: none;
+                opacity: 0;
+                padding: 0 15px;
+            }
+            .month-panel.active {
+                display: block;
+                animation: panelFade 0.5s ease-out forwards;
+            }
+            @keyframes panelFade {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .hall-of-fame-header {
+                background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+                border-radius: 20px;
+                padding: 20px 30px;
+                color: #fff;
+                margin-bottom: 20px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            }
+            .empty-state {
+                padding: 40px;
+                text-align: center;
+                background: #fff;
+                border-radius: 20px;
+                border: 2px dashed #e2e8f0;
+                color: #94a3b8;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+            /* Premium Swal Overrides */
+            .swal2-popup.premium-modal {
+                border-radius: 24px !important;
+                padding: 2rem !important;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+            }
+            .swal2-title { font-weight: 700 !important; }
+            .swal2-confirm { border-radius: 12px !important; font-weight: 600 !important; padding: 12px 30px !important; }
+            .swal2-cancel { border-radius: 12px !important; font-weight: 600 !important; }
 
-        <li class="<?php echo ($activePage === 'dashboard') ? 'active' : ''; ?>">
-            <a href="<?php echo url('admin/dashboard'); ?>" class="nav-link">
-                <div class="nav-link-content">
-                    <i class="fa fa-home main-icon"></i><span>Dashboard</span>
-                </div>
-            </a>
-        </li>
-
-        <!-- Content -->
-
-        <li>
-            <a href="#contentMenu" class="nav-link collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
-                <div class="nav-link-content">
-                    <i class="fa fa-folder-open main-icon"></i><span>Management</span>
-                </div>
-                <i class="fa fa-chevron-right arrow-icon"></i>
-            </a>
-            <div class="collapse <?php echo in_array($activePage, ['pending_notes', 'manage_resources']) ? 'show' : ''; ?>" id="contentMenu" data-bs-parent="#sidebarAccordion">
-                <ul class="sub-menu">
-                    <li class="<?php echo ($activePage === 'pending_notes') ? 'active' : ''; ?>">
-                        <a href="<?php echo url('admin/pending_notes'); ?>" class="nav-link">Pending Notes</a>
-                    </li>
-                    <li class="<?php echo ($activePage === 'manage_resources') ? 'active' : ''; ?>">
-                        <a href="<?php echo url('admin/manage_resources'); ?>" class="nav-link">Resources</a>
-                    </li>
-                </ul>
+            /* Hidden Rendering Container - Far offscreen to prevent flash */
+            #certGenerator-overlay {
+                position: fixed;
+                top: 0;
+                left: -10000px; /* Crucial: Far off-screen */
+                width: 1122px;
+                height: 794px;
+                z-index: -9999;
+                background: #fff;
+                pointer-events: none;
+            }
+            #certTemplate { width: 842pt; height: 595pt; display: block; }
+        </style>
+    </head>
+    <body class="bg-light">
+        <?php $activePage = 'awards'; ?>
+        <!-- Sidebar -->
+        <aside class="sidebar admin-sidebar">
+            <div class="logo">
+                <i class="fa fa-graduation-cap me-2"></i> <span>StudyHub</span>
             </div>
-        </li>
+            <ul class="nav flex-column" id="sidebarAccordion">
+                <li class="<?php echo ($activePage === 'dashboard') ? 'active' : ''; ?>">
+                    <a href="<?php echo url('admin/dashboard'); ?>" class="nav-link">
+                        <div class="nav-link-content">
+                            <i class="fa fa-home main-icon"></i><span>Dashboard</span>
+                        </div>
+                    </a>
+                </li>
 
-        <?php if ($role === 'admin') { ?>
-            <!-- Governance -->
-
-            <li>
-                <a href="#governanceMenu" class="nav-link collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
-                    <div class="nav-link-content">
-                        <i class="fa fa-shield-halved main-icon"></i><span>Control</span>
+                <li>
+                    <a href="#contentMenu" class="nav-link collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                        <div class="nav-link-content">
+                            <i class="fa fa-folder-open main-icon"></i><span>Management</span>
+                        </div>
+                        <i class="fa fa-chevron-right arrow-icon"></i>
+                    </a>
+                    <div class="collapse <?php echo in_array($activePage, ['pending_notes', 'manage_resources']) ? 'show' : ''; ?>" id="contentMenu" data-bs-parent="#sidebarAccordion">
+                        <ul class="sub-menu">
+                            <li class="<?php echo ($activePage === 'pending_notes') ? 'active' : ''; ?>">
+                                <a href="<?php echo url('admin/pending_notes'); ?>" class="nav-link">Pending Notes</a>
+                            </li>
+                            <li class="<?php echo ($activePage === 'manage_resources') ? 'active' : ''; ?>">
+                                <a href="<?php echo url('admin/manage_resources'); ?>" class="nav-link">Resources</a>
+                            </li>
+                        </ul>
                     </div>
-                    <i class="fa fa-chevron-right arrow-icon"></i>
-                </a>
-                <div class="collapse <?php echo in_array($activePage, ['users', 'active_users']) ? 'show' : ''; ?>" id="governanceMenu" data-bs-parent="#sidebarAccordion">
-                    <ul class="sub-menu">
-                        <li class="<?php echo ($activePage === 'users') ? 'active' : ''; ?>">
-                            <a href="<?php echo url('admin/users'); ?>" class="nav-link">User List</a>
-                        </li>
-                        <li class="<?php echo ($activePage === 'active_users') ? 'active' : ''; ?>">
-                            <a href="<?php echo url('admin/active_users'); ?>" class="nav-link">Active Sessions</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
+                </li>
 
-            <!-- Insights -->
+                <?php if ($role === 'admin') { ?>
+                    <li>
+                        <a href="#governanceMenu" class="nav-link collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                            <div class="nav-link-content">
+                                <i class="fa fa-shield-halved main-icon"></i><span>Control</span>
+                            </div>
+                            <i class="fa fa-chevron-right arrow-icon"></i>
+                        </a>
+                        <div class="collapse <?php echo in_array($activePage, ['users', 'active_users']) ? 'show' : ''; ?>" id="governanceMenu" data-bs-parent="#sidebarAccordion">
+                            <ul class="sub-menu">
+                                <li class="<?php echo ($activePage === 'users') ? 'active' : ''; ?>">
+                                    <a href="<?php echo url('admin/users'); ?>" class="nav-link">User List</a>
+                                </li>
+                                <li class="<?php echo ($activePage === 'active_users') ? 'active' : ''; ?>">
+                                    <a href="<?php echo url('admin/active_users'); ?>" class="nav-link">Active Sessions</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
 
-            <li>
-                <a href="#insightsMenu" class="nav-link collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
-                    <div class="nav-link-content">
-                        <i class="fa fa-chart-line main-icon"></i><span>Analytics</span>
+                    <li>
+                        <a href="#insightsMenu" class="nav-link collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                            <div class="nav-link-content">
+                                <i class="fa fa-chart-line main-icon"></i><span>Analytics</span>
+                            </div>
+                            <i class="fa fa-chevron-right arrow-icon"></i>
+                        </a>
+                        <div class="collapse <?php echo in_array($activePage, ['analytics', 'resource_analytics', 'reports', 'awards']) ? 'show' : ''; ?>" id="insightsMenu" data-bs-parent="#sidebarAccordion">
+                            <ul class="sub-menu">
+                                <li class="<?php echo ($activePage === 'analytics') ? 'active' : ''; ?>">
+                                    <a href="<?php echo url('admin/analytics'); ?>" class="nav-link">Statistics</a>
+                                </li>
+                                <li class="<?php echo ($activePage === 'resource_analytics') ? 'active' : ''; ?>">
+                                    <a href="<?php echo url('admin/resource_analytics'); ?>" class="nav-link">Resources</a>
+                                </li>
+                                <li class="<?php echo ($activePage === 'reports') ? 'active' : ''; ?>">
+                                    <a href="<?php echo url('admin/reports'); ?>" class="nav-link">Reports</a>
+                                </li>
+                                <li class="<?php echo ($activePage === 'awards') ? 'active' : ''; ?>">
+                                    <a href="<?php echo url('admin/awards'); ?>" class="nav-link">Awards</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                <?php } ?>
+
+                <li>
+                    <a href="#navigationMenu" class="nav-link collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
+                        <div class="nav-link-content">
+                            <i class="fa fa-compass main-icon"></i><span>Quick Links</span>
+                        </div>
+                        <i class="fa fa-chevron-right arrow-icon"></i>
+                    </a>
+                    <div class="collapse <?php echo in_array($activePage, ['browse_notes', 'browse_resources', 'my_notes']) ? 'show' : ''; ?>" id="navigationMenu" data-bs-parent="#sidebarAccordion">
+                        <ul class="sub-menu">
+                            <li><a href="<?php echo url('home/dashboard'); ?>" class="nav-link">Browse Notes</a></li>
+                            <li><a href="<?php echo url('resources'); ?>" class="nav-link">Browse Resources</a></li>
+                            <li><a href="<?php echo url('note/my_notes'); ?>" class="nav-link">My Notes</a></li>
+                        </ul>
                     </div>
-                    <i class="fa fa-chevron-right arrow-icon"></i>
-                </a>
-                <div class="collapse <?php echo in_array($activePage, ['analytics', 'resource_analytics', 'reports', 'awards']) ? 'show' : ''; ?>" id="insightsMenu" data-bs-parent="#sidebarAccordion">
-                    <ul class="sub-menu">
-                        <li class="<?php echo ($activePage === 'analytics') ? 'active' : ''; ?>">
-                            <a href="<?php echo url('admin/analytics'); ?>" class="nav-link">Statistics</a>
-                        </li>
-                        <li class="<?php echo ($activePage === 'resource_analytics') ? 'active' : ''; ?>">
-                            <a href="<?php echo url('admin/resource_analytics'); ?>" class="nav-link">Resources</a>
-                        </li>
-                        <li class="<?php echo ($activePage === 'reports') ? 'active' : ''; ?>">
-                            <a href="<?php echo url('admin/reports'); ?>" class="nav-link">Reports</a>
-                        </li>
-                        <li class="<?php echo ($activePage === 'awards') ? 'active' : ''; ?>">
-                            <a href="<?php echo url('admin/awards'); ?>" class="nav-link">Awards</a>
-                        </li>
-                    </ul>
+                </li>
+
+                <li class="<?php echo ($activePage === 'settings') ? 'active' : ''; ?>">
+                    <a href="<?php echo url('settings'); ?>" class="nav-link">
+                        <div class="nav-link-content">
+                            <i class="fa fa-cog main-icon"></i><span>Settings</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="logout">
+                    <a href="<?php echo url('logout'); ?>" class="nav-link">
+                        <div class="nav-link-content">
+                            <i class="fa fa-sign-out-alt main-icon"></i><span>Logout</span>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="menu-toggle btn text-white p-0 border-0"><i class="fa fa-bars"></i></button>
+                    <h5 class="mb-0 fw-semibold">Awards & Recognition Center</h5>
                 </div>
-            </li>
-        <?php } ?>
-
-        <!-- Navigation -->
-
-        <li>
-            <a href="#navigationMenu" class="nav-link collapsed" data-bs-toggle="collapse" role="button" aria-expanded="false">
-                <div class="nav-link-content">
-                    <i class="fa fa-compass main-icon"></i><span>Quick Links</span>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-light text-dark text-uppercase"><?php echo $role; ?></span>
+                    <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm">
+                        <i class="fa fa-sign-out-alt"></i><span class="d-none d-md-inline ms-1">Logout</span>
+                    </a>
                 </div>
-                <i class="fa fa-chevron-right arrow-icon"></i>
-            </a>
-            <div class="collapse <?php echo in_array($activePage, ['browse_notes', 'browse_resources', 'my_notes']) ? 'show' : ''; ?>" id="navigationMenu" data-bs-parent="#sidebarAccordion">
-                <ul class="sub-menu">
-                    <li><a href="<?php echo url('home/dashboard'); ?>" class="nav-link">Browse Notes</a></li>
-                    <li><a href="<?php echo url('resources'); ?>" class="nav-link">Browse Resources</a></li>
-                    <li><a href="<?php echo url('note/my_notes'); ?>" class="nav-link">My Notes</a></li>
-                </ul>
-            </div>
-        </li>
+            </header>
 
-        <!-- Account -->
-
-        <li class="<?php echo ($activePage === 'settings') ? 'active' : ''; ?>">
-            <a href="<?php echo url('settings'); ?>" class="nav-link">
-                <div class="nav-link-content">
-                    <i class="fa fa-cog main-icon"></i><span>Settings</span>
-                </div>
-            </a>
-        </li>
-        <li class="logout">
-            <a href="<?php echo url('logout'); ?>" class="nav-link">
-                <div class="nav-link-content">
-                    <i class="fa fa-sign-out-alt main-icon"></i><span>Logout</span>
-                </div>
-            </a>
-        </li>
-    </ul>
-</aside>
-
-    <main class="main-content">
-        <header class="topbar d-flex justify-content-between align-items-center mb-4">
-            <div class="d-flex align-items-center gap-3">
-                <button class="menu-toggle btn text-white p-0 border-0"><i class="fa fa-bars"></i></button>
-                <h5 class="mb-0 fw-semibold">Awards & Recognition Center</h5>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <span class="badge bg-light text-dark text-uppercase"><?php echo $role; ?></span>
-                <a href="<?php echo url('logout'); ?>" class="btn btn-danger btn-sm">
-                    <i class="fa fa-sign-out-alt"></i><span class="d-none d-md-inline ms-1">Logout</span>
-                </a>
-            </div>
-        </header>
-
-        <div class="container-fluid py-2">
+            <div class="container-fluid py-2">
             
-            <!-- TOP 3 STUDENTS -->
-            <h4 class="category-title"><i class="fa fa-star text-warning"></i> Top 3 Students (Academic Excellence)</h4>
-            <div class="row g-4 mb-5">
-                <?php foreach($topStudents as $index => $user): ?>
-                <div class="col-md-4">
-                    <div class="card award-card h-100">
-                        <div class="award-header">
-                            <span class="rank-badge"><?php echo $index + 1; ?></span>
-                            <i class="fa <?php echo $index === 0 ? 'fa-crown' : ($index === 1 ? 'fa-medal' : 'fa-award'); ?>"></i>
-                            <h6 class="mb-0 mt-1 font-monospace small">HONORARY AWARD</h6>
-                        </div>
-                        <div class="user-avatar shadow-sm">
-                            <?php echo strtoupper(substr($user['name'], 0, 1)); ?>
-                        </div>
-                        <div class="card-body text-center pt-0">
-                            <h5 class="fw-bold mb-1" style="font-family: Georgia, serif;"><?php echo htmlspecialchars($user['name']); ?></h5>
-                            <p class="text-muted small mb-3"><?php echo number_format($user['points']); ?> XP Points Earned</p>
-                            
-                            <div class="d-grid gap-2">
-                                <button onclick="sendAward(<?php echo $user['id']; ?>, 'student', <?php echo $index+1; ?>, '<?php echo htmlspecialchars($user['name']); ?>')" class="btn btn-dark btn-action">
-                                    <i class="fa fa-envelope-open-text"></i> Generate & Send
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+            <!-- MONTH SELECTOR -->
+            <div class="month-navigation mb-4">
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <?php foreach($monthsData as $i => $m): ?>
+                        <button class="btn month-btn <?php echo $i === 0 ? 'active' : ''; ?>" 
+                                id="btn-month-<?php echo $i; ?>" 
+                                onclick="switchMonth(<?php echo $i; ?>)">
+                            <i class="fa fa-calendar-check <?php echo $i === 0 ? 'text-warning' : ''; ?>"></i>
+                            <?php echo $m['label']; ?>
+                        </button>
+                    <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
             </div>
 
-            <!-- TOP 3 CONTRIBUTORS -->
-            <h4 class="category-title"><i class="fa fa-upload text-warning"></i> Top 3 Contributors (Knowledge Sharing)</h4>
-            <div class="row g-4">
-                <?php foreach($topContributors as $index => $user): ?>
-                <div class="col-md-4">
-                    <div class="card award-card h-100">
-                        <div class="award-header">
-                            <span class="rank-badge"><?php echo $index + 1; ?></span>
-                            <i class="fa fa-feather-pointed"></i>
-                            <h6 class="mb-0 mt-1 font-monospace small">EXCEPTIONAL SERVICE</h6>
+            <!-- MONTHLY PANELS -->
+            <?php foreach($monthsData as $i => $m): ?>
+            <div id="month-panel-<?php echo $i; ?>" class="month-panel <?php echo $i === 0 ? 'active' : ''; ?>">
+                
+                <div class="hall-of-fame-header shadow-sm">
+                    <div class="row align-items-center">
+                        <div class="col-md-7">
+                            <span class="month-badge mb-3 d-inline-block">Exclusive Honors</span>
+                            <h1 class="display-5 fw-bold mb-2"><?php echo $m['label']; ?></h1>
+                            <p class="lead mb-0 opacity-75">Recognizing top performance and community contributions.</p>
                         </div>
-                        <div class="user-avatar shadow-sm">
-                            <?php echo strtoupper(substr($user['name'], 0, 1)); ?>
-                        </div>
-                        <div class="card-body text-center pt-0">
-                            <h5 class="fw-bold mb-1" style="font-family: Georgia, serif;"><?php echo htmlspecialchars($user['name']); ?></h5>
-                            <p class="text-muted small mb-3"><?php echo $user['note_count']; ?> Approved Notebooks</p>
-                            
-                            <div class="d-grid gap-2">
-                                <button onclick="sendAward(<?php echo $user['id']; ?>, 'contributor', <?php echo $index+1; ?>, '<?php echo htmlspecialchars($user['name']); ?>')" class="btn btn-dark btn-action">
-                                    <i class="fa fa-envelope-open-text"></i> Generate & Send
-                                </button>
+                        <div class="col-md-5 text-md-end mt-4 mt-md-0">
+                            <div class="d-inline-flex align-items-center gap-2 p-3 bg-white bg-opacity-10 rounded-4">
+                                <i class="fa fa-trophy fa-3x text-warning"></i>
+                                <div class="text-start">
+                                    <div class="fw-bold">Monthly Winner</div>
+                                    <div class="small opacity-75">StudyHub Hall of Fame</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <?php endforeach; ?>
+
+                <div class="row g-4">
+                    <!-- Top 3 Students -->
+                    <div class="col-12 mb-4">
+                        <h4 class="category-title mb-3"><i class="fa fa-star text-warning"></i> Top 3 Students</h4>
+                        <div class="row g-4">
+                            <?php if(!empty($m['students'])): ?>
+                                <?php foreach($m['students'] as $index => $user): ?>
+                                <div class="col-md-4">
+                                    <div class="card award-card p-3 h-100">
+                                        <div class="card-body text-center pt-4">
+                                            <div class="rank-badge"><?php echo $index + 1; ?></div>
+                                            <div class="user-avatar text-uppercase">
+                                                <?php echo strtoupper(substr($user['name'], 0, 1)); ?>
+                                            </div>
+                                            <h5 class="fw-bold mb-2"><?php echo htmlspecialchars($user['name']); ?></h5>
+                                            <div class="mb-4">
+                                                <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill">
+                                                    <i class="fa fa-bolt me-1"></i> <?php echo number_format($user['points']); ?> XP
+                                                </span>
+                                            </div>
+                                            <button onclick="sendAward(<?php echo $user['id']; ?>, 'student', <?php echo $index + 1; ?>, '<?php echo htmlspecialchars($user['name']); ?>')" class="btn btn-dark w-100 rounded-pill py-2 fw-semibold">
+                                                <i class="fa fa-medal me-2"></i> Issue Award
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <div class="col-12">
+                                    <div class="empty-state">
+                                        <i class="fa fa-user-slash fa-3x mb-3 opacity-25"></i>
+                                        <p class="mb-0">No records found for this period.</p>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <!-- Top 3 Contributors -->
+                    <div class="col-12 mb-4">
+                        <h4 class="category-title mb-3"><i class="fa fa-award text-primary"></i> Top 3 Contributors</h4>
+                        <div class="row g-4">
+                            <?php if(!empty($m['contributors'])): ?>
+                                <?php foreach($m['contributors'] as $index => $user): ?>
+                                <div class="col-md-4">
+                                    <div class="card award-card p-3 h-100">
+                                        <div class="card-body text-center pt-4">
+                                            <div class="rank-badge" style="background: #3b82f6;"><?php echo $index + 1; ?></div>
+                                            <div class="user-avatar text-uppercase" style="border-color: #3b82f6;">
+                                                <?php echo strtoupper(substr($user['name'], 0, 1)); ?>
+                                            </div>
+                                            <h5 class="fw-bold mb-2"><?php echo htmlspecialchars($user['name']); ?></h5>
+                                            <div class="mb-4">
+                                                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
+                                                    <i class="fa fa-file-arrow-up me-1"></i> <?php echo $user['note_count']; ?> Uploads
+                                                </span>
+                                            </div>
+                                            <button onclick="sendAward(<?php echo $user['id']; ?>, 'contributor', <?php echo $index + 1; ?>, '<?php echo htmlspecialchars($user['name']); ?>')" class="btn btn-dark w-100 rounded-pill py-2 fw-semibold">
+                                                <i class="fa fa-feather me-2"></i> Issue Recognition
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <div class="col-12">
+                                    <div class="empty-state">
+                                        <i class="fa fa-folder-open fa-3x mb-3 opacity-25"></i>
+                                        <p class="mb-0">No contributions recorded this month.</p>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <?php endforeach; ?>
         </div>
     </main>
 
     <!-- BULLETPROOF SVG RENDERER (Off-stage High-Priority Container) -->
-    <div id="certGenerator-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -99999; opacity: 0; background: #fff; display: flex; align-items: center; justify-content: center; pointer-events: none; visibility: hidden;">
-        <div id="certTemplate" style="width: 842pt; height: 595pt; min-width: 842pt; min-height: 595pt; background: #fff; position: relative; overflow: hidden; line-height: normal; display: block; font-family: 'Times New Roman', Georgia, serif;">
+    <div id="certGenerator-overlay">
+        <div id="certTemplate" style="background: #fff; position: relative; overflow: hidden; line-height: normal; font-family: 'Times New Roman', Georgia, serif;">
             <!-- Parchment Texture -->
             <div style="position: absolute; top:0; left:0; right:0; bottom:0; background: #fff9f0;"></div>
 
@@ -465,16 +574,40 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="<?php echo asset('js/admin_dashboard.js?v=4.0.1'); ?>"></script>
     <script>
+        function switchMonth(index) {
+            // Update Buttons
+            document.querySelectorAll('.month-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-month-' + index).classList.add('active');
 
+            // Update Panels
+            const panels = document.querySelectorAll('.month-panel');
+            const targetPanel = document.getElementById('month-panel-' + index);
+            
+            panels.forEach(panel => {
+                if (panel !== targetPanel) {
+                    panel.classList.remove('active');
+                    panel.style.display = 'none';
+                }
+            });
+
+            targetPanel.style.display = 'block';
+            // Use requestAnimationFrame for smoother transition trigger
+            requestAnimationFrame(() => {
+                targetPanel.classList.add('active');
+            });
+        }
 
         async function sendAward(userId, type, rank, userName) {
             const confirmResult = await Swal.fire({
-                title: 'Bulletproof Certification?',
-                text: `Generating SVG-certified high-res credentials for ${userName}.`,
-                icon: 'question',
+                title: 'Confirm Recognition',
+                text: `You are about to generate a certified award for ${userName}. Proceed?`,
+                icon: 'info',
                 showCancelButton: true,
                 confirmButtonText: 'Issue Certificate',
-                confirmButtonColor: '#1e293b'
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#1e293b',
+                heightAuto: false,
+                customClass: { popup: 'premium-modal' }
             });
 
             if (!confirmResult.isConfirmed) return;
@@ -491,26 +624,28 @@
             document.getElementById('pdfTitle').innerText = roleTitle;
             document.getElementById('pdfDesc').innerText = description;
             
-            const overlay = document.getElementById('certGenerator-overlay');
             const element = document.getElementById('certTemplate');
 
+            // Sleek Render Toast
             Swal.fire({
-                title: 'Professional Render Engine',
-                html: 'Locking SVG coordinates and forcing GPU paint... <br><small class="text-muted">Stay active for 100% reliable capture.</small>',
+                title: 'Optimizing Render Engine',
+                html: `
+                    <div class="py-3 text-center">
+                        <div class="spinner-border text-primary mb-3" role="status"></div>
+                        <p class="mb-1 fw-bold">Generating high-definition credentials...</p>
+                        <small class="text-muted">Please stay active for 100% reliable capture.</small>
+                    </div>
+                `,
+                showConfirmButton: false,
                 allowOutsideClick: false,
-                didOpen: () => { Swal.showLoading(); }
+                heightAuto: false,
+                customClass: { popup: 'premium-modal' }
             });
 
             try {
-                // 1. FLASH VISIBLE: Move to front layer (hidden behind Swal)
-                overlay.style.zIndex = '999999';
-                overlay.style.visibility = 'visible';
-                overlay.style.opacity = '1';
+                // Wait for styles and icons to settle
+                await new Promise(r => setTimeout(r, 800));
 
-                // 2. LEAD TIME: Ensure graphics are fully drawn
-                await new Promise(r => setTimeout(r, 1000));
-
-                // 3. RAW CAPTURE: Using html2canvas directly for maximum control
                 const canvas = await html2canvas(element, {
                     scale: 2,
                     useCORS: true,
@@ -523,7 +658,6 @@
                     windowHeight: 595
                 });
 
-                // 4. IMAGE-BRIDGE WRAP: Convert to JPEG and embed into PDF
                 const imgData = canvas.toDataURL('image/jpeg', 1.0);
                 const pdf = new jspdf.jsPDF({
                     orientation: 'landscape',
@@ -534,13 +668,8 @@
                 pdf.addImage(imgData, 'JPEG', 0, 0, 842, 595);
                 const pdfBlob = pdf.output('blob');
 
-                // Cleanup Overlay
-                overlay.style.zIndex = '-99999';
-                overlay.style.visibility = 'hidden';
-                overlay.style.opacity = '0';
-
                 if (pdfBlob.size < 8000) {
-                    throw new Error("Render Check failed: Resulting document is too small (blank).");
+                    throw new Error("Render corruption detected. Please try again.");
                 }
 
                 const formData = new FormData();
@@ -554,25 +683,34 @@
                     body: formData
                 });
 
-                const responseText = await response.text();
-                let result;
-                try {
-                   result = JSON.parse(responseText);
-                } catch (e) {
-                   console.error('Raw Server Response:', responseText);
-                   throw new Error('Server protocol error. Image-bridge check failed.');
-                }
+                const result = await response.json();
                 
                 if (result.success) {
-                    Swal.fire('Award Dispatched!', 'The SVG-certified certificate has been emailed successfully.', 'success');
+                    Swal.fire({
+                        title: 'Award Dispatched!',
+                        text: result.message || 'The certificate has been emailed successfully.',
+                        icon: 'success',
+                        heightAuto: false,
+                        customClass: { popup: 'premium-modal' }
+                    });
                 } else {
-                    Swal.fire('Email Error', result.message || 'Delivery failed.', 'error');
+                    Swal.fire({
+                        title: 'Delivery Failed',
+                        text: result.message || 'The email could not be sent. Please check logs.',
+                        icon: 'error',
+                        heightAuto: false,
+                        customClass: { popup: 'premium-modal' }
+                    });
                 }
             } catch (err) {
-                console.error('Bulletproof Render Error:', err);
-                overlay.style.zIndex = '-99999';
-                overlay.style.visibility = 'hidden';
-                Swal.fire('Process Failed', `<b>Detailed Error:</b> ${err.message}`, 'error');
+                console.error('Render Engine Error:', err);
+                Swal.fire({
+                    title: 'System Failure',
+                    html: `An error occurred during rendering: <br><b>${err.message}</b>`,
+                    icon: 'error',
+                    heightAuto: false,
+                    customClass: { popup: 'premium-modal' }
+                });
             }
         }
     </script>

@@ -1,0 +1,16 @@
+Write a Python Code for N puzzle/Sliding Puzzle Solvability
+ 
+When is an N Puzzle not solvable:
+1. For an odd value of N
+-- and then the inversion count is found to be odd.
+2. For an even value of N
+-- and then when the blank position is in odd row (starting from 1) and inversion count is also odd. or,
+-- when the blank position is in even (starting from 1) and inversion count is also even.
+ 
+Now how do we calculate the inversion count:
+1. Linearize the puzzle and remove the blank tile from it. (For an N puzzle there are total N^2 tiles)
+2. For each tile, count how many tiles with smaller values appear after it in this linearized sequence. The sum of these counts for all tiles is the total inversion count.
+ 
+Note: marks will be deducted if plagiarism found.
+
+Submission Link: https://forms.gle/N8v1hyNgUsCv5JoD6
