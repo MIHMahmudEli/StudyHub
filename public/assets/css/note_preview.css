@@ -44,62 +44,103 @@ body {
 .note-card {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
   flex: 1;
   /* take all available height */
-  overflow: hidden;
+  overflow-y: auto;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  padding: 20px;
+  padding: 0;
+}
+
+/* Scrollbar styling for note-card */
+.note-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.note-card::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.note-card::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 /* Title */
 .note-card h1 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   color: #1e293b;
+  font-weight: 700;
+  line-height: 1.3;
+  padding: 24px 20px 16px 20px;
+  margin: 0;
+  border-bottom: 2px solid #f1f5f9;
 }
 
-/* Info Items */
-.info-item {
+/* Info Items Container */
+.note-card>.info-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
+  gap: 10px;
+  font-size: 0.875rem;
   color: #475569;
+  padding: 12px 20px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #fafbfc;
+  transition: background 0.2s;
+}
+
+.note-card>.info-item:hover {
+  background: #f1f5f9;
+}
+
+.note-card>.info-item:first-of-type {
+  background: #fff;
 }
 
 .info-item i {
   color: #2563eb;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
 }
 
 /* Labels / Badges */
 .badge-info {
   display: inline-block;
-  background: #e0f2fe;
-  color: #0369a1;
-  font-size: 0.8rem;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #1e40af;
+  font-size: 0.75rem;
   font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 8px;
+  padding: 4px 10px;
+  border-radius: 12px;
   margin-right: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 /* Scrollable Description */
 .desc {
-  flex: 1;
-  overflow-y: auto;
-  margin-top: 10px;
-  padding-right: 5px;
+  padding: 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #f1f5f9;
 }
 
-.desc::-webkit-scrollbar {
-  width: 6px;
+.desc h4 {
+  font-size: 0.9rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  font-weight: 600;
 }
 
-.desc::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 3px;
+.desc p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #475569;
+  margin: 0;
 }
 
 /* =======================
@@ -220,36 +261,52 @@ body.reading-mode .preview-image {
 /* =======================
    Rating Section
 ======================= */
+.rating-section {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  padding: 20px;
+}
+
 .rating-section h6 {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: #1e293b;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   font-weight: 600;
+  text-align: center;
 }
 
 .stars-input {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  font-size: 1.5rem;
-  /* Standard Size */
-  margin-bottom: 12px;
+  gap: 12px;
+  font-size: 2rem;
+  /* Larger Size for better visibility */
+  margin-bottom: 20px;
+  padding: 10px 0;
 }
 
 .rating-star {
   color: #cbd5e1;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .rating-star:hover {
-  transform: scale(1.2);
+  transform: scale(1.3) rotate(-5deg);
   color: #fbbf24;
+  filter: drop-shadow(0 4px 8px rgba(251, 191, 36, 0.4));
 }
 
 .rating-star.active {
   color: #f59e0b;
-  transform: scale(1.05);
+  transform: scale(1.1);
+  filter: drop-shadow(0 3px 6px rgba(245, 158, 11, 0.5));
+}
+
+.rating-star.active:hover {
+  transform: scale(1.3) rotate(-5deg);
+  color: #f59e0b;
 }
 
 .rating-btn-container {
@@ -263,26 +320,34 @@ body.reading-mode .preview-image {
   border: none;
   font-weight: 600;
   transition: all 0.3s ease;
-  padding: 10px 24px;
-  border-radius: 20px;
-  font-size: 0.9rem;
+  padding: 12px 32px;
+  border-radius: 24px;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 #submitRating:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
 }
 
 #submitRating:active {
   transform: translateY(0);
 }
 
+#submitRating:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .rating-message {
-  padding: 10px;
+  padding: 12px;
   border-radius: 12px;
   text-align: center;
   font-weight: 500;
   animation: slideDown 0.4s ease-out;
+  margin-top: 12px;
 }
 
 @keyframes slideDown {

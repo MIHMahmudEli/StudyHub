@@ -36,35 +36,24 @@ document.addEventListener('DOMContentLoaded', function () {
                             // If user requested to hide icon when bookmarked:
                             buttonElement.remove();
                         } else {
-                            // buttonElement.style.display = 'none'; // Don't hide, maybe just toggle style? User asked for icon.
-                            // Actually for dashboard non-bookmark view, notes disappear if we don't want to show "remove".
-                            // But in resource list, we want to toggle icon.
-                            // For now, let's just toggle class if available.
-                            buttonElement.innerHTML = type === 'resource' ? '<i class="fa fa-bookmark"></i>' : 'Remove Bookmark';
-                            buttonElement.classList.add('btn-danger');
-                            buttonElement.classList.remove('btn-primary', 'btn-outline-primary');
+                            // Hide the bookmark button completely on main dashboard
+                            buttonElement.style.display = 'none';
                         }
                     } else {
-                        // In dashboard
-                        // buttonElement.textContent = 'Remove Bookmark'; 
-                        // Dashboard keeps trash icon or whatever layout is there
+                        // In dashboard bookmarks view
                         buttonElement.classList.remove('btn-primary');
                         buttonElement.classList.add('btn-danger');
                     }
-                    showNotification('Bookmark added!', 'success');
+                    showToastNotification('Bookmark added successfully!', 'success');
                 } else if (data === 'removed') {
                     if (window.location.href.includes('bookmarks=1')) {
                         // Remove the card from the view
                         buttonElement.closest('.col').remove();
-                        showNotification('Bookmark removed!', 'info');
+                        showToastNotification('Bookmark removed!', 'info');
 
                         // Check if current pane is empty
-                        // We need to know which pane we are in? The 'col' is inside a 'row'.
-                        // Let's check visible cards.
                         const remainingCards = document.querySelectorAll('.tab-pane.active .col');
                         if (remainingCards.length === 0) {
-                            // Ideally show "No bookmarks" message
-                            // But implementation details vary.
                             location.reload(); // Simple fallback to refresh empty state
                         }
                     } else {
@@ -75,38 +64,90 @@ document.addEventListener('DOMContentLoaded', function () {
                         } else {
                             // Standard toggle back
                             buttonElement.classList.remove('btn-danger');
-                            buttonElement.classList.add('btn-primary'); // or outline
+                            buttonElement.classList.add('btn-primary');
                             buttonElement.innerHTML = type === 'resource' ? '<i class="fa fa-bookmark"></i>' : '🔖 Bookmark';
                         }
-                        showNotification('Bookmark removed!', 'info');
+                        showToastNotification('Bookmark removed!', 'info');
                     }
                 } else {
                     console.error('Unknown response:', data);
-                    showNotification('Error: ' + data, 'error');
+                    showToastNotification('Error: ' + data, 'error');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                showNotification('Error updating bookmark', 'error');
+                showToastNotification('Error updating bookmark', 'error');
             });
     }
 
-    function showNotification(message, type) {
-        const existingNotification = document.querySelector('.bookmark-notification');
-        if (existingNotification) existingNotification.remove();
+    function showToastNotification(message, type) {
+        // Remove existing toast if any
+        const existingToast = document.querySelector('.toast-alert');
+        if (existingToast) existingToast.remove();
 
-        const notification = document.createElement('div');
-        notification.className = `bookmark-notification alert alert-${type === 'error' ? 'danger' : type} position-fixed`;
-        notification.style.cssText = `
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            min-width: 250px;
+        // Define colors and icons based on type
+        const config = {
+            success: {
+                icon: 'fa-check-circle',
+                gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                color: '#065f46'
+            },
+            info: {
+                icon: 'fa-info-circle',
+                gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                color: '#1e40af'
+            },
+            error: {
+                icon: 'fa-exclamation-circle',
+                gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                color: '#991b1b'
+            }
+        };
+
+        const typeConfig = config[type] || config.info;
+
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = 'toast-alert';
+        toast.innerHTML = `
+            <div class="toast-alert-content">
+                <div class="toast-alert-icon" style="background: ${typeConfig.gradient}">
+                    <i class="fas ${typeConfig.icon}"></i>
+                </div>
+                <div class="toast-alert-message" style="color: ${typeConfig.color}">
+                    ${message}
+                </div>
+                <button class="toast-alert-close" onclick="this.parentElement.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="toast-alert-progress" style="background: ${typeConfig.gradient}"></div>
         `;
-        notification.textContent = message;
 
-        document.body.appendChild(notification);
-        setTimeout(() => notification.remove(), 3000);
+        document.body.appendChild(toast);
+
+        // Trigger animation
+        setTimeout(() => toast.classList.add('toast-show'), 10);
+
+        // Auto dismiss after 4 seconds
+        const dismissTimer = setTimeout(() => {
+            toast.classList.remove('toast-show');
+            toast.classList.add('toast-hide');
+            setTimeout(() => toast.remove(), 400);
+        }, 4000);
+
+        // Clear timer if manually closed
+        toast.querySelector('.toast-alert-close').addEventListener('click', () => {
+            clearTimeout(dismissTimer);
+            toast.classList.remove('toast-show');
+            toast.classList.add('toast-hide');
+            setTimeout(() => toast.remove(), 400);
+        });
+    }
+
+    function showNotification(message, type) {
+        // Deprecated - kept for backwards compatibility
+        showToastNotification(message, type);
     }
 
     // ====================== Card Hover Effect ======================

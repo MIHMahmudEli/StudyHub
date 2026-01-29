@@ -28,17 +28,27 @@ class UserController extends Controller {
         }
 
         $newName = trim($_POST['name']);
+        
         if (empty($newName)) {
             $_SESSION['flash_error'] = "Name cannot be empty.";
-        } else {
-            $userModel = new User();
-            if ($userModel->updateName($_SESSION['user_id'], $newName)) {
-                $_SESSION['user_name'] = $newName; // Update session
-                $_SESSION['flash_message'] = "Profile updated successfully!";
-            } else {
-                $_SESSION['flash_error'] = "Failed to update profile.";
-            }
+            $this->redirect('profile');
         }
+
+        $userModel = new User();
+        $user = $userModel->findById($_SESSION['user_id']);
+
+        if ($user['name'] === $newName) {
+            $_SESSION['flash_error'] = "No changes made. Name is identical.";
+            $this->redirect('profile');
+        }
+
+        if ($userModel->updateName($_SESSION['user_id'], $newName)) {
+            $_SESSION['user_name'] = $newName; // Update session
+            $_SESSION['flash_message'] = "Profile updated successfully!";
+        } else {
+            $_SESSION['flash_error'] = "Failed to update profile.";
+        }
+        
         $this->redirect('profile');
     }
 
@@ -56,6 +66,11 @@ class UserController extends Controller {
 
         if (!password_verify($currentPass, $user['password'])) {
             $_SESSION['flash_error'] = "Current password is incorrect.";
+            $this->redirect('profile');
+        }
+
+        if (password_verify($newPass, $user['password'])) {
+            $_SESSION['flash_error'] = "New password cannot be the same as the current password.";
             $this->redirect('profile');
         }
 
@@ -107,24 +122,33 @@ class UserController extends Controller {
          if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('settings');
         }
-        // Logic similar to updateProfile but redirects to settings
+        
         $newName = trim($_POST['name']);
+        
         if (empty($newName)) {
             $_SESSION['flash_error'] = "Name cannot be empty.";
-        } else {
-            $userModel = new User();
-            if ($userModel->updateName($_SESSION['user_id'], $newName)) {
-                $_SESSION['user_name'] = $newName; 
-                $_SESSION['flash_message'] = "Name updated successfully!";
-            } else {
-                $_SESSION['flash_error'] = "Failed to update name.";
-            }
+            $this->redirect('settings');
         }
+
+        $userModel = new User();
+        $user = $userModel->findById($_SESSION['user_id']);
+
+        if ($user['name'] === $newName) {
+            $_SESSION['flash_error'] = "No changes made. Name is already set to '$newName'.";
+            $this->redirect('settings');
+        }
+
+        if ($userModel->updateName($_SESSION['user_id'], $newName)) {
+            $_SESSION['user_name'] = $newName; 
+            $_SESSION['flash_message'] = "Name updated successfully!";
+        } else {
+            $_SESSION['flash_error'] = "Failed to update name.";
+        }
+        
         $this->redirect('settings');
     }
     
     public function updateSettingsPassword() {
-        // Logic similar to updatePassword but redirects to settings
         if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('settings');
         }
@@ -141,16 +165,24 @@ class UserController extends Controller {
             $this->redirect('settings');
         }
 
+        if (password_verify($newPass, $user['password'])) {
+            $_SESSION['flash_error'] = "New password cannot be the same as the current password.";
+            $this->redirect('settings');
+        }
+
         if ($newPass !== $confirmPass) {
             $_SESSION['flash_error'] = "New passwords do not match.";
             $this->redirect('settings');
         }
         
-        // Validation...
-         if (strlen($newPass) < 8 || !preg_match("/[A-Z]/", $newPass)) { // Simplified check for brevity here, reused same logic hopefully
-             $_SESSION['flash_error'] = "Password weak.";
+        // Validation with regex
+        if (strlen($newPass) < 8 || 
+            !preg_match("/[A-Z]/", $newPass) || 
+            !preg_match("/[a-z]/", $newPass) || 
+            !preg_match("/[0-9]/", $newPass)) {
+             $_SESSION['flash_error'] = "Password must be 8+ chars with uppercase, lowercase & number.";
              $this->redirect('settings');
-         }
+        }
 
         $hashed = password_hash($newPass, PASSWORD_BCRYPT);
         if ($userModel->updatePassword($_SESSION['user_id'], $hashed)) {

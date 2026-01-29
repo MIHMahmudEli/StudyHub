@@ -205,17 +205,28 @@
     <!-- Settings Sections -->
     <section class="container-fluid py-4 px-lg-5">
         <div class="row g-4">
-             <?php if (!empty($message)): ?>
-                <div class="col-12">
-                     <div class="alert alert-success shadow-sm border-0 rounded-3"><?php echo $message; ?></div>
+            <!-- Toast Notification System -->
+            <?php if (!empty($message) || !empty($error)): ?>
+            <div class="toast-notification" id="settingsToast">
+                <div class="toast-content">
+                    <div class="toast-icon" style="background: <?php echo !empty($message) ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'; ?>">
+                        <i class="fas <?php echo !empty($message) ? 'fa-check-circle' : 'fa-exclamation-circle'; ?>"></i>
+                    </div>
+                    <div class="toast-body">
+                        <h6 class="toast-title mb-1" style="color: <?php echo !empty($message) ? '#065f46' : '#991b1b'; ?>">
+                            <?php echo !empty($message) ? 'Success!' : 'Error!'; ?>
+                        </h6>
+                        <p class="toast-message mb-0">
+                            <?php echo !empty($message) ? htmlspecialchars($message) : htmlspecialchars($error); ?>
+                        </p>
+                    </div>
+                    <button type="button" class="toast-close" onclick="closeSettingsToast()">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-                <?php endif; ?>
-                
-                <?php if (!empty($error)): ?>
-                <div class="col-12">
-                     <div class="alert alert-danger shadow-sm border-0 rounded-3"><?php echo $error; ?></div>
-                </div>
-                <?php endif; ?>
+                <div class="toast-progress" style="background: <?php echo !empty($message) ? 'linear-gradient(90deg, #10b981 0%, #059669 100%)' : 'linear-gradient(90deg, #ef4444 0%, #dc2626 100%)'; ?>"></div>
+            </div>
+            <?php endif; ?>
                 
             <!-- Update Name -->
             <div class="col-lg-6 col-md-12">
@@ -317,5 +328,160 @@
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="<?php echo asset('js/admin_dashboard.js?v=4.0.1'); ?>"></script>
+
+<script>
+    function closeSettingsToast() {
+        const toast = document.getElementById('settingsToast');
+        if (toast) {
+            toast.classList.add('toast-hide');
+            setTimeout(() => {
+                toast.remove();
+            }, 400);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const settingsToast = document.getElementById('settingsToast');
+        if (settingsToast) {
+            // Show with animation
+            setTimeout(() => {
+                settingsToast.classList.add('toast-show');
+            }, 100);
+
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => {
+                closeSettingsToast();
+            }, 5000);
+            
+            // Start progress animation
+            const progressBar = settingsToast.querySelector('.toast-progress');
+            if(progressBar) {
+                progressBar.style.animation = 'progress 5s linear forwards';
+            }
+        }
+    });
+</script>
+
+<style>
+    /* Modern Toast Notification Styles */
+    .toast-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        min-width: 350px;
+        max-width: 400px;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 
+                    0 0 0 1px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        transform: translateX(450px);
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    .toast-notification.toast-show {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    
+    .toast-notification.toast-hide {
+        transform: translateX(450px);
+        opacity: 0;
+    }
+    
+    .toast-content {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 20px;
+        position: relative;
+    }
+    
+    .toast-icon {
+        flex-shrink: 0;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    .toast-body {
+        flex: 1;
+    }
+    
+    .toast-title {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0;
+    }
+    
+    .toast-message {
+        font-size: 14px;
+        color: #6b7280;
+        margin: 0;
+        line-height: 1.4;
+    }
+    
+    .toast-close {
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: rgba(107, 114, 128, 0.1);
+        border-radius: 8px;
+        color: #6b7280;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+    }
+    
+    .toast-close:hover {
+        background: rgba(107, 114, 128, 0.2);
+        color: #374151;
+        transform: rotate(90deg);
+    }
+    
+    .toast-progress {
+        height: 4px;
+        transform-origin: left;
+        border-radius: 0 0 16px 16px;
+    }
+    
+    @keyframes progress {
+        from { transform: scaleX(1); }
+        to { transform: scaleX(0); }
+    }
+    
+    @keyframes bounceIn {
+        0% { transform: scale(0); opacity: 0; }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @media (max-width: 768px) {
+        .toast-notification {
+            top: 10px; right: 10px; left: 10px;
+            min-width: auto; max-width: none;
+            transform: translateY(-150px);
+        }
+        .toast-notification.toast-show {
+            transform: translateY(0);
+        }
+        .toast-notification.toast-hide {
+            transform: translateY(-150px);
+        }
+    }
+</style>
 </body>
 </html>

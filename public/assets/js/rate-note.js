@@ -15,18 +15,48 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
+    // Initialize with existing rating (count active stars)
     let selectedRating = 0;
+    stars.forEach(star => {
+        if (star.classList.contains('active')) {
+            const value = parseInt(star.getAttribute('data-value'));
+            if (value > selectedRating) {
+                selectedRating = value;
+            }
+        }
+    });
 
-    // Select stars
+    // Hover effect for stars
+    stars.forEach(star => {
+        star.addEventListener('mouseenter', () => {
+            const hoverValue = parseInt(star.getAttribute('data-value'));
+            updateStarsDisplay(hoverValue);
+        });
+    });
+
+    // Reset to selected rating when mouse leaves
+    const starsContainer = document.getElementById('starsInput');
+    if (starsContainer) {
+        starsContainer.addEventListener('mouseleave', () => {
+            updateStarsDisplay(selectedRating);
+        });
+    }
+
+    // Select stars on click
     stars.forEach(star => {
         star.addEventListener('click', () => {
             selectedRating = parseInt(star.getAttribute('data-value'));
-            stars.forEach(s => {
-                const val = parseInt(s.getAttribute('data-value'));
-                s.classList.toggle('active', val <= selectedRating);
-            });
+            updateStarsDisplay(selectedRating);
         });
     });
+
+    // Helper function to update stars display
+    function updateStarsDisplay(rating) {
+        stars.forEach(s => {
+            const val = parseInt(s.getAttribute('data-value'));
+            s.classList.toggle('active', val <= rating);
+        });
+    }
 
     // Submit rating
     submitBtn.addEventListener('click', () => {

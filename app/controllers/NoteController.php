@@ -240,9 +240,24 @@ class NoteController extends Controller {
         $courseCode = trim($_POST['course_code']);
         
         $noteModel = new Note();
+        $existingNote = $noteModel->find($noteId); // Fetch existing data
+        
+        if ($existingNote) {
+            // Check if any field has changed
+            if ($existingNote['title'] === $title && 
+                $existingNote['description'] === $description && 
+                $existingNote['subject'] === $subject && 
+                $existingNote['course_code'] === $courseCode) {
+                
+                // No changes detected -> redirect with unchanged flag
+                $this->redirect('note/my_notes?unchanged=1');
+                return;
+            }
+        }
+        
         $noteModel->update($noteId, $_SESSION['user_id'], $title, $description, $subject, $courseCode);
         
-        $this->redirect('note/my_notes');
+        $this->redirect('note/my_notes?updated=1');
     }
 
     public function rate() {
