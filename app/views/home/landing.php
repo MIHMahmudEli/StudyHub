@@ -24,6 +24,9 @@
 </head>
 
 <body>
+    <!-- Background Animations -->
+    <div class="bg-animation-container" id="circle-container"></div>
+
     <!-- Abstract Visuals -->
     <div class="bg-blobs">
         <div class="blob blob-1"></div>

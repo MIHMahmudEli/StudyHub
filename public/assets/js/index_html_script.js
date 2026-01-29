@@ -1,3 +1,55 @@
+// Floating Glass Circles Animation
+function initCircleAnimation() {
+  const container = document.getElementById('circle-container');
+  if (!container) return;
+
+  const circleCount = 10;
+  const circles = [];
+
+  for (let i = 0; i < circleCount; i++) {
+    const circle = document.createElement('div');
+    circle.className = 'glass-circle';
+
+    const size = Math.random() * 150 + 50; // 50px to 200px
+    const x = Math.random() * window.innerWidth;
+    const y = Math.random() * window.innerHeight;
+
+    // Random velocities (Slowed down for graceful movement)
+    const vx = (Math.random() - 0.5) * 0.3;
+    const vy = (Math.random() - 0.5) * 0.3;
+
+    circle.style.width = `${size}px`;
+    circle.style.height = `${size}px`;
+    circle.style.left = `0px`;
+    circle.style.top = `0px`;
+    circle.style.transform = `translate(${x}px, ${y}px)`;
+
+    container.appendChild(circle);
+    circles.push({ el: circle, x, y, vx, vy, size });
+  }
+
+  function animate() {
+    circles.forEach(c => {
+      c.x += c.vx;
+      c.y += c.vy;
+
+      // Wrap around edges
+      if (c.x < -c.size) c.x = window.innerWidth;
+      if (c.x > window.innerWidth) c.x = -c.size;
+      if (c.y < -c.size) c.y = window.innerHeight;
+      if (c.y > window.innerHeight) c.y = -c.size;
+
+      c.el.style.transform = `translate(${c.x}px, ${c.y}px)`;
+    });
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', initCircleAnimation);
+
 // Navbar scroll behavior
 window.addEventListener('scroll', () => {
   const navbar = document.querySelector('.custom-navbar');
