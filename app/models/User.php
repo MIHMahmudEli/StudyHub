@@ -101,6 +101,9 @@ class User {
         if ($period === 'today') {
             $today = date('Y-m-d');
             $query .= " WHERE DATE(e.at) = '$today'";
+        } elseif ($period === 'yesterday') {
+            $yesterday = date('Y-m-d', strtotime('-1 day'));
+            $query .= " WHERE DATE(e.at) = '$yesterday'";
         }
         
         $query .= " GROUP BY e.user_id 
@@ -109,6 +112,21 @@ class User {
                    
         $result = $this->db->query($query);
         return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getTopActiveForDate($date, $limit = 20) {
+        $query = "SELECT u.name, COUNT(e.id) as activity, MAX(e.at) as last_active 
+                  FROM events e
+                  LEFT JOIN users u ON e.user_id = u.id 
+                  WHERE DATE(e.at) = ?
+                  GROUP BY e.user_id 
+                  ORDER BY activity DESC 
+                  LIMIT ?";
+                  
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("si", $date, $limit);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
     public function findById($id) {

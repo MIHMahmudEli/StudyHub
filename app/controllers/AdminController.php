@@ -157,10 +157,21 @@ class AdminController extends Controller {
         $userModel = new User();
         $allTimeActive = $userModel->getTopActive(20, 'all');
         $todayActive = $userModel->getTopActive(20, 'today');
+        $yesterdayActive = $userModel->getTopActive(20, 'yesterday');
+        
+        $customDate = $_GET['date'] ?? null;
+        $customActive = null;
+        if ($customDate) {
+            // We use a custom query for specific date since getTopActive is period-based
+            $customActive = $userModel->getTopActiveForDate($customDate, 20);
+        }
 
         $data = [
             'allTimeActive' => $allTimeActive,
             'todayActive' => $todayActive,
+            'yesterdayActive' => $yesterdayActive,
+            'customActive' => $customActive,
+            'customDate' => $customDate,
             'role' => $_SESSION['role']
         ];
 

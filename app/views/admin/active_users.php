@@ -51,6 +51,10 @@
     .rank-1 { background-color: #fee2e2; color: #ef4444; }
     .rank-2 { background-color: #ffedd5; color: #f97316; }
     .rank-3 { background-color: #fef9c3; color: #eab308; }
+    
+    .date-picker-btn { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; }
+    .btn-white { background: #fff; color: #64748b; }
+    .btn-white:hover { background: #f8fafc; color: #0f172a; }
 </style>
 </head>
 <body>
@@ -198,22 +202,51 @@
     <!-- Content -->
     <section class="container-fluid py-2 px-3 px-lg-5">
         
-        <!-- Header -->
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-2 gap-3">
-            <!-- <div class="d-none d-md-block">
-                <h4 class="fw-bold text-dark mb-1">Most Active Users</h4>
-                <p class="text-muted small mb-0">Top users by activity.</p>
-            </div> -->
-            
-             <!-- Tabs -->
-            <ul class="nav nav-pills w-100 w-md-auto d-flex gap-2 justify-content-between bg-white p-1 rounded-pill shadow-sm border" id="activeUserTabs" role="tablist">
-                <li class="nav-item flex-fill text-center" role="presentation">
-                    <button class="nav-link w-100 active rounded-pill fw-medium py-2 small-mobile" id="data-today-tab" data-bs-toggle="pill" data-bs-target="#data-today" type="button" role="tab">Today</button>
-                </li>
-                <li class="nav-item flex-fill text-center" role="presentation">
-                    <button class="nav-link w-100 rounded-pill fw-medium py-2 small-mobile" id="data-all-tab" data-bs-toggle="pill" data-bs-target="#data-all" type="button" role="tab">All Time</button>
-                </li>
-            </ul>
+        <!-- Header & Navigation -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+            <div class="d-flex align-items-center gap-3 w-100 w-md-auto">
+                <!-- Dropdown for Mobile -->
+                <div class="dropdown d-md-none flex-grow-1">
+                    <button class="btn btn-white border w-100 rounded-pill dropdown-toggle fw-semibold" type="button" id="activeUsersDropdown" data-bs-toggle="dropdown">
+                        <i class="fa fa-filter me-2 text-primary"></i> 
+                        <?php 
+                            if ($customDate) echo date('M d, Y', strtotime($customDate));
+                            else echo "Filter View";
+                        ?>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark w-100 rounded-4 shadow-lg border-0">
+                        <li><a class="dropdown-item py-2 px-4" href="#" onclick="activateUserTab('data-today-tab')"><i class="fa fa-clock me-3 text-info"></i>Today</a></li>
+                        <li><a class="dropdown-item py-2 px-4" href="#" onclick="activateUserTab('data-yesterday-tab')"><i class="fa fa-calendar-day me-3 text-warning"></i>Yesterday</a></li>
+                        <li><a class="dropdown-item py-2 px-4" href="#" onclick="activateUserTab('data-all-tab')"><i class="fa fa-history me-3 text-primary"></i>All Time</a></li>
+                    </ul>
+                </div>
+
+                <!-- Tabs for Desktop -->
+                <ul class="nav nav-pills d-none d-md-flex gap-2 bg-white p-1 rounded-pill shadow-sm border" id="activeUserTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active rounded-pill fw-medium px-4 py-2" id="data-today-tab" data-bs-toggle="pill" data-bs-target="#data-today" type="button" role="tab">Today</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-pill fw-medium px-4 py-2" id="data-yesterday-tab" data-bs-toggle="pill" data-bs-target="#data-yesterday" type="button" role="tab">Yesterday</button>
+                    </li>
+                    <?php if ($customDate): ?>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-pill fw-medium px-4 py-2" id="data-custom-tab" data-bs-toggle="pill" data-bs-target="#data-custom" type="button" role="tab"><?php echo date('M d', strtotime($customDate)); ?></button>
+                    </li>
+                    <?php endif; ?>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-pill fw-medium px-4 py-2" id="data-all-tab" data-bs-toggle="pill" data-bs-target="#data-all" type="button" role="tab">All Time</button>
+                    </li>
+                </ul>
+
+                <!-- Date Picker Icon -->
+                <div class="position-relative">
+                    <button class="btn btn-white border rounded-circle shadow-sm date-picker-btn" onclick="document.getElementById('customDatePicker').showPicker()">
+                        <i class="fa fa-calendar-alt text-primary"></i>
+                    </button>
+                    <input type="date" id="customDatePicker" class="position-absolute opacity-0" style="left:0; top:0; width:100%; height:100%; cursor:pointer;" onchange="filterByDate(this.value)" max="<?php echo date('Y-m-d'); ?>">
+                </div>
+            </div>
         </div>
 
         <div class="tab-content" id="activeUserTabsContent">
@@ -276,7 +309,123 @@
                 </div>
             </div>
 
-            <!-- All Time Tab -->
+            <!-- Yesterday Tab -->
+            <div class="tab-pane fade" id="data-yesterday" role="tabpanel">
+                <div class="user-card-table">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th>User Name</th>
+                                    <th>Activity</th>
+                                    <th class="d-none d-md-table-cell">Last Active</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (empty($yesterdayActive)): ?>
+                                    <tr>
+                                        <td colspan="4" class="text-center py-5 text-muted">
+                                            <i class="fa fa-calendar-day fa-2x mb-3"></i>
+                                            <p>No activity recorded yesterday.</p>
+                                        </td>
+                                    </tr>
+                                <?php else: ?>
+                                    <?php foreach ($yesterdayActive as $index => $u): ?>
+                                    <tr>
+                                        <td>
+                                            <?php 
+                                            $rank = $index + 1;
+                                            $rankClass = 'rank-' . $rank;
+                                            ?>
+                                            <div class="rank-badge <?php echo $rankClass; ?>">
+                                                <?php echo $rank; ?>
+                                            </div>
+                                        </td>
+                                        <td onclick="document.getElementById('m-time-yesterday-<?php echo $index; ?>').classList.toggle('d-none')" style="cursor: pointer;">
+                                            <div class="fw-semibold text-dark text-truncate" style="max-width: 150px;"><?php echo htmlspecialchars($u['name']); ?> <i class="fa fa-caret-down text-muted ms-1 d-md-none" style="font-size: 0.7rem;"></i></div>
+                                            <!-- Mobile Toggle Time -->
+                                            <div id="m-time-yesterday-<?php echo $index; ?>" class="small text-muted d-none d-md-none mt-1 bg-light p-1 rounded">
+                                                <i class="fa fa-clock me-1"></i> <?php echo date('h:i A', strtotime($u['last_active'])); ?> (Yesterday)
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-warning-subtle text-warning rounded-pill px-2 small-badge">
+                                                <?php echo number_format($u['activity']); ?>
+                                            </span>
+                                        </td>
+                                        <td class="small text-muted d-none d-md-table-cell">
+                                            <div class="text-dark fw-medium"><?php echo date('h:i A', strtotime($u['last_active'])); ?></div>
+                                            <div class="text-muted" style="font-size: 0.75rem;">Yesterday</div>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <?php if ($customDate): ?>
+            <!-- Custom Date Tab -->
+            <div class="tab-pane fade" id="data-custom" role="tabpanel">
+                <div class="user-card-table">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th>User Name</th>
+                                    <th>Activity</th>
+                                    <th class="d-none d-md-table-cell">Last Active</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (empty($customActive)): ?>
+                                    <tr>
+                                        <td colspan="4" class="text-center py-5 text-muted">
+                                            <i class="fa fa-search fa-2x mb-3"></i>
+                                            <p>No activity recorded on <?php echo date('M d, Y', strtotime($customDate)); ?>.</p>
+                                        </td>
+                                    </tr>
+                                <?php else: ?>
+                                    <?php foreach ($customActive as $index => $u): ?>
+                                    <tr>
+                                        <td>
+                                            <?php 
+                                            $rank = $index + 1;
+                                            $rankClass = 'rank-' . $rank;
+                                            ?>
+                                            <div class="rank-badge <?php echo $rankClass; ?>">
+                                                <?php echo $rank; ?>
+                                            </div>
+                                        </td>
+                                        <td onclick="document.getElementById('m-time-custom-<?php echo $index; ?>').classList.toggle('d-none')" style="cursor: pointer;">
+                                            <div class="fw-semibold text-dark text-truncate" style="max-width: 150px;"><?php echo htmlspecialchars($u['name']); ?> <i class="fa fa-caret-down text-muted ms-1 d-md-none" style="font-size: 0.7rem;"></i></div>
+                                            <!-- Mobile Toggle Time -->
+                                            <div id="m-time-custom-<?php echo $index; ?>" class="small text-muted d-none d-md-none mt-1 bg-light p-1 rounded">
+                                                <i class="fa fa-clock me-1"></i> <?php echo date('h:i A', strtotime($u['last_active'])); ?> (<?php echo date('M d', strtotime($customDate)); ?>)
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info-subtle text-info rounded-pill px-2 small-badge">
+                                                <?php echo number_format($u['activity']); ?>
+                                            </span>
+                                        </td>
+                                        <td class="small text-muted d-none d-md-table-cell">
+                                            <div class="text-dark fw-medium"><?php echo date('h:i A', strtotime($u['last_active'])); ?></div>
+                                            <div class="text-muted" style="font-size: 0.75rem;"><?php echo date('M d, Y', strtotime($customDate)); ?></div>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
             <div class="tab-pane fade" id="data-all" role="tabpanel">
                 <div class="user-card-table">
                     <div class="table-responsive">
@@ -339,6 +488,31 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function activateUserTab(tabId) {
+        const tabTrigger = new bootstrap.Tab(document.getElementById(tabId));
+        tabTrigger.show();
+        
+        // Update dropdown title for mobile
+        const btn = document.getElementById('activeUsersDropdown');
+        if (btn) {
+            const selectedText = document.getElementById(tabId).innerText;
+            btn.innerHTML = `<i class="fa fa-filter me-2 text-primary"></i> ${selectedText}`;
+        }
+    }
+
+    function filterByDate(date) {
+        if (!date) return;
+        window.location.href = `<?php echo url('admin/active_users'); ?>?date=${date}`;
+    }
+
+    // Auto-activate custom tab if date is present
+    document.addEventListener('DOMContentLoaded', () => {
+        <?php if ($customDate): ?>
+            activateUserTab('data-custom-tab');
+        <?php endif; ?>
+    });
+</script>
 <script src="<?php echo asset('js/admin_dashboard.js?v=4.0.1'); ?>"></script>
 </body>
 </html>
