@@ -132,6 +132,23 @@
                 max-width: 600px;
                 margin: 0 auto;
             }
+            /* Responsive Select for Mobile */
+            .month-select-container {
+                display: none;
+            }
+            @media (max-width: 768px) {
+                .month-navigation { display: none; }
+                .month-select-container { display: block; max-width: 300px; margin: 0 auto 20px; }
+                .month-select { 
+                    border-radius: 12px; 
+                    padding: 12px; 
+                    border: 1px solid #e2e8f0; 
+                    font-weight: 600;
+                    color: #475569;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+                }
+            }
+
             /* Premium Swal Overrides */
             .swal2-popup.premium-modal {
                 border-radius: 24px !important;
@@ -286,7 +303,7 @@
 
             <div class="container-fluid py-2">
             
-            <!-- MONTH SELECTOR -->
+            <!-- MONTH SELECTOR (Desktop) -->
             <div class="month-navigation mb-4">
                 <div class="d-flex flex-wrap justify-content-center gap-3">
                     <?php foreach($monthsData as $i => $m): ?>
@@ -298,6 +315,15 @@
                         </button>
                     <?php endforeach; ?>
                 </div>
+            </div>
+
+            <!-- MONTH SELECTOR (Mobile) -->
+            <div class="month-select-container mb-4">
+                <select class="form-select month-select" onchange="switchMonth(this.value)">
+                    <?php foreach($monthsData as $i => $m): ?>
+                        <option value="<?php echo $i; ?>"><?php echo $m['label']; ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
 
             <!-- MONTHLY PANELS -->
@@ -583,6 +609,10 @@
             const panels = document.querySelectorAll('.month-panel');
             const targetPanel = document.getElementById('month-panel-' + index);
             
+            // Update Mobile Select if it exists
+            const mobileSelect = document.querySelector('.month-select');
+            if (mobileSelect) mobileSelect.value = index;
+
             panels.forEach(panel => {
                 if (panel !== targetPanel) {
                     panel.classList.remove('active');

@@ -105,8 +105,8 @@
   <div id="note-results" style="display:none;">
     <?php if ($isBookmarksView): ?>
         <?php if (!empty($notes) || !empty($bookmarkedResources) || !empty($bookmarkedSubjects)): ?>
-            <!-- Tabs -->
-            <ul class="nav nav-pills mb-4 gap-2 justify-content-center" id="bookmarkTabs" role="tablist">
+            <!-- Tab List (Desktop) -->
+            <ul class="nav nav-pills mb-4 gap-2 justify-content-center d-none d-md-flex" id="bookmarkTabs" role="tablist">
                 <?php if (!empty($notes)): ?>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active rounded-pill px-4 border" id="notes-tab" data-bs-toggle="pill" data-bs-target="#pills-notes" type="button" role="tab" aria-controls="pills-notes" aria-selected="true"><i class="fa fa-file-alt me-2"></i>Notes (<?php echo count($notes); ?>)</button>
@@ -123,6 +123,38 @@
                 </li>
                 <?php endif; ?>
             </ul>
+
+            <!-- Tab Dropdown (Mobile) -->
+            <div class="d-md-none mb-4 text-center">
+                <div class="dropdown">
+                    <button class="btn btn-primary rounded-pill px-4 dropdown-toggle w-100" type="button" id="bookmarkDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-filter me-2"></i>Filter View
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark w-100 rounded-4 shadow-lg border-0" aria-labelledby="bookmarkDropdown">
+                        <?php if (!empty($notes)): ?>
+                        <li><a class="dropdown-item py-2 px-4" href="#" onclick="activateTab('notes-tab')"><i class="fa fa-file-alt me-3 text-info"></i>Notes (<?php echo count($notes); ?>)</a></li>
+                        <?php endif; ?>
+                        <?php if (!empty($bookmarkedResources)): ?>
+                        <li><a class="dropdown-item py-2 px-4" href="#" onclick="activateTab('resources-tab')"><i class="fa fa-book me-3 text-warning"></i>Files (<?php echo count($bookmarkedResources); ?>)</a></li>
+                        <?php endif; ?>
+                        <?php if (!empty($bookmarkedSubjects)): ?>
+                        <li><a class="dropdown-item py-2 px-4" href="#" onclick="activateTab('subjects-tab')"><i class="fa fa-folder-open me-3 text-success"></i>Subjects (<?php echo count($bookmarkedSubjects); ?>)</a></li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            </div>
+
+            <script>
+                function activateTab(tabId) {
+                    const tabTrigger = new bootstrap.Tab(document.getElementById(tabId));
+                    tabTrigger.show();
+                    
+                    // Update dropdown title
+                    const btn = document.getElementById('bookmarkDropdown');
+                    const selectedText = document.getElementById(tabId).innerText;
+                    btn.innerHTML = `<i class="fa fa-filter me-2"></i> ${selectedText}`;
+                }
+            </script>
 
             <div class="tab-content" id="bookmarkTabsContent">
                 <!-- Notes Pane -->

@@ -492,7 +492,20 @@
 </main>
 
 <script>
-    const palette = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899'];
+    // Dynamic Color Generation Utility
+    function generateRandomColors(count) {
+        const colors = [];
+        for (let i = 0; i < count; i++) {
+            // Use HSL for better visual balance (Random Hue, 65-80% Saturation, 45-60% Lightness)
+            const h = Math.floor(Math.random() * 360);
+            const s = Math.floor(Math.random() * 20) + 65;
+            const l = Math.floor(Math.random() * 15) + 45;
+            colors.push(`hsl(${h}, ${s}%, ${l}%)`);
+        }
+        return colors;
+    }
+
+    const palette = generateRandomColors(12);
     window.adminCharts = window.adminCharts || [];
 
     // 1. Status Dist (Pie)
@@ -501,7 +514,11 @@
         type: 'pie',
         data: {
             labels: statusData.map(s => s.status.toUpperCase()),
-            datasets: [{ data: statusData.map(s => s.c), backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderWidth: 0 }]
+            datasets: [{ 
+                data: statusData.map(s => s.c), 
+                backgroundColor: generateRandomColors(statusData.length), 
+                borderWidth: 0 
+            }]
         },
         options: { 
             responsive: true, maintainAspectRatio: false, 
@@ -517,7 +534,11 @@
         type: 'doughnut',
         data: {
             labels: fileData.map(f => f.file_type.toUpperCase()),
-            datasets: [{ data: fileData.map(f => f.c), backgroundColor: palette, borderWidth: 0 }]
+            datasets: [{ 
+                data: fileData.map(f => f.c), 
+                backgroundColor: generateRandomColors(fileData.length), 
+                borderWidth: 0 
+            }]
         },
         options: { 
             responsive: true, maintainAspectRatio: false, cutout: '75%', 
@@ -597,7 +618,7 @@
             labels: resDistData.map(s => s.subject),
             datasets: [{ 
                 data: resDistData.map(s => s.resource_count),
-                backgroundColor: palette,
+                backgroundColor: generateRandomColors(resDistData.length),
                 hoverOffset: 15
             }]
         },
@@ -640,7 +661,11 @@
         type: 'doughnut',
         data: {
             labels: roleData.map(r => r.role.toUpperCase()),
-            datasets: [{ data: roleData.map(r => r.count), backgroundColor: ['#ec4899', '#f59e0b', '#6366f1'], borderWidth: 0 }]
+            datasets: [{ 
+                data: roleData.map(r => r.count), 
+                backgroundColor: generateRandomColors(roleData.length), 
+                borderWidth: 0 
+            }]
         },
         options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15 } } } }
     });
@@ -652,7 +677,11 @@
         type: 'doughnut',
         data: {
             labels: resFileData.map(f => f.file_type.toUpperCase()),
-            datasets: [{ data: resFileData.map(f => f.c), backgroundColor: palette.slice().reverse(), borderWidth: 0 }]
+            datasets: [{ 
+                data: resFileData.map(f => f.c), 
+                backgroundColor: generateRandomColors(resFileData.length), 
+                borderWidth: 0 
+            }]
         },
         options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15 } } } }
     });
