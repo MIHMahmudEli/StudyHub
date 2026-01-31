@@ -252,20 +252,22 @@
         ?>
 
         <?php if ($toast): ?>
-        <div class="toast-notification" id="toastNotification" style="box-shadow: 0 10px 40px <?php echo $toast['shadow_color']; ?>, 0 0 0 1px rgba(0,0,0,0.05);">
+        <div class="toast-notification" id="toastNotification">
             <div class="toast-content">
-                <div class="toast-icon" style="background: <?php echo $toast['icon_bg']; ?>; box-shadow: 0 4px 12px <?php echo $toast['shadow_color']; ?>;">
+                <div class="toast-icon" style="background: <?php echo $toast['icon_bg']; ?>">
                     <i class="fas <?php echo $toast['icon']; ?>"></i>
                 </div>
                 <div class="toast-body">
-                    <h6 class="toast-title mb-1" style="color: <?php echo $toast['title_color']; ?>;"><?php echo $toast['title']; ?></h6>
+                    <h6 class="toast-title mb-1" style="color: <?php echo $toast['title_color']; ?>"><?php echo $toast['title']; ?></h6>
                     <p class="toast-message mb-0"><?php echo $toast['message']; ?></p>
                 </div>
                 <button type="button" class="toast-close" onclick="closeToast()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="toast-progress" style="background: <?php echo $toast['progress_bg']; ?>;"></div>
+            <div class="toast-progress">
+                <div class="toast-progress-bar" style="background: <?php echo $toast['progress_bg']; ?>"></div>
+            </div>
         </div>
         <?php endif; ?>
 
@@ -345,7 +347,7 @@
                 }, 5000);
                 
                 // Progress bar animation
-                const progressBar = toast.querySelector('.toast-progress');
+                const progressBar = toast.querySelector('.toast-progress-bar');
                 if (progressBar) {
                     progressBar.style.animation = 'progress 5s linear forwards';
                 }
@@ -353,144 +355,5 @@
         });
     </script>
     
-    <style>
-        /* Modern Toast Notification Styles */
-        .toast-notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            min-width: 350px;
-            max-width: 400px;
-            background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
-            border-radius: 16px;
-            overflow: hidden;
-            transform: translateX(450px);
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        
-        .toast-notification.toast-show {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        
-        .toast-notification.toast-hide {
-            transform: translateX(450px);
-            opacity: 0;
-        }
-        
-        .toast-content {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 20px;
-            position: relative;
-        }
-        
-        .toast-icon {
-            flex-shrink: 0;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        
-        .toast-body {
-            flex: 1;
-        }
-        
-        .toast-title {
-            font-size: 16px;
-            font-weight: 700;
-            margin: 0;
-        }
-        
-        .toast-message {
-            font-size: 14px;
-            color: #6b7280;
-            margin: 0;
-            line-height: 1.4;
-        }
-        
-        .toast-close {
-            flex-shrink: 0;
-            width: 32px;
-            height: 32px;
-            border: none;
-            background: rgba(107, 114, 128, 0.1);
-            border-radius: 8px;
-            color: #6b7280;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-        
-        .toast-close:hover {
-            background: rgba(107, 114, 128, 0.2);
-            color: #374151;
-            transform: rotate(90deg);
-        }
-        
-        .toast-progress {
-            height: 4px;
-            transform-origin: left;
-            border-radius: 0 0 16px 16px;
-        }
-        
-        @keyframes progress {
-            from {
-                transform: scaleX(1);
-            }
-            to {
-                transform: scaleX(0);
-            }
-        }
-        
-        @keyframes bounceIn {
-            0% {
-                transform: scale(0);
-                opacity: 0;
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .toast-notification {
-                top: 10px;
-                right: 10px;
-                left: 10px;
-                min-width: auto;
-                max-width: none;
-            }
-            
-            .toast-notification.toast-show {
-                transform: translateY(0);
-            }
-            
-            .toast-notification.toast-hide {
-                transform: translateY(-150px);
-            }
-            
-            .toast-notification {
-                transform: translateY(-150px);
-            }
-        }
-    </style>
 </body>
 </html>

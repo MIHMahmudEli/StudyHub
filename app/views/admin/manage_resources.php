@@ -181,7 +181,6 @@
 
 
 
-        /* Suggestions Dropdown (Note Upload Style) */
         .suggestions {
             border: 1px solid #e2e8f0;
             background: #fff;
@@ -364,26 +363,31 @@
             </div>
         </header>
 
-        <!-- Toast Notification (Overlay) -->
-        <?php if (isset($_SESSION['flash_message'])): ?>
+        <!-- Toast Notification System -->
+        <?php 
+            $message = $_SESSION['flash_message'] ?? '';
+            $error = $_SESSION['flash_error'] ?? '';
+            unset($_SESSION['flash_message'], $_SESSION['flash_error']);
+        ?>
+        <?php if ($message || $error): ?>
         <div class="toast-notification" id="flashToast">
             <div class="toast-content">
-                <div class="toast-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%)">
-                    <i class="fas fa-check-circle"></i>
+                <div class="toast-icon" style="background: <?= $message ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'; ?>">
+                    <i class="fas <?= $message ? 'fa-check-circle' : 'fa-exclamation-circle'; ?>"></i>
                 </div>
                 <div class="toast-body">
-                    <h6 class="toast-title mb-1" style="color: #065f46">Success!</h6>
-                    <p class="toast-message mb-0"><?= htmlspecialchars($_SESSION['flash_message']); ?></p>
+                    <h6 class="toast-title mb-1" style="color: <?= $message ? '#065f46' : '#991b1b'; ?>"><?= $message ? 'Success!' : 'Error!'; ?></h6>
+                    <p class="toast-message mb-0"><?= htmlspecialchars($message ?: $error); ?></p>
                 </div>
                 <button type="button" class="toast-close" onclick="closeFlashToast()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="toast-progress" style="background: linear-gradient(90deg, #10b981 0%, #059669 100%)"></div>
+            <div class="toast-progress">
+                <div class="toast-progress-bar" style="background: <?= $message ? 'linear-gradient(90deg, #10b981 0%, #059669 100%)' : 'linear-gradient(90deg, #ef4444 0%, #dc2626 100%)'; ?>"></div>
+            </div>
         </div>
-        <?php 
-            unset($_SESSION['flash_message']); // Clear the message after displaying
-        endif; ?>
+        <?php endif; ?>
 
         <div class="container-fluid px-lg-4">
             <!-- Integrated Search -->
@@ -724,7 +728,7 @@
                 }, 5000);
                 
                 // Progress bar animation
-                const progressBar = flashToast.querySelector('.toast-progress');
+                const progressBar = flashToast.querySelector('.toast-progress-bar');
                 if (progressBar) {
                     progressBar.style.animation = 'progress 5s linear forwards';
                 }
@@ -732,147 +736,5 @@
         });
     </script>
 
-    <style>
-        /* Modern Toast Notification Styles */
-        .toast-notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10000;
-            min-width: 350px;
-            max-width: 400px;
-            background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.2), 
-                        0 0 0 1px rgba(16, 185, 129, 0.1);
-            overflow: hidden;
-            transform: translateX(450px);
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        
-        .toast-notification.toast-show {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        
-        .toast-notification.toast-hide {
-            transform: translateX(450px);
-            opacity: 0;
-        }
-        
-        .toast-content {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 20px;
-            position: relative;
-        }
-        
-        .toast-icon {
-            flex-shrink: 0;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-            animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        
-        .toast-body {
-            flex: 1;
-        }
-        
-        .toast-title {
-            font-size: 16px;
-            font-weight: 700;
-            margin: 0;
-        }
-        
-        .toast-message {
-            font-size: 14px;
-            color: #6b7280;
-            margin: 0;
-            line-height: 1.4;
-        }
-        
-        .toast-close {
-            flex-shrink: 0;
-            width: 32px;
-            height: 32px;
-            border: none;
-            background: rgba(107, 114, 128, 0.1);
-            border-radius: 8px;
-            color: #6b7280;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-        
-        .toast-close:hover {
-            background: rgba(107, 114, 128, 0.2);
-            color: #374151;
-            transform: rotate(90deg);
-        }
-        
-        .toast-progress {
-            height: 4px;
-            transform-origin: left;
-            border-radius: 0 0 16px 16px;
-        }
-        
-        @keyframes progress {
-            from {
-                transform: scaleX(1);
-            }
-            to {
-                transform: scaleX(0);
-            }
-        }
-        
-        @keyframes bounceIn {
-            0% {
-                transform: scale(0);
-                opacity: 0;
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .toast-notification {
-                top: 10px;
-                right: 10px;
-                left: 10px;
-                min-width: auto;
-                max-width: none;
-            }
-            
-            .toast-notification.toast-show {
-                transform: translateY(0);
-            }
-            
-            .toast-notification.toast-hide {
-                transform: translateY(-150px);
-            }
-            
-            .toast-notification {
-                transform: translateY(-150px);
-            }
-        }
-    </style>
 </body>
 </html>

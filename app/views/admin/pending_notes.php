@@ -155,7 +155,32 @@
                     <i class="fa fa-sign-out-alt"></i><span class="d-none d-md-inline ms-1">Logout</span>
                 </a>
             </div>
-        </header>
+    </header>
+
+    <!-- Toast Notification System -->
+    <?php if (!empty($message) || !empty($error)): ?>
+    <div class="toast-notification" id="pendingToast">
+        <div class="toast-content">
+            <div class="toast-icon" style="background: <?php echo !empty($message) ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'; ?>">
+                <i class="fas <?php echo !empty($message) ? 'fa-check-circle' : 'fa-exclamation-circle'; ?>"></i>
+            </div>
+            <div class="toast-body">
+                <h6 class="toast-title mb-1" style="color: <?php echo !empty($message) ? '#065f46' : '#991b1b'; ?>">
+                    <?php echo !empty($message) ? 'Success!' : 'Error!'; ?>
+                </h6>
+                <p class="toast-message mb-0">
+                    <?php echo !empty($message) ? htmlspecialchars($message) : htmlspecialchars($error); ?>
+                </p>
+            </div>
+            <button type="button" class="toast-close" onclick="closePendingToast()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="toast-progress">
+            <div class="toast-progress-bar" style="background: <?php echo !empty($message) ? 'linear-gradient(90deg, #10b981 0%, #059669 100%)' : 'linear-gradient(90deg, #ef4444 0%, #dc2626 100%)'; ?>"></div>
+        </div>
+    </div>
+    <?php endif; ?>
 
         <div class="container-fluid">
             <?php if (empty($notes)): ?>
@@ -215,5 +240,26 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo asset('js/admin_dashboard.js?v=4.0.1'); ?>"></script>
+    <script>
+        function closePendingToast() {
+            const toast = document.getElementById('pendingToast');
+            if (toast) {
+                toast.classList.add('toast-hide');
+                setTimeout(() => { toast.remove(); }, 400);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const pendingToast = document.getElementById('pendingToast');
+            if (pendingToast) {
+                setTimeout(() => { pendingToast.classList.add('toast-show'); }, 100);
+                setTimeout(() => { closePendingToast(); }, 5000);
+                const progressBar = pendingToast.querySelector('.toast-progress-bar');
+                if(progressBar) {
+                    progressBar.style.animation = 'progress 5s linear forwards';
+                }
+            }
+        });
+    </script>
 </body>
 </html>

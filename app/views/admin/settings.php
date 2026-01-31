@@ -15,50 +15,215 @@
 <link rel="stylesheet" href="<?php echo asset('css/admin_dashboard.css?v=4.0.2'); ?>">
 <link rel="icon" type="image/svg+xml" href="<?php echo asset('images/favicon.svg'); ?>">
 <style>
-    .settings-card {
-        background: #fff;
-        border-radius: 16px;
-        border: 1px solid rgba(0,0,0,0.05);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        overflow: hidden;
+    .settings-wrapper {
+        max-width: 850px;
+        margin: 0 auto;
+        padding-bottom: 50px;
     }
+
+    .settings-card {
+        background: #ffffff;
+        border-radius: 30px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 40px;
+    }
+
     .settings-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.15);
     }
+
     .settings-header {
-        background: linear-gradient(to right, #f8fafc, #fff);
-        padding: 20px 25px;
-        border-bottom: 1px solid rgba(0,0,0,0.05);
+        padding: 35px 45px;
+        background: #ffffff;
+        border-bottom: 1px solid #f8fafc;
+        display: flex;
+        align-items: center;
+        gap: 20px;
     }
+
+    .settings-header-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .bg-blue-soft { background: #eff6ff; color: #3b82f6; }
+    .bg-amber-soft { background: #fffbeb; color: #f59e0b; }
+    .bg-rose-soft { background: #fff1f2; color: #f43f5e; }
+
     .settings-header h5 {
         margin: 0;
+        font-weight: 800;
         color: #1e293b;
-        font-weight: 600;
+        font-size: 1.35rem;
+        letter-spacing: -0.02em;
+    }
+
+    .card-body-custom {
+        padding: 45px;
+    }
+
+    .form-group-custom {
+        margin-bottom: 30px;
+    }
+
+    .form-label-custom {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    .input-wrapper-custom {
+        position: relative;
+    }
+
+    .input-wrapper-custom i {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
         font-size: 1.1rem;
+        transition: color 0.3s;
     }
-    .form-control {
-        border-radius: 8px;
-        padding: 12px 15px;
-        border: 1px solid #e2e8f0;
+
+    .form-control-custom {
         background-color: #f8fafc;
-        font-size: 0.95rem;
-    }
-    .form-control:focus {
-        background-color: #fff;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-        border-color: #3b82f6;
-    }
-    .btn-modern {
-        padding: 12px;
+        border: 2px solid #f1f5f9;
+        border-radius: 18px;
+        padding: 15px 20px 15px 55px;
+        font-size: 1rem;
         font-weight: 500;
-        border-radius: 8px;
+        color: #1e293b;
         transition: all 0.3s ease;
+        width: 100%;
     }
-    .btn-modern:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+    .form-control-custom:focus {
+        background-color: #ffffff;
+        border-color: #3b82f6;
+        box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.15);
+        outline: none;
+    }
+
+    .form-control-custom:focus + i {
+        color: #3b82f6;
+    }
+
+    .btn-premium {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        color: white;
+        border: none;
+        border-radius: 18px;
+        padding: 18px 35px;
+        font-weight: 700;
+        font-size: 1rem;
+        width: 100%;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 10px;
+        box-shadow: 0 10px 25px -5px rgba(30, 41, 59, 0.3);
+    }
+
+    .btn-premium:hover {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Moderator List Styling */
+    .mod-card-item {
+        background: #f8fafc;
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid #f1f5f9;
+        transition: transform 0.2s;
+    }
+
+    .mod-card-item:hover {
+        transform: scale(1.01);
+        background: #ffffff;
+        box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.05);
+    }
+
+    .mod-avatar-circle {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.2rem;
+        box-shadow: 0 5px 15px rgba(37, 99, 235, 0.2);
+        flex-shrink: 0;
+    }
+
+    .mod-details {
+        flex: 1;
+        min-width: 0;
+        margin-left: 15px;
+    }
+
+    .btn-action-demote {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: #fee2e2;
+        color: #ef4444;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+
+    .btn-action-demote:hover {
+        background: #ef4444;
+        color: white;
+        transform: rotate(90deg) scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+        .settings-header { padding: 20px 25px; }
+        .card-body-custom { padding: 20px; }
+        .settings-card { border-radius: 25px; margin-bottom: 25px; }
+        .settings-header h5 { font-size: 1.15rem; }
+        .settings-header-icon { width: 42px; height: 42px; font-size: 1.25rem; }
+        
+        .mod-card-item { padding: 15px; }
+        .mod-avatar-circle { width: 40px; height: 40px; font-size: 1rem; }
+    }
+
+    @media (max-width: 480px) {
+        .container-fluid { padding-left: 15px !important; padding-right: 15px !important; }
+        .settings-header { padding: 18px 20px; gap: 12px; }
+        .card-body-custom { padding: 18px; }
+        .mod-card-item { gap: 10px; }
+        .btn-action-demote { width: 38px; height: 38px; }
     }
 </style>
 </head>
@@ -204,7 +369,7 @@
 
     <!-- Settings Sections -->
     <section class="container-fluid py-4 px-lg-5">
-        <div class="row g-4">
+        <div class="settings-wrapper">
             <!-- Toast Notification System -->
             <?php if (!empty($message) || !empty($error)): ?>
             <div class="toast-notification" id="settingsToast">
@@ -224,100 +389,123 @@
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div class="toast-progress" style="background: <?php echo !empty($message) ? 'linear-gradient(90deg, #10b981 0%, #059669 100%)' : 'linear-gradient(90deg, #ef4444 0%, #dc2626 100%)'; ?>"></div>
+                <div class="toast-progress">
+                    <div class="toast-progress-bar" style="background: <?php echo !empty($message) ? 'linear-gradient(90deg, #10b981 0%, #059669 100%)' : 'linear-gradient(90deg, #ef4444 0%, #dc2626 100%)'; ?>"></div>
+                </div>
             </div>
             <?php endif; ?>
                 
-            <!-- Update Name -->
-            <div class="col-lg-6 col-md-12">
-                <div class="settings-card h-100 d-flex flex-column">
-                    <div class="settings-header">
-                        <h5><i class="fa fa-user-pen text-primary me-2"></i>Update Name</h5>
+            <!-- Update Name Card -->
+            <div class="settings-card">
+                <div class="settings-header">
+                    <div class="settings-header-icon bg-blue-soft">
+                        <i class="fa fa-user"></i>
                     </div>
-                    <div class="card-body p-4 d-flex flex-column flex-grow-1">
-                        <form method="post" action="<?php echo url('settings/update_name'); ?>" class="d-flex flex-column h-100">
-                            <div class="mb-4">
-                                <label class="form-label text-muted small fw-bold text-uppercase">New Name</label>
-                                <input type="text" class="form-control" name="name" value="<?php echo htmlspecialchars($_SESSION['user_name']); ?>" required>
+                    <div class="flex-grow-1">
+                        <h5>Profile Identity</h5>
+                        <p class="text-muted small mb-0">Manage how you appear on the platform</p>
+                    </div>
+                </div>
+                <div class="card-body-custom">
+                    <form method="post" action="<?php echo url('settings/update_name'); ?>">
+                        <div class="form-group-custom">
+                            <label class="form-label-custom">New Display Name</label>
+                            <div class="input-wrapper-custom">
+                                <input type="text" class="form-control-custom" name="name" value="<?php echo htmlspecialchars($_SESSION['user_name']); ?>" placeholder="Enter new name" required>
+                                <i class="fa fa-signature"></i>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100 btn-modern mt-auto">Save Changes</button>
-                        </form>
-                    </div>
+                        </div>
+                        <button type="submit" class="btn-premium">
+                            <i class="fa fa-check-circle"></i> Save Changes
+                        </button>
+                    </form>
                 </div>
             </div>
 
-            <!-- Update Password -->
-            <div class="col-lg-6 col-md-12">
-                <div class="settings-card h-100 d-flex flex-column">
-                     <div class="settings-header">
-                        <h5><i class="fa fa-shield-halved text-warning me-2"></i>Change Password</h5>
+            <!-- Update Password Card -->
+            <div class="settings-card">
+                <div class="settings-header">
+                    <div class="settings-header-icon bg-amber-soft">
+                        <i class="fa fa-lock"></i>
                     </div>
-                    <div class="card-body p-4 d-flex flex-column flex-grow-1">
-                        <form method="post" action="<?php echo url('settings/update_password'); ?>" class="d-flex flex-column h-100">
-                            <div class="mb-3">
-                                <label class="form-label text-muted small fw-bold text-uppercase">Current Password</label>
-                                <input type="password" name="current_password" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label text-muted small fw-bold text-uppercase">New Password</label>
-                                <input type="password" name="new_password" class="form-control" required>
-                                <div class="form-text text-muted small">
-                                    <i class="fa fa-info-circle me-1"></i> Min 8 chars, uppercase, lowercase, number.
+                    <div class="flex-grow-1">
+                        <h5>Security & Privacy</h5>
+                        <p class="text-muted small mb-0">Keep your account safe and secure</p>
+                    </div>
+                </div>
+                <div class="card-body-custom">
+                    <form method="post" action="<?php echo url('settings/update_password'); ?>">
+                        <div class="row">
+                            <div class="col-12 col-md-6 form-group-custom">
+                                <label class="form-label-custom">Current Password</label>
+                                <div class="input-wrapper-custom">
+                                    <input type="password" name="current_password" class="form-control-custom" placeholder="••••••••" required>
+                                    <i class="fa fa-shield-alt"></i>
                                 </div>
                             </div>
-                            <div class="mb-4">
-                                <label class="form-label text-muted small fw-bold text-uppercase">Confirm New Password</label>
-                                <input type="password" name="confirm_password" class="form-control" required>
+                            <div class="col-12 col-md-6 form-group-custom">
+                                <label class="form-label-custom">New Password</label>
+                                <div class="input-wrapper-custom">
+                                    <input type="password" name="new_password" class="form-control-custom" placeholder="••••••••" required>
+                                    <i class="fa fa-key"></i>
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-warning w-100 text-white btn-modern mt-auto">Update Password</button>
-                        </form>
-                    </div>
+                            <div class="col-12 form-group-custom">
+                                <label class="form-label-custom">Confirm New Password</label>
+                                <div class="input-wrapper-custom">
+                                    <input type="password" name="confirm_password" class="form-control-custom" placeholder="••••••••" required>
+                                    <i class="fa fa-check-double"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-premium">
+                            <i class="fa fa-shield-check"></i> Update Password
+                        </button>
+                    </form>
                 </div>
             </div>
 
             <!-- Demote Moderators -->
             <?php if ($role === 'admin') { ?>
-            <div class="col-12">
-                <div class="settings-card">
-                     <div class="settings-header">
-                        <h5><i class="fa fa-users-gear text-danger me-2"></i>Manage Moderators</h5>
+            <div class="settings-card">
+                <div class="settings-header">
+                    <div class="settings-header-icon bg-rose-soft">
+                        <i class="fa fa-user-shield"></i>
                     </div>
-                    <div class="card-body p-4">
-                        <?php if (empty($moderators)) { ?>
-                            <div class="text-center py-4 text-muted">
-                                <i class="fa fa-user-slash fa-2x mb-2"></i>
-                                <p>No moderators found.</p>
-                            </div>
-                        <?php } else { ?>
-                            <div class="table-responsive">
-                                <table class="table align-middle table-hover">
-                                    <thead class="bg-light">
-                                        <tr>
-                                            <th class="border-0 text-secondary text-uppercase small fw-bold ps-4">Name</th>
-                                            <th class="border-0 text-secondary text-uppercase small fw-bold">Email</th>
-                                            <th class="border-0 text-secondary text-uppercase small fw-bold text-center">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="border-top-0">
-                                        <?php foreach ($moderators as $mod) { ?>
-                                            <tr>
-                                                <td class="ps-4 fw-medium"><?php echo htmlspecialchars($mod['name']); ?></td>
-                                                <td class="text-muted"><?php echo htmlspecialchars($mod['email']); ?></td>
-                                                <td class="text-center">
-                                                    <form method="post" action="<?php echo url('settings/demote'); ?>" class="d-inline">
-                                                        <input type="hidden" name="mod_id" value="<?php echo $mod['id']; ?>">
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger btn-modern px-3">
-                                                            <i class="fa fa-user-minus me-1"></i> Demote
-                                                        </button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        <?php } ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <?php } ?>
+                    <div class="flex-grow-1">
+                        <h5>Moderation Team</h5>
+                        <p class="text-muted small mb-0">Manage moderator accounts and access</p>
                     </div>
+                </div>
+                <div class="card-body-custom">
+                    <?php if (empty($moderators)) { ?>
+                        <div class="text-center py-5">
+                            <div class="mb-3">
+                                <i class="fa fa-users-slash fa-3x text-light"></i>
+                            </div>
+                            <h6 class="text-muted fw-bold">No moderators found.</h6>
+                        </div>
+                    <?php } else { ?>
+                        <div class="mod-container">
+                            <?php foreach ($moderators as $mod) { ?>
+                                <div class="mod-card-item">
+                                    <div class="mod-avatar-circle">
+                                        <?php echo strtoupper(substr($mod['name'], 0, 1)); ?>
+                                    </div>
+                                    <div class="mod-details">
+                                        <div class="fw-bold text-dark text-truncate" style="font-size: 1.05rem;"><?php echo htmlspecialchars($mod['name']); ?></div>
+                                        <div class="text-muted small text-truncate"><?php echo htmlspecialchars($mod['email']); ?></div>
+                                    </div>
+                                    <form method="post" action="<?php echo url('settings/demote'); ?>" class="ms-2 ms-sm-3">
+                                        <input type="hidden" name="mod_id" value="<?php echo $mod['id']; ?>">
+                                        <button type="submit" class="btn-action-demote" title="Demote" onclick="return confirm('Demote this moderator?')">
+                                            <i class="fa fa-user-minus"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
             <?php } ?>
@@ -354,7 +542,7 @@
             }, 5000);
             
             // Start progress animation
-            const progressBar = settingsToast.querySelector('.toast-progress');
+            const progressBar = settingsToast.querySelector('.toast-progress-bar');
             if(progressBar) {
                 progressBar.style.animation = 'progress 5s linear forwards';
             }
@@ -362,126 +550,5 @@
     });
 </script>
 
-<style>
-    /* Modern Toast Notification Styles */
-    .toast-notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 10000;
-        min-width: 350px;
-        max-width: 400px;
-        background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
-        border-radius: 16px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 
-                    0 0 0 1px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-        transform: translateX(450px);
-        opacity: 0;
-        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-    
-    .toast-notification.toast-show {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    
-    .toast-notification.toast-hide {
-        transform: translateX(450px);
-        opacity: 0;
-    }
-    
-    .toast-content {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 20px;
-        position: relative;
-    }
-    
-    .toast-icon {
-        flex-shrink: 0;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 24px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-    
-    .toast-body {
-        flex: 1;
-    }
-    
-    .toast-title {
-        font-size: 16px;
-        font-weight: 700;
-        margin: 0;
-    }
-    
-    .toast-message {
-        font-size: 14px;
-        color: #6b7280;
-        margin: 0;
-        line-height: 1.4;
-    }
-    
-    .toast-close {
-        flex-shrink: 0;
-        width: 32px;
-        height: 32px;
-        border: none;
-        background: rgba(107, 114, 128, 0.1);
-        border-radius: 8px;
-        color: #6b7280;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-    }
-    
-    .toast-close:hover {
-        background: rgba(107, 114, 128, 0.2);
-        color: #374151;
-        transform: rotate(90deg);
-    }
-    
-    .toast-progress {
-        height: 4px;
-        transform-origin: left;
-        border-radius: 0 0 16px 16px;
-    }
-    
-    @keyframes progress {
-        from { transform: scaleX(1); }
-        to { transform: scaleX(0); }
-    }
-    
-    @keyframes bounceIn {
-        0% { transform: scale(0); opacity: 0; }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); opacity: 1; }
-    }
-    
-    @media (max-width: 768px) {
-        .toast-notification {
-            top: 10px; right: 10px; left: 10px;
-            min-width: auto; max-width: none;
-            transform: translateY(-150px);
-        }
-        .toast-notification.toast-show {
-            transform: translateY(0);
-        }
-        .toast-notification.toast-hide {
-            transform: translateY(-150px);
-        }
-    }
-</style>
 </body>
 </html>

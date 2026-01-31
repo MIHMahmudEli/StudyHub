@@ -49,7 +49,15 @@ class AdminController extends Controller {
         $noteModel = new Note(); 
         $notes = $noteModel->getPending();
 
-        $this->view('admin/pending_notes', ['notes' => $notes, 'role' => $_SESSION['role']]);
+        $data = [
+            'notes' => $notes,
+            'role' => $_SESSION['role'],
+            'message' => $_SESSION['flash_message'] ?? '',
+            'error' => $_SESSION['flash_error'] ?? ''
+        ];
+        unset($_SESSION['flash_message'], $_SESSION['flash_error']);
+
+        $this->view('admin/pending_notes', $data);
     }
 
     public function approveNote() {
@@ -58,7 +66,9 @@ class AdminController extends Controller {
             $id = intval($_GET['id']);
             $noteModel = new Note();
             if ($noteModel->updateStatus($id, 'approved')) {
-                // Log event? Maybe?
+                $_SESSION['flash_message'] = "Note approved successfully!";
+            } else {
+                $_SESSION['flash_error'] = "Failed to approve note.";
             }
         }
         $this->redirect('admin/pending_notes');
@@ -69,7 +79,11 @@ class AdminController extends Controller {
         if (isset($_GET['id'])) {
             $id = intval($_GET['id']);
             $noteModel = new Note();
-            $noteModel->updateStatus($id, 'rejected');
+            if ($noteModel->updateStatus($id, 'rejected')) {
+                $_SESSION['flash_message'] = "Note rejected successfully.";
+            } else {
+                $_SESSION['flash_error'] = "Failed to reject note.";
+            }
         }
         $this->redirect('admin/pending_notes');
     }
@@ -92,11 +106,11 @@ class AdminController extends Controller {
         $data = [
             'users' => $users,
             'search' => $search,
-            'role' => $_SESSION['role']
+            'role' => $_SESSION['role'],
+            'message' => $_SESSION['flash_message'] ?? '',
+            'error' => $_SESSION['flash_error'] ?? ''
         ];
-        
-        // Pass success/error messages if any (stored in session usually, but here we might just redirect with query param or standard flash)
-        // Let's stick to standard flash session pattern if used, or just pass empty.
+        unset($_SESSION['flash_message'], $_SESSION['flash_error']);
         
         $this->view('admin/users', $data);
     }
@@ -111,7 +125,11 @@ class AdminController extends Controller {
              // Validate role
              if (in_array($newRole, ['student', 'moderator', 'admin'])) {
                  $userModel = new User();
-                 $userModel->updateRole($userId, $newRole);
+                 if ($userModel->updateRole($userId, $newRole)) {
+                     $_SESSION['flash_message'] = "User role updated successfully!";
+                 } else {
+                     $_SESSION['flash_error'] = "Failed to update user role.";
+                 }
              }
         }
         $this->redirect('admin/users');
@@ -123,12 +141,16 @@ class AdminController extends Controller {
         if (isset($_GET['id'])) {
             $userId = intval($_GET['id']);
             // Prevent deleting self
-            if ($userId === $_SESSION['user_id']) {
-                 // Error
-            } else {
-                 $userModel = new User();
-                 $userModel->deleteUser($userId);
-            }
+             if ($userId === $_SESSION['user_id']) {
+                  $_SESSION['flash_error'] = "You cannot delete your own account.";
+             } else {
+                  $userModel = new User();
+                  if ($userModel->deleteUser($userId)) {
+                      $_SESSION['flash_message'] = "User deleted successfully.";
+                  } else {
+                      $_SESSION['flash_error'] = "Failed to delete user.";
+                  }
+             }
         }
         $this->redirect('admin/users');
     }
